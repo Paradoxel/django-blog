@@ -8,7 +8,7 @@
       <div class="about-content col-lg-12">
         <h1 class="text-white">Contact Us</h1>
         <p class="text-white link-nav">
-          <a href="index.html">Home </a>
+          <a href="{% url 'core:home' %}">Home </a>
           <span class="lnr lnr-arrow-right"></span>
           <a href="contact.html"> Contact Us</a>
         </p>
@@ -52,11 +52,11 @@
           </div>
         </div>
       </div>
-      <div class="col-lg-8">
+      <div class="col-lg-8" id="contact-form">
         <form
           class="form-area contact-form text-right"
           id="myForm"
-          action="mail.php"
+          action=""
           method="post"
         >
           <div class="row">
@@ -115,5 +115,14 @@
   </div>
 </section>
 <!-- End contact-page Area -->
+
+<script>
+  window.onload = function () {
+    const el = document.getElementById("contact-form");
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+</script>
 
 {% endblock content %}
