@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from .managers import UserManager
+from django.conf import settings
+from .validators import validate_iran_phone_number
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -9,7 +11,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(max_length=150, blank=True)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
-    date_joined = models.DateTimeField(auto_now_add=True)
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
 
@@ -24,3 +25,37 @@ class User(AbstractBaseUser, PermissionsMixin):
         full_name = f"{self.first_name} {self.last_name}".strip()
 
         return full_name or self.email
+
+
+def avatar_upload_path(instance, filename):
+    return f"avatars/{instance.user.id}/{filename}"
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="profile",
+    )
+
+    phone_number = models.CharField(
+        max_length=13,
+        blank=True,
+        null=True,
+        unique=True,
+        validators=[validate_iran_phone_number],
+    )
+
+    avatar = models.ImageField(
+        upload_to=avatar_upload_path,
+        blank=True,
+        null=True,
+    )
+
+    bio = models.TextField(blank=True)
+
+    created_date = models.DateTimeField(auto_now_add=True)
+    updated_date = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.user.get_full_name()}'s profile"
