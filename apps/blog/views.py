@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic import ListView
+from django.views.generic import ListView,DetailView
 from apps.blog.models import Post
 class BlogView(ListView):
     template_name='blog/blog-home.html'
@@ -7,5 +7,11 @@ class BlogView(ListView):
     def get_queryset(self):
         return Post.objects.published()
 
-def blog_single(request):
-    return render(request, 'blog/blog-single.html')
+class PostDetailView(DetailView):
+    model = Post
+    template_name = "blog/blog-single.html"
+    context_object_name = "post"
+    slug_url_kwarg = "slug"
+
+    def get_queryset(self):
+        return Post.objects.published()
