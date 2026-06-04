@@ -142,9 +142,4 @@ class Post(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        author_name = (
-            self.author.get_full_name()
-            or self.author.get_username()
-        )
-
-        return f"{self.title} by {author_name}"
+        return f"{self.title}"
