@@ -109,6 +109,7 @@ class Post(models.Model):
         blank=True,
         db_index=True
     )
+    excerpt = models.TextField(blank=True, null=True,max_length=300)
 
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
