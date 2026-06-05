@@ -109,7 +109,7 @@ class Command(BaseCommand):
                 post = Post.objects.create(
                     author=user,
                     title=fake.sentence(nb_words=6),
-                    content=fake.paragraph(nb_sentences=12),
+                    content=fake.paragraph(nb_sentences=50),
                     excerpt=fake.sentence(nb_words=18),
                     image=File(img, name=image_name),
                     primary_tag=random.choice(tags),
