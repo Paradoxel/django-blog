@@ -1,6 +1,5 @@
 from django import template
-from apps.blog.models import Post
-from apps.blog.models import Category
+from apps.blog.models import Post,Category,Tag
 register = template.Library()
 @register.inclusion_tag("blog/partials/popular_posts.html")
 def popular_posts():
@@ -31,3 +30,10 @@ def category_widget():
 @register.inclusion_tag("blog/partials/post_categories.html")
 def post_categories(post):
     return {"categories":post.categories.all()}
+
+
+
+@register.inclusion_tag("blog/partials/tag_widget.html")
+def tag_widget():
+    tags=Tag.objects.all()
+    return {'tags':tags}

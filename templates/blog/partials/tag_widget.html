@@ -1,0 +1,20 @@
+<div class="single-sidebar-widget tag-cloud-widget">
+
+    <h4 class="tagcloud-title">Tags</h4>
+
+    <ul>
+
+        {% for tag in tags %}
+        <li>
+            <a href="#">{{ tag.name }}</a>
+        </li>
+
+        {% empty %}
+        <li>
+            <span class="text-muted">No tags available</span>
+        </li>
+        {% endfor %}
+
+    </ul>
+
+</div>
