@@ -1,0 +1,67 @@
+{% load static %}
+
+<div class="single-sidebar-widget user-info-widget">
+
+  {# ===== Avatar (with fallback) ===== #}
+  {% if author.profile.avatar %}
+    <img class="author-avatar" src="{{ author.profile.avatar.url }}" alt="{{ author.get_full_name }}">
+  {% else %}
+    <img class="author-avatar" src="{% static 'img/blog/default-avatar.png' %}" alt="default avatar">
+  {% endif %}
+
+  {# ===== Author Name ===== #}
+  <a href="#">
+    <h4>{{ author.get_full_name }}</h4>
+  </a>
+
+  <p>blog writer</p>
+
+  {# ===== Social Links ===== #}
+  <ul class="social-links">
+
+    {% if author.profile.website %}
+      <li>
+        <a href="{{ author.profile.website }}" target="_blank" rel="noopener noreferrer">
+          <i class="fa fa-globe"></i>
+        </a>
+      </li>
+    {% endif %}
+
+    {% if author.profile.facebook %}
+      <li>
+        <a href="{{ author.profile.facebook }}" target="_blank" rel="noopener noreferrer">
+          <i class="fa fa-facebook"></i>
+        </a>
+      </li>
+    {% endif %}
+
+    {% if author.profile.twitter %}
+      <li>
+        <a href="{{ author.profile.twitter }}" target="_blank" rel="noopener noreferrer">
+          <i class="fa fa-twitter"></i>
+        </a>
+      </li>
+    {% endif %}
+
+    {% if author.profile.github %}
+      <li>
+        <a href="{{ author.profile.github }}" target="_blank" rel="noopener noreferrer">
+          <i class="fa fa-github"></i>
+        </a>
+      </li>
+    {% endif %}
+
+    {% if author.profile.linkedin %}
+      <li>
+        <a href="{{ author.profile.linkedin }}" target="_blank" rel="noopener noreferrer">
+          <i class="fa fa-linkedin"></i>
+        </a>
+      </li>
+    {% endif %}
+
+  </ul>
+
+  {# ===== Bio ===== #}
+  <p>{{ author.profile.bio|default:"No bio available." }}</p>
+
+</div>

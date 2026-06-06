@@ -4509,3 +4509,11 @@ body.mobile-nav-active #mobile-nav-toggle {
     object-fit: cover;
     display: block;
 }
+
+
+.author-avatar {
+    width: 220px;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 50%;
+}

@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from .managers import UserManager
 from django.conf import settings
 from .validators import validate_iran_phone_number
-
+from django.core.validators import MinLengthValidator, MaxLengthValidator
 
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
@@ -52,7 +52,20 @@ class Profile(models.Model):
         null=True,
     )
 
-    bio = models.TextField(blank=True)
+    bio = models.TextField(
+    blank=True,
+    validators=[
+        MinLengthValidator(20),   # avoid empty
+        MaxLengthValidator(150),  # prevent long bios
+    ]
+)
+
+    # social links
+    website = models.URLField(blank=True, null=True)
+    github = models.URLField(blank=True, null=True)
+    twitter = models.URLField(blank=True, null=True)
+    facebook = models.URLField(blank=True, null=True)
+    linkedin = models.URLField(blank=True, null=True)
 
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
