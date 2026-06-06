@@ -16,7 +16,17 @@
           <span class="lnr lnr-arrow-right"></span
           ><a href="{% url 'blog:index' %}">Blog </a>
           <span class="lnr lnr-arrow-right"></span>
-          <a href=""> Blog Details Page</a>
+          
+          <a href="{% url 'blog:detail' post.slug %}">
+    {{ post.title }}
+</a>
+
+{% if post.primary_tag %}
+    <a href="#" class="post-tag">
+        with tag: {{ post.primary_tag.name }}
+    </a>
+{% endif %}
+
         </p>
       </div>
     </div>
@@ -322,23 +332,7 @@
             </div>
             <p class="text-bottom">You can unsubscribe at any time</p>
           </div>
-          <div class="single-sidebar-widget tag-cloud-widget">
-            <h4 class="tagcloud-title">Tag Clouds</h4>
-            <ul>
-              <li><a href="#">Technology</a></li>
-              <li><a href="#">Fashion</a></li>
-              <li><a href="#">Architecture</a></li>
-              <li><a href="#">Fashion</a></li>
-              <li><a href="#">Food</a></li>
-              <li><a href="#">Technology</a></li>
-              <li><a href="#">Lifestyle</a></li>
-              <li><a href="#">Art</a></li>
-              <li><a href="#">Adventure</a></li>
-              <li><a href="#">Food</a></li>
-              <li><a href="#">Lifestyle</a></li>
-              <li><a href="#">Adventure</a></li>
-            </ul>
-          </div>
+
         </div>
       </div>
     </div>
