@@ -26,3 +26,8 @@ def category_widget():
     return {
         "categories": categories
     }
+
+
+@register.inclusion_tag("blog/partials/post_categories.html")
+def post_categories(post):
+    return {"categories":post.categories.all()}
