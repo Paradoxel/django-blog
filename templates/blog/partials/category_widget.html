@@ -1,0 +1,25 @@
+<div class="single-sidebar-widget post-category-widget">
+
+    <h4 class="category-title">Post Categories</h4>
+
+    <ul class="cat-list">
+
+        {% for category in categories %}
+        <li>
+            <a href="#" class="d-flex justify-content-between">
+
+                <p>{{ category.name }}</p>
+                <p>{{ category.post_count }}</p>
+
+            </a>
+        </li>
+
+        {% empty %}
+        <li>
+            <p class="text-muted">No categories available</p>
+        </li>
+        {% endfor %}
+
+    </ul>
+
+</div>
