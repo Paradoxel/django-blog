@@ -1,5 +1,6 @@
 from django import template
 from apps.blog.models import Post
+from apps.core.models import Ad
 register = template.Library()
 @register.inclusion_tag("blog/partials/popular_posts.html")
 def popular_posts():

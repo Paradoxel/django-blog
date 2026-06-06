@@ -4,6 +4,7 @@
 {% load humanize %}
 {% load format_views %}
 {% load blog_tags %}
+{% load ads_tags %}
 
 			<!-- start banner Area -->
 			<section class="banner-area relative blog-home-banner" id="home">	
@@ -205,10 +206,6 @@
   </ul>
 </nav>
 {% endif %}
-
-
-
-
 						</div>
 						<div class="col-lg-4 sidebar-widgets">
 							<div class="widget-wrap">
@@ -218,12 +215,9 @@
 			                            <button type="submit"><i class="fa fa-search"></i></button>
 			                        </form>
 								</div>
-								
+								{% popular_posts %}								
 
-								{% popular_posts %}
-								<div class="single-sidebar-widget ads-widget">
-									<a href="#"><img class="img-fluid" src="{% static 'img/blog/ads-banner.jpg' %}" alt=""></a>
-								</div>
+								{% ads_widget %}
 								<div class="single-sidebar-widget post-category-widget">
 									<h4 class="category-title">Post Catgories</h4>
 									<ul class="cat-list">

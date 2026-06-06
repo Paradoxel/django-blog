@@ -3,6 +3,7 @@
 {% load humanize %}
 {% load format_views %}
 {% load blog_tags %}
+{% load ads_tags %}
 <!-- start banner Area -->
 <section class="relative about-banner">
   <div class="overlay overlay-bg"></div>
@@ -289,11 +290,7 @@
 
 
 
-          <div class="single-sidebar-widget ads-widget">
-            <a href="#"
-              ><img class="img-fluid" src="{% static 'img/blog/ads-banner.jpg' %}" alt=""
-            /></a>
-          </div>
+          {% ads_widget %}
           <div class="single-sidebar-widget post-category-widget">
             <h4 class="category-title">Post Catgories</h4>
             <ul class="cat-list">

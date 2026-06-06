@@ -1,0 +1,33 @@
+{% if ad %}
+<div class="single-sidebar-widget ads-widget">
+
+    <h4 class="widget-title">Sponsored</h4>
+
+    <div class="ad-card">
+
+        {% if ad.url %}
+        <a href="{{ ad.url }}" target="_blank" rel="noopener noreferrer">
+        {% endif %}
+
+            <img class="img-fluid ad-image"
+                 src="{{ ad.image.url }}"
+                 alt="{{ ad.title }}">
+
+        {% if ad.url %}
+        </a>
+        {% endif %}
+
+    </div>
+
+    <div class="ad-content mt-2">
+        <h6>{{ ad.title }}</h6>
+
+        {% if ad.description %}
+        <p class="text-muted small">
+            {{ ad.description }}
+        </p>
+        {% endif %}
+    </div>
+
+</div>
+{% endif %}
