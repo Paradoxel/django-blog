@@ -4,6 +4,7 @@ from apps.blog.models import Post
 class BlogView(ListView):
     template_name='blog/blog-home.html'
     context_object_name='posts'
+    paginate_by=6
     def get_queryset(self):
         return Post.objects.published()
 

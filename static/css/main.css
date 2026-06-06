@@ -4517,3 +4517,19 @@ body.mobile-nav-active #mobile-nav-toggle {
     object-fit: cover;
     border-radius: 50%;
 }
+
+.pagination .page-link {
+    border-radius: 6px;
+    margin: 0 3px;
+    transition: 0.2s;
+}
+
+.pagination .page-link:hover {
+    background: #f1f1f1;
+}
+
+.pagination .active .page-link {
+    background: #222;
+    color: #fff;
+    border: none;
+}
