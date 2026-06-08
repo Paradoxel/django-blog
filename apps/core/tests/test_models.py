@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.db import IntegrityError
-from apps.core.models import Contact
+from apps.core.models import Contact,Newsletter
 
 
 class ContactModelTest(TestCase):
@@ -62,3 +62,17 @@ class ContactModelTest(TestCase):
                 subject="Test",
                 message="Hello"
             )
+
+
+# test for newslatter form
+class NewsletterModelTest(TestCase):
+
+    def test_newsletter_str_method(self):
+        newsletter = Newsletter.objects.create(
+            email="test@gmail.com"
+        )
+
+        self.assertEqual(
+            str(newsletter),
+            "test@gmail.com"
+        )

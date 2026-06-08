@@ -1,6 +1,6 @@
 from django import forms
 from captcha.fields import CaptchaField
-from apps.core.models import Contact
+from apps.core.models import Contact,Newsletter
 
 
 class ContactForm(forms.ModelForm):
@@ -26,3 +26,19 @@ class ContactForm(forms.ModelForm):
         if len(message) < 10:
             raise forms.ValidationError("Message is too short")
         return message
+
+
+class NewsletterForm(forms.ModelForm):
+    class Meta:
+        model=Newsletter
+        fields =['email']
+
+    def clean_email(self):
+        email = self.cleaned_data["email"]
+
+        if Newsletter.objects.filter(email=email).exists():
+            raise forms.ValidationError(
+                "You are already subscribed to our newsletter."
+            )
+
+        return email

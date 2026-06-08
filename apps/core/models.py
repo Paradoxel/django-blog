@@ -46,3 +46,14 @@ class Ad(models.Model):
 
     def has_link(self):
         return bool(self.url)
+    
+
+class Newsletter(models.Model):
+    email=models.EmailField(unique=True)
+    created_date=models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering=['-created_date']
+    
+    def __str__(self):
+        return self.email

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Contact,Ad
+from .models import Contact,Ad,Newsletter
 
 @admin.register(Contact)
 class ContactAdmin(admin.ModelAdmin):
@@ -22,3 +22,9 @@ class AdAdmin(admin.ModelAdmin):
         "title",
     )
     list_per_page=10
+
+
+@admin.register(Newsletter)
+class NewsletterForm(admin.ModelAdmin):
+    list_display = ("email", "created_date")
+    search_fields = ("email",)

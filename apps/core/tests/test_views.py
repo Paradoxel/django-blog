@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse
-
+from apps.core.models import Newsletter
 
 class CoreViewTest(TestCase):
     # set up
@@ -54,3 +54,15 @@ class CoreViewTest(TestCase):
         response=self.client.get(self.about_url)
         self.assertContains(response,"About Us")
 
+class NewsletterViewTest(TestCase):
+
+    def setUp(self):
+        self.url = reverse("core:newsletter_subscribe")
+
+    def test_can_subscribe(self):
+        response = self.client.post(
+            self.url,
+            {"email": "test@gmail.com"}
+        )
+
+        self.assertEqual(Newsletter.objects.count(), 1)
