@@ -6,9 +6,9 @@ from apps.blog.models import Post, Category
 from apps.accounts.models import User
 
 
-# =========================
+# =====================================================
 # BLOG LIST VIEW TESTS
-# =========================
+# =====================================================
 class BlogListViewTest(TestCase):
 
     def setUp(self):
@@ -33,26 +33,30 @@ class BlogListViewTest(TestCase):
             image=self.image,
         )
 
-    def test_status_code_is_200(self):
+    # status check
+    def test_status_code(self):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
 
-    def test_correct_template_used(self):
+    # template check
+    def test_template_used(self):
         response = self.client.get(self.url)
         self.assertTemplateUsed(response, "blog/blog-home.html")
 
+    # context check
     def test_context_contains_posts(self):
         response = self.client.get(self.url)
         self.assertIn("posts", response.context)
 
-    def test_posts_are_rendered(self):
+    # content rendering
+    def test_post_title_rendered(self):
         response = self.client.get(self.url)
         self.assertContains(response, "Django Testing")
 
 
-# =========================
+# =====================================================
 # BLOG CATEGORY TESTS
-# =========================
+# =====================================================
 class BlogCategoryTest(TestCase):
 
     def setUp(self):
@@ -81,5 +85,71 @@ class BlogCategoryTest(TestCase):
 
         self.post.categories.add(self.category)
 
-    def test_post_has_category(self):
+    # relation check
+    def test_post_category_relation(self):
         self.assertIn(self.category, self.post.categories.all())
+
+
+# =====================================================
+# BLOG DETAIL VIEW TESTS
+# =====================================================
+class BlogDetailViewTest(TestCase):
+
+    def setUp(self):
+        self.user = User.objects.create_user(
+            email="test@gmail.com",
+            password="1234"
+        )
+
+        self.category = Category.objects.create(
+            name="Django"
+        )
+
+        self.image = SimpleUploadedFile(
+            name="test.jpg",
+            content=b"fake-image-content",
+            content_type="image/jpeg"
+        )
+
+        self.post = Post.objects.create(
+            author=self.user,
+            title="Detail View Post",
+            content="This is a test post for detail view",
+            status=Post.Status.PUBLISHED,
+            image=self.image,
+        )
+
+        self.post.categories.add(self.category)
+
+        self.url = reverse("blog:detail", args=[self.post.slug])
+
+    # status code
+    def test_status_code(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+
+    # template used
+    def test_template_used(self):
+        response = self.client.get(self.url)
+        self.assertTemplateUsed(response, "blog/blog-single.html")
+
+    # post exists in context
+    def test_context_contains_post(self):
+        response = self.client.get(self.url)
+        self.assertIn("post", response.context)
+
+    # correct post returned
+    def test_correct_post_returned(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.context["post"], self.post)
+
+    # title rendered
+    def test_post_title_rendered(self):
+        response = self.client.get(self.url)
+        self.assertContains(response, "Detail View Post")
+
+    # 404 for invalid slug
+    def test_invalid_slug_returns_404(self):
+        url = reverse("blog:detail", args=["wrong-slug"])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)
