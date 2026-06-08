@@ -45,7 +45,9 @@ INSTALLED_APPS = [
     "apps.accounts.apps.AccountsConfig",
     "apps.core.apps.CoreConfig",
     "apps.blog.apps.BlogConfig",
+    "captcha",
     "django.contrib.humanize",
+    
 ]
 
 MIDDLEWARE = [

@@ -53,64 +53,98 @@
         </div>
       </div>
       <div class="col-lg-8" id="contact-form">
-        <form
-          class="form-area contact-form text-right"
-          id="myForm"
-          action=""
-          method="post"
-        >
-          <div class="row">
-            <div class="col-lg-6 form-group">
-              <input
-                name="name"
-                placeholder="Enter your name"
-                onfocus="this.placeholder = ''"
-                onblur="this.placeholder = 'Enter your name'"
-                class="common-input mb-20 form-control"
-                required=""
-                type="text"
-              />
+<form
+  class="form-area contact-form text-right"
+  method="post"
+  action="{% url 'core:contact' %}"
+>
+  {% csrf_token %}
 
-              <input
-                name="email"
-                placeholder="Enter email address"
-                pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{1,63}$"
-                onfocus="this.placeholder = ''"
-                onblur="this.placeholder = 'Enter email address'"
-                class="common-input mb-20 form-control"
-                required=""
-                type="email"
-              />
+  <div class="row">
 
-              <input
-                name="subject"
-                placeholder="Enter subject"
-                onfocus="this.placeholder = ''"
-                onblur="this.placeholder = 'Enter subject'"
-                class="common-input mb-20 form-control"
-                required=""
-                type="text"
-              />
-            </div>
-            <div class="col-lg-6 form-group">
-              <textarea
-                class="common-textarea form-control"
-                name="message"
-                placeholder="Enter Messege"
-                onfocus="this.placeholder = ''"
-                onblur="this.placeholder = 'Enter Messege'"
-                required=""
-              ></textarea>
-            </div>
-            <div class="col-lg-12">
-              <div class="alert-msg" style="text-align: left"></div>
-              <button class="genric-btn primary" style="float: right">
-                Send Message
-              </button>
-            </div>
+    <div class="col-lg-6 form-group">
+
+      <!-- NAME -->
+      <input
+        name="name"
+        placeholder="Enter your name"
+        class="common-input mb-20 form-control"
+        type="text"
+        value="{{ form.name.value|default:'' }}"
+      />
+      {{ form.name.errors }}
+
+      <!-- EMAIL -->
+      <input
+        name="email"
+        placeholder="Enter email address"
+        class="common-input mb-20 form-control"
+        type="email"
+        value="{{ form.email.value|default:'' }}"
+      />
+      {{ form.email.errors }}
+
+      <!-- SUBJECT -->
+      <input
+        name="subject"
+        placeholder="Enter subject"
+        class="common-input mb-20 form-control"
+        type="text"
+        value="{{ form.subject.value|default:'' }}"
+      />
+      {{ form.subject.errors }}
+
+      <!-- CAPTCHA -->
+      <div class="mt-3">
+        {{ form.captcha }}
+        {% if form.captcha.errors %}
+          <div class="text-danger mt-2">
+            ⚠️ Invalid captcha code
           </div>
-        </form>
+        {% endif %}
       </div>
+
+    </div>
+
+    <div class="col-lg-6 form-group">
+
+      <!-- MESSAGE -->
+      <textarea
+        class="common-textarea form-control"
+        name="message"
+        placeholder="Enter Message"
+      >{{ form.message.value|default:'' }}</textarea>
+
+      {{ form.message.errors }}
+
+    </div>
+
+    <div class="col-lg-12">
+
+      <!-- GLOBAL NON-FIELD ERRORS -->
+      {% if form.non_field_errors %}
+        <div class="alert alert-danger">
+          {{ form.non_field_errors }}
+        </div>
+      {% endif %}
+
+      <!-- SUCCESS/INFO MESSAGES -->
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-success">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      <button class="genric-btn primary" style="float: right">
+        Send Message
+      </button>
+    </div>
+
+  </div>
+</form>
+</div>
     </div>
   </div>
 </section>
