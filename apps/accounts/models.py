@@ -1,37 +1,49 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
-from .managers import UserManager
 from django.conf import settings
+from .managers import UserManager
 from .validators import validate_iran_phone_number
-from django.core.validators import MinLengthValidator, MaxLengthValidator
+
 
 class User(AbstractBaseUser, PermissionsMixin):
-    email = models.EmailField(unique=True)
+    """
+    Custom user model that uses email as the unique identifier
+    instead of the default username field.
+    """
+
+    email = models.EmailField(unique=True)  # used as USERNAME_FIELD
     first_name = models.CharField(max_length=150, blank=True)
     last_name = models.CharField(max_length=150, blank=True)
     is_staff = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True)  # set False to deactivate without deleting
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
 
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = []  # no extra fields required on createsuperuser
+
     objects = UserManager()
 
     def __str__(self):
         return self.email
 
     def get_full_name(self):
+        """Return full name, or email if first/last name are not set."""
         full_name = f"{self.first_name} {self.last_name}".strip()
-
         return full_name or self.email
 
 
 def avatar_upload_path(instance, filename):
+    """Generate a unique upload path per user: avatars/<user_id>/<filename>"""
     return f"avatars/{instance.user.id}/{filename}"
 
 
 class Profile(models.Model):
+    """
+    Extended user profile created automatically via signal on User creation.
+    Stores optional personal info and social links.
+    """
+
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -43,7 +55,7 @@ class Profile(models.Model):
         blank=True,
         null=True,
         unique=True,
-        validators=[validate_iran_phone_number],
+        validators=[validate_iran_phone_number],  # accepts 09xx or +989xx format
     )
 
     avatar = models.ImageField(
@@ -52,15 +64,9 @@ class Profile(models.Model):
         null=True,
     )
 
-    bio = models.TextField(
-    blank=True,
-    validators=[
-        MinLengthValidator(20),   # avoid empty
-        MaxLengthValidator(150),  # prevent long bios
-    ]
-)
+    bio = models.CharField(max_length=150, blank=True)
 
-    # social links
+    # social links — all optional
     website = models.URLField(blank=True, null=True)
     github = models.URLField(blank=True, null=True)
     twitter = models.URLField(blank=True, null=True)
