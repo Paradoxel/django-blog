@@ -1,9 +1,15 @@
 from django import forms
 from captcha.fields import CaptchaField
-from apps.core.models import Contact,Newsletter
+
+from apps.core.models import Contact, Newsletter
 
 
 class ContactForm(forms.ModelForm):
+    """
+    Form for the contact page.
+    Includes captcha to prevent spam.
+    Custom validation on name and message length.
+    """
 
     captcha = CaptchaField(
         error_messages={
@@ -13,32 +19,33 @@ class ContactForm(forms.ModelForm):
 
     class Meta:
         model = Contact
-        fields = ['name', 'email', 'subject', 'message']
+        fields = ('name', 'email', 'subject', 'message')
 
     def clean_name(self):
+        """Reject names shorter than 2 characters."""
         name = self.cleaned_data.get("name")
         if len(name) < 2:
-            raise forms.ValidationError("Name is too short")
+            raise forms.ValidationError("Name is too short.")
         return name
 
     def clean_message(self):
+        """Reject messages shorter than 10 characters."""
         message = self.cleaned_data.get("message")
         if len(message) < 10:
-            raise forms.ValidationError("Message is too short")
+            raise forms.ValidationError("Message is too short.")
         return message
 
 
 class NewsletterForm(forms.ModelForm):
+    """Form for newsletter subscription. Prevents duplicate emails."""
+
     class Meta:
-        model=Newsletter
-        fields =['email']
+        model = Newsletter
+        fields = ('email',)
 
     def clean_email(self):
+        """Reject email if already subscribed."""
         email = self.cleaned_data["email"]
-
         if Newsletter.objects.filter(email=email).exists():
-            raise forms.ValidationError(
-                "You are already subscribed to our newsletter."
-            )
-
+            raise forms.ValidationError("You are already subscribed.")
         return email
