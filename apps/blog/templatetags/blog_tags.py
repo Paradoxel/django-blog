@@ -1,39 +1,52 @@
 from django import template
-from apps.blog.models import Post,Category,Tag
+from django.db.models import Count
+from django.db import models
+from apps.blog.models import Post, Category, Tag
+
+
 register = template.Library()
+
+
 @register.inclusion_tag("blog/partials/popular_posts.html")
 def popular_posts():
-    posts=Post.objects.filter(status=Post.Status.PUBLISHED).order_by("-view_count", "-published_date")[:4]
+    """Return top 4 posts ordered by view count."""
+    posts = Post.objects.published().order_by("-view_count", "-published_date")[:4]
     return {"popular_posts": posts}
-
 
 
 @register.inclusion_tag("blog/partials/author_widget.html")
 def author_widget(author):
-    return {'author':author}
+    """Render author info widget for post detail sidebar."""
+    return {"author": author}
 
 
 @register.inclusion_tag("blog/partials/category_widget.html")
 def category_widget():
-    categories = Category.objects.all()
-
-    for cat in categories:
-        cat.post_count = Post.objects.published().filter(categories=cat).count()
-    # sort
-    categories = sorted(categories, key=lambda c: c.post_count, reverse=True)
-
-    return {
-        "categories": categories
-    }
+    """
+    Return categories with published post counts.
+    annotate() runs a single SQL JOIN instead of N+1 queries.
+    """
+    categories = (
+        Category.objects
+        .annotate(
+            post_count=Count(
+                "posts",
+                filter=models.Q(posts__status=Post.Status.PUBLISHED)
+            )
+        )
+        .order_by("-post_count")
+    )
+    return {"categories": categories}
 
 
 @register.inclusion_tag("blog/partials/post_categories.html")
 def post_categories(post):
-    return {"categories":post.categories.all()}
-
+    """Return categories belonging to a specific post."""
+    return {"categories": post.categories.all()}
 
 
 @register.inclusion_tag("blog/partials/tag_widget.html")
 def tag_widget():
-    tags=Tag.objects.all()
-    return {'tags':tags}
+    """Return all tags for the tag cloud widget."""
+    tags = Tag.objects.all()
+    return {"tags": tags}
