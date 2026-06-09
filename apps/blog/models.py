@@ -4,52 +4,48 @@ from django.utils import timezone
 from django.utils.text import slugify
 
 
-# Content tags
 class Tag(models.Model):
+    """Content tag for labeling posts."""
+
     name = models.CharField(max_length=100, unique=True)
-    slug = models.SlugField(unique=True, blank=True, db_index=True)
+    slug = models.SlugField(unique=True, blank=True) 
 
     def save(self, *args, **kwargs):
-        # Auto-generate slug
         if not self.slug:
             self.slug = slugify(self.name)
-
         super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
 
 
-# Hierarchical categories
 class Category(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-    slug = models.SlugField(unique=True, blank=True, db_index=True)
-    description = models.TextField(blank=True)
+    """
+    Post category.
+    Per Post Many Category
+    """
 
-    parent = models.ForeignKey(
-        "self",
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name="children"
-    )
+    name = models.CharField(max_length=100, unique=True)
+    slug = models.SlugField(unique=True, blank=True) 
+    description = models.TextField(blank=True)
 
     class Meta:
         verbose_name_plural = "Categories"
 
     def save(self, *args, **kwargs):
-        # Auto-generate slug
         if not self.slug:
             self.slug = slugify(self.name)
-
         super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
 
 
-# Custom post filters
 class PostQuerySet(models.QuerySet):
+    """
+    Semantic query interface for Post.
+    Keeps filter logic in one place — views stay clean.
+    """
 
     def published(self):
         return self.filter(status=Post.Status.PUBLISHED)
@@ -62,9 +58,14 @@ class PostQuerySet(models.QuerySet):
 
 
 class Post(models.Model):
+    """
+    Core blog post model.
+    Handles draft → published → archived workflow.
+    Auto-generates slug and sets published_date on first publish.
+    """
 
-    # Publication status
     class Status(models.TextChoices):
+        """Publication lifecycle states."""
         DRAFT = "draft", "Draft"
         PUBLISHED = "published", "Published"
         ARCHIVED = "archived", "Archived"
@@ -72,27 +73,29 @@ class Post(models.Model):
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name="posts"
+        related_name="posts",
     )
 
     title = models.CharField(max_length=255)
-    slug = models.SlugField(unique=True, blank=True, db_index=True)
+    slug = models.SlugField(unique=True, blank=True)  
 
     content = models.TextField()
+    excerpt = models.CharField(max_length=300, blank=True)  # short preview 
 
-    image = models.ImageField(upload_to="images/")
+    # organized by year/month to avoid too many files in one folder
+    image = models.ImageField(upload_to="posts/%Y/%m/")
 
     primary_tag = models.ForeignKey(
         Tag,
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
-        related_name="primary_posts"
+        related_name="primary_posts",
     )
 
     categories = models.ManyToManyField(
         Category,
-        related_name="posts"
+        related_name="posts",
     )
 
     view_count = models.PositiveIntegerField(default=0)
@@ -101,15 +104,14 @@ class Post(models.Model):
         max_length=20,
         choices=Status.choices,
         default=Status.DRAFT,
-        db_index=True
+        db_index=True,  # frequently filtered — index justified
     )
 
     published_date = models.DateTimeField(
         null=True,
         blank=True,
-        db_index=True
+        db_index=True,  # used in ordering and filters — index justified
     )
-    excerpt = models.TextField(blank=True, null=True,max_length=300)
 
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
@@ -120,8 +122,7 @@ class Post(models.Model):
         ordering = ["-published_date", "-created_date"]
 
     def save(self, *args, **kwargs):
-
-        # Generate unique slug
+        # Build unique slug from title on first save only
         if not self.slug:
             base_slug = slugify(self.title)
             slug = base_slug
@@ -133,14 +134,11 @@ class Post(models.Model):
 
             self.slug = slug
 
-        # Set publish timestamp
-        if (
-            self.status == self.Status.PUBLISHED
-            and self.published_date is None
-        ):
+        # Auto-set published_date once on first publish — never overwrite
+        if self.status == self.Status.PUBLISHED and self.published_date is None:
             self.published_date = timezone.now()
 
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.title}"
+        return self.title
