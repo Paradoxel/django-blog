@@ -1,68 +1,88 @@
 from django.test import TestCase
 from django.urls import reverse
+
 from apps.core.models import Newsletter
 
-class CoreViewTest(TestCase):
-    # set up
-    def setUp(self):
-        self.home_url = reverse('core:home')
-        self.contact_url=reverse('core:contact')
-        self.about_url=reverse('core:about')
 
-    # Home
-    def test_home_page_status_code(self):
-        response = self.client.get(self.home_url)
+class HomeViewTest(TestCase):
+    """Tests for home page view."""
+
+    def setUp(self):
+        self.url = reverse("core:home")
+
+    def test_status_code(self):
+        """Home page returns 200."""
+        response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
 
-    def test_home_page_uses_correct_template(self):
-        response = self.client.get(self.home_url)
-        self.assertTemplateUsed(response, 'core/index.html')
+    def test_template_used(self):
+        """Home page uses correct template."""
+        response = self.client.get(self.url)
+        self.assertTemplateUsed(response, "core/index.html")
 
-    def test_home_page_contains_expected_text(self):
-        response = self.client.get(self.home_url)
+    def test_contains_expected_text(self):
+        """Home page contains Travel text."""
+        response = self.client.get(self.url)
         self.assertContains(response, "Travel")
 
-    def test_home_page_contains_contact_link(self):
-        response = self.client.get(self.home_url)
-        self.assertContains(response, self.contact_url)
+
+class AboutViewTest(TestCase):
+    """Tests for about page view."""
+
+    def setUp(self):
+        self.url = reverse("core:about")
+
+    def test_status_code(self):
+        """About page returns 200."""
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_template_used(self):
+        """About page uses correct template."""
+        response = self.client.get(self.url)
+        self.assertTemplateUsed(response, "core/about.html")
+
+    def test_contains_expected_text(self):
+        """About page contains About Us text."""
+        response = self.client.get(self.url)
+        self.assertContains(response, "About Us")
 
 
-    # Contact 
-    def test_contact_page_status_code(self):
-        response=self.client.get(self.contact_url)
-        self.assertEqual(response.status_code,200)
+class ContactViewTest(TestCase):
+    """Tests for contact page view."""
 
-    def test_contact_page_uses_correct_template(self):
-        response=self.client.get(self.contact_url)
-        self.assertTemplateUsed(response,'core/contact.html')
+    def setUp(self):
+        self.url = reverse("core:contact")
 
-    def test_contact_page_contains_expected_text(self):
-        response=self.client.get(self.contact_url)
-        self.assertContains(response,"Contact Us")
+    def test_status_code(self):
+        """Contact page returns 200."""
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
 
+    def test_template_used(self):
+        """Contact page uses correct template."""
+        response = self.client.get(self.url)
+        self.assertTemplateUsed(response, "core/contact.html")
 
-    # contact
-    def test_about_page_status_code(self):
-        response =self.client.get(self.about_url)
-        self.assertEqual(response.status_code,200)
+    def test_contains_expected_text(self):
+        """Contact page contains Contact Us text."""
+        response = self.client.get(self.url)
+        self.assertContains(response, "Contact Us")
 
-    def test_about_page_uses_correct_template(self):
-        response=self.client.get(self.about_url)
-        self.assertTemplateUsed(response,'core/about.html')
-
-    def test_about_page_contains_expected_text(self):
-        response=self.client.get(self.about_url)
-        self.assertContains(response,"About Us")
 
 class NewsletterViewTest(TestCase):
+    """Tests for newsletter subscription view."""
 
     def setUp(self):
         self.url = reverse("core:newsletter_subscribe")
 
     def test_can_subscribe(self):
-        response = self.client.post(
-            self.url,
-            {"email": "test@gmail.com"}
-        )
+        """Valid email creates newsletter subscription."""
+        self.client.post(self.url, {"email": "test@gmail.com"})
+        self.assertEqual(Newsletter.objects.count(), 1)
 
+    def test_duplicate_email_not_subscribed(self):
+        """Duplicate email does not create second subscription."""
+        self.client.post(self.url, {"email": "test@gmail.com"})
+        self.client.post(self.url, {"email": "test@gmail.com"})
         self.assertEqual(Newsletter.objects.count(), 1)
