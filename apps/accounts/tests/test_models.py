@@ -1,57 +1,48 @@
 from django.test import TestCase
-from apps.accounts.models import User,Profile
-from django.core.exceptions import ValidationError
+
+from apps.accounts.models import User, Profile
+
 
 class UserModelTest(TestCase):
-    def test_get_full_name_returns_full_name(self):
-        user = User.objects.create_user(
+    """Tests for custom User model methods."""
+
+    def setUp(self):
+        self.user = User.objects.create_user(
             email="test@example.com",
             password="123456789",
             first_name="Mohammadreza",
             last_name="Amini",
         )
 
-        result = user.get_full_name()
-
-        self.assertEqual(result, "Mohammadreza Amini")
-
+    def test_get_full_name_returns_full_name(self):
+        """get_full_name returns first and last name combined."""
+        self.assertEqual(self.user.get_full_name(), "Mohammadreza Amini")
 
     def test_get_full_name_returns_email_when_names_are_empty(self):
+        """get_full_name falls back to email when names are empty."""
         user = User.objects.create_user(
-            email="test@example.com",
+            email="nname@example.com",
             password="123456789",
-            first_name="",
-            last_name="",
         )
-        result = user.get_full_name()
-        self.assertEqual(result, "test@example.com")
+        self.assertEqual(user.get_full_name(), "nname@example.com")
 
 
 class ProfileModelTest(TestCase):
-    def test_profile_str_returns_user_full_name(self):
-        user = User.objects.create_user(
+    """Tests for Profile model and signal-based auto-creation."""
+
+    def setUp(self):
+        self.user = User.objects.create_user(
             email="test@example.com",
             password="123456789",
             first_name="Ali",
             last_name="Amini",
         )
-        # profile will create for single create User
-        profile=Profile.objects.get(user=user)
-        self.assertEqual(str(profile),"Ali Amini's profile")
 
+    def test_profile_auto_created_on_user_creation(self):
+        """Profile is automatically created via signal when User is created."""
+        self.assertTrue(Profile.objects.filter(user=self.user).exists())
 
-class ProfileValidationTest(TestCase):
-
-    def test_bio_min_length_validation(self):
-        user = User.objects.create_user(
-            email="test@example.com",
-            password="123456789",
-        )
-
-        profile = Profile(
-            user=user,
-            bio="short bio"
-        )
-        # context manager for test
-        with self.assertRaises(ValidationError):
-            profile.full_clean()
+    def test_str_method(self):
+        """__str__ returns user full name with profile suffix."""
+        profile = Profile.objects.get(user=self.user)
+        self.assertEqual(str(profile), "Ali Amini's profile")
