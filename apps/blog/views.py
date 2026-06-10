@@ -1,7 +1,7 @@
 from django.views.generic import ListView, DetailView
 
 from apps.blog.models import Post
-
+from django.db.models import Q
 
 class BlogView(ListView):
     """
@@ -12,8 +12,17 @@ class BlogView(ListView):
     context_object_name = "posts"
     paginate_by = 6
 
+    # Use Walrus :=
     def get_queryset(self):
-        return Post.objects.published()
+        posts=Post.objects.published()
+        if s:=self.request.GET.get("search",""):
+            posts=posts.filter(Q(title__icontains=s) | Q(excerpt__icontains=s))
+        return posts
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['query'] = self.request.GET.get("search","")
+        return context
 
 
 class PostDetailView(DetailView):
