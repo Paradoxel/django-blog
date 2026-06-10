@@ -1,100 +1,78 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
+
 from apps.blog.models import Post, Category, Tag
+
 
 User = get_user_model()
 
 
 class PostModelTest(TestCase):
+    """Tests for Post model fields, defaults, and save() logic."""
 
     def setUp(self):
         self.user = User.objects.create_user(
             email="test@example.com",
-            password="testpass123"
+            password="testpass123",
+        )
+        self.category = Category.objects.create(name="Django")
+        self.tag = Tag.objects.create(name="Python")
+        self.post = Post.objects.create(
+            author=self.user,
+            title="My First Post",
+            content="Hello world",
+            status=Post.Status.DRAFT,
         )
 
-        self.category = Category.objects.create(
-            name="Django"
-        )
-
-        self.tag = Tag.objects.create(
-            name="Python"
-        )
-
-    # -----------------------------------
-    # 1. BASIC CREATION TEST
-    # -----------------------------------
     def test_post_creation(self):
-        post = Post.objects.create(
+        """Post is created with correct fields and defaults."""
+        self.assertEqual(self.post.title, "My First Post")
+        self.assertEqual(self.post.author, self.user)
+        self.assertEqual(self.post.view_count, 0)
+        self.assertEqual(self.post.status, Post.Status.DRAFT)
+        self.assertTrue(Post.objects.filter(pk=self.post.pk).exists())
+
+    def test_str_method(self):
+        """__str__ returns post title."""
+        self.assertEqual(str(self.post), "My First Post")
+
+    def test_slug_auto_generated(self):
+        """Slug is auto-generated from title on first save."""
+        self.assertEqual(self.post.slug, "my-first-post")
+
+    def test_slug_unique_on_duplicate_title(self):
+        """Duplicate title gets incremented slug."""
+        post2 = Post.objects.create(
             author=self.user,
             title="My First Post",
-            content="Hello world",
-            status=True,
+            content="Different content",
+            status=Post.Status.DRAFT,
         )
+        self.assertEqual(post2.slug, "my-first-post-1")
 
-        post.categories.add(self.category)
+    def test_published_date_set_on_publish(self):
+        """published_date is set automatically when status becomes PUBLISHED."""
+        self.assertIsNone(self.post.published_date)
+        self.post.status = Post.Status.PUBLISHED
+        self.post.save()
+        self.assertIsNotNone(self.post.published_date)
 
-        self.assertEqual(post.title, "My First Post")
-        self.assertEqual(post.author, self.user)
-        self.assertTrue(Post.objects.filter(pk=post.pk).exists())
-        self.assertIn(self.category, post.categories.all())
+    def test_published_date_not_overwritten(self):
+        """published_date is never overwritten on subsequent saves."""
+        self.post.status = Post.Status.PUBLISHED
+        self.post.save()
+        first_published = self.post.published_date
 
-    # -----------------------------------
-    # 2. STRING REPRESENTATION
-    # -----------------------------------
-    def test_post_str_method(self):
-        post = Post.objects.create(
-            author=self.user,
-            title="My First Post",
-            content="Hello world",
-            status=True,
-        )
+        self.post.title = "Updated Title"
+        self.post.save()
+        self.assertEqual(self.post.published_date, first_published)
 
-        self.assertEqual(str(post), "My First Post")
+    def test_timestamps_are_set(self):
+        """created_date and updated_date are set automatically."""
+        self.assertIsNotNone(self.post.created_date)
+        self.assertIsNotNone(self.post.updated_date)
 
-    # -----------------------------------
-    # 3. DEFAULT VALUES TEST
-    # -----------------------------------
-    def test_post_default_values(self):
-        post = Post.objects.create(
-            author=self.user,
-            title="Post Title",
-            content="Post Content",
-            status=True,
-        )
-
-        # adjust this if your model has view_count
-        if hasattr(post, "view_count"):
-            self.assertEqual(post.view_count, 0)
-
-    # -----------------------------------
-    # 4. TIMESTAMP TEST
-    # -----------------------------------
-    def test_post_created_date_is_set(self):
-        post = Post.objects.create(
-            author=self.user,
-            title="Post Title",
-            content="Post Content",
-            status='published',
-        )
-
-        self.assertIsNotNone(post.created_date)
-
-        # only if your model has updated_date
-        if hasattr(post, "updated_date"):
-            self.assertIsNotNone(post.updated_date)
-
-    # -----------------------------------
-    # 5. CATEGORY RELATIONSHIP TEST
-    # -----------------------------------
-    def test_post_category_relationship(self):
-        post = Post.objects.create(
-            author=self.user,
-            title="Post Title",
-            content="Post Content",
-            status=True,
-        )
-
-        post.categories.add(self.category)
-
-        self.assertIn(self.category, post.categories.all())
+    def test_category_relationship(self):
+        """Post can be assigned to multiple categories."""
+        self.post.categories.add(self.category)
+        self.assertIn(self.category, self.post.categories.all())
