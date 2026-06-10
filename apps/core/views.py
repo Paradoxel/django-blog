@@ -50,5 +50,9 @@ class NewsletterSubscribeView(CreateView):
         return redirect(self.request.META.get("HTTP_REFERER", "/"))
 
     def form_invalid(self, form):
-        messages.error(self.request, "Please enter a valid email address.")
+        email_errors = form.errors.get("email")
+        if email_errors:
+            messages.error(self.request, email_errors[0])
+        else:
+            messages.error(self.request, "Please enter a valid email address.")
         return redirect(self.request.META.get("HTTP_REFERER", "/"))
