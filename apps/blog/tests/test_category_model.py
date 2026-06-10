@@ -1,21 +1,23 @@
 from django.test import TestCase
+
 from apps.blog.models import Category
 
+
 class CategoryModelTest(TestCase):
+    """Tests for Category model fields and save() logic."""
 
-    def test_category_creation_and_slug(self):
-        category = Category.objects.create(
-            name="Django Tutorials"
-        )
+    def setUp(self):
+        self.category = Category.objects.create(name="Django Tutorials")
 
-        self.assertEqual(category.name, "Django Tutorials")
-        self.assertTrue(category.slug)  # slug should exist
-        self.assertEqual(category.slug, "django-tutorials")
-        self.assertTrue(Category.objects.filter(pk=category.pk).exists)
+    def test_category_creation(self):
+        """Category is saved to DB with correct name."""
+        self.assertEqual(self.category.name, "Django Tutorials")
+        self.assertTrue(Category.objects.filter(pk=self.category.pk).exists())
 
-    def test_category_str_method(self):
-        category = Category.objects.create(
-            name="Django Tutorials"
-        )
+    def test_slug_auto_generated(self):
+        """Slug is auto-generated from name on first save."""
+        self.assertEqual(self.category.slug, "django-tutorials")
 
-        self.assertEqual(str(category), "Django Tutorials")
+    def test_str_method(self):
+        """__str__ returns category name."""
+        self.assertEqual(str(self.category), "Django Tutorials")
