@@ -3,6 +3,7 @@ from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, FormView, CreateView
 
+from apps.blog.models import Post
 from apps.core.forms import ContactForm, NewsletterForm
 from apps.core.models import Newsletter
 
@@ -11,6 +12,11 @@ class HomeView(TemplateView):
     """Render the home page."""
 
     template_name = "core/index.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['latest_posts'] = Post.objects.published().order_by("-published_date")[:6]
+        return context
 
 
 class AboutView(TemplateView):
