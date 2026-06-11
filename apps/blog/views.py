@@ -59,3 +59,10 @@ class PostDetailView(DetailView):
         # Increment view count on every visit
         Post.objects.filter(pk=post.pk).update(view_count=post.view_count + 1)
         return post
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        post=self.get_object()
+        context["next_post"] = Post.objects.published().filter(id__gt=post.id).order_by('id').first()
+        context["previous_post"] = Post.objects.published().filter(id__lt=post.id).order_by('-id').first()
+        return context

@@ -82,44 +82,70 @@
           </div>
         </div>
         <div class="navigation-area">
-          <div class="row">
-            <div
-              class="col-lg-6 col-md-6 col-12 nav-left flex-row d-flex justify-content-start align-items-center"
-            >
-              <div class="thumb">
-                <a href="#"
-                  ><img class="img-fluid" src="{% static 'img/blog/prev.jpg' %}" alt=""
-                /></a>
-              </div>
-              <div class="arrow">
-                <a href="#"
-                  ><span class="lnr text-white lnr-arrow-left"></span
-                ></a>
-              </div>
-              <div class="detials">
-                <p>Prev Post</p>
-                <a href="#"><h4>Space The Final Frontier</h4></a>
-              </div>
+            <div class="row">
+
+                {% if previous_post %}
+                <div class="col-lg-6 col-md-6 col-12 nav-left d-flex flex-row align-items-center">
+
+                    {% if previous_post.image %}
+                    <div class="thumb">
+                        <a href="{% url 'blog:detail' previous_post.slug %}">
+                            <img
+                                src="{{ previous_post.image.url }}"
+                                alt="{{ previous_post.title }}"
+                            >
+                        </a>
+                    </div>
+                    {% endif %}
+
+                    <div class="arrow">
+                        <a href="{% url 'blog:detail' previous_post.slug %}">
+                            <span class="lnr text-white lnr-arrow-left"></span>
+                        </a>
+                    </div>
+
+                    <div class="detials">
+                        <p>Previous Post</p>
+                        <a href="{% url 'blog:detail' previous_post.slug %}">
+                            <h4>{{ previous_post.title }}</h4>
+                        </a>
+                    </div>
+
+                </div>
+                {% endif %}
+
+
+                {% if next_post %}
+                <div class="col-lg-6 col-md-6 col-12 nav-right d-flex flex-row justify-content-end align-items-center">
+
+                    <div class="detials text-end">
+                        <p>Next Post</p>
+                        <a href="{% url 'blog:detail' next_post.slug %}">
+                            <h4>{{ next_post.title }}</h4>
+                        </a>
+                    </div>
+
+                    <div class="arrow">
+                        <a href="{% url 'blog:detail' next_post.slug %}">
+                            <span class="lnr text-white lnr-arrow-right"></span>
+                        </a>
+                    </div>
+
+                    {% if next_post.image %}
+                    <div class="thumb">
+                        <a href="{% url 'blog:detail' next_post.slug %}">
+                            <img
+                                src="{{ next_post.image.url }}"
+                                alt="{{ next_post.title }}"
+                            >
+                        </a>
+                    </div>
+                    {% endif %}
+
+                </div>
+                {% endif %}
+
             </div>
-            <div
-              class="col-lg-6 col-md-6 col-12 nav-right flex-row d-flex justify-content-end align-items-center"
-            >
-              <div class="detials">
-                <p>Next Post</p>
-                <a href="#"><h4>Telescopes 101</h4></a>
-              </div>
-              <div class="arrow">
-                <a href="#"
-                  ><span class="lnr text-white lnr-arrow-right"></span
-                ></a>
-              </div>
-              <div class="thumb">
-                <a href="#"
-                  ><img class="img-fluid" src="{% static 'img/blog/next.jpg' %}" alt=""
-                /></a>
-              </div>
-            </div>
-          </div>
         </div>
         <div class="comments-area">
           <h4>05 Comments</h4>

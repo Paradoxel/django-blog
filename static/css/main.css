@@ -4591,3 +4591,18 @@ body.mobile-nav-active #mobile-nav-toggle {
     text-transform: uppercase;
     letter-spacing: 1px;
 }
+
+.navigation-area .thumb {
+    width: 90px;
+    height: 90px;
+    overflow: hidden;
+    border-radius: 6px;
+    flex-shrink: 0;
+}
+
+.navigation-area .thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
