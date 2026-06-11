@@ -15,13 +15,20 @@ class BlogView(ListView):
     # Use Walrus :=
     def get_queryset(self):
         posts=Post.objects.published()
+        # search filter
         if s:=self.request.GET.get("search",""):
             posts=posts.filter(Q(title__icontains=s) | Q(excerpt__icontains=s))
+        # category filter
+        if category_slug:=self.kwargs.get("slug"):
+            posts=posts.filter(categories__slug=category_slug)
         return posts
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['query'] = self.request.GET.get("search","")
+        # pass active category to template for highlighting
+        if category_slug := self.kwargs.get("slug"):
+            context["active_category"] = category_slug
         return context
 
 
