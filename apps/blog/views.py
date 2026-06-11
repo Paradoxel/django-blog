@@ -26,7 +26,8 @@ class BlogView(ListView):
                 posts = posts.filter(categories__slug=slug)
             elif "tag" in self.request.path:
                 posts = posts.filter(primary_tag__slug=slug)
-
+        if pk:=self.kwargs.get('pk'):
+            posts=posts.filter(author__pk=pk)
         return posts
     
     def get_context_data(self, **kwargs):

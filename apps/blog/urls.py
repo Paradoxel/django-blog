@@ -8,5 +8,6 @@ urlpatterns = [
     path("", views.BlogView.as_view(), name="index"),
     path("category/<slug:slug>/", views.BlogView.as_view(), name="category"),
     path("tag/<slug:slug>/", views.BlogView.as_view(), name="tag"),
+    path('author/<int:pk>/',views.BlogView.as_view(),name='author'),
     path("<slug:slug>/", views.PostDetailView.as_view(), name="detail"),
 ]

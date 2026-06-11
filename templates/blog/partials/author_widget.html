@@ -10,7 +10,7 @@
   {% endif %}
 
   {# ===== Author Name ===== #}
-  <a href="#">
+  <a href="{% url 'blog:author' author.pk %}">
     <h4>{{ author.get_full_name }}</h4>
   </a>
 
