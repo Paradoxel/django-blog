@@ -14,13 +14,19 @@ class BlogView(ListView):
 
     # Use Walrus :=
     def get_queryset(self):
-        posts=Post.objects.published()
+        posts = Post.objects.published()
+
         # search filter
-        if s:=self.request.GET.get("search",""):
-            posts=posts.filter(Q(title__icontains=s) | Q(excerpt__icontains=s))
-        # category filter
-        if category_slug:=self.kwargs.get("slug"):
-            posts=posts.filter(categories__slug=category_slug)
+        if s := self.request.GET.get("search", ""):
+            posts = posts.filter(Q(title__icontains=s) | Q(excerpt__icontains=s))
+
+        # category/tag filter — only when slug exists in URL
+        if slug := self.kwargs.get("slug"):
+            if "category" in self.request.path:
+                posts = posts.filter(categories__slug=slug)
+            elif "tag" in self.request.path:
+                posts = posts.filter(primary_tag__slug=slug)
+
         return posts
     
     def get_context_data(self, **kwargs):

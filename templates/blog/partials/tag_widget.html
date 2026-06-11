@@ -3,18 +3,15 @@
     <h4 class="tagcloud-title">Tags</h4>
 
     <ul>
-
         {% for tag in tags %}
         <li>
-            <a href="#">{{ tag.name }}</a>
+            <a href="{% url 'blog:tag' tag.slug %}">{{ tag.name }}</a>
         </li>
-
         {% empty %}
         <li>
             <span class="text-muted">No tags available</span>
         </li>
         {% endfor %}
-
     </ul>
 
 </div>
