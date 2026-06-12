@@ -29,6 +29,7 @@ urlpatterns = [
     path("blog/", include("apps.blog.urls")),
     path("captcha/", include("captcha.urls")),
     path("sitemap.xml/", sitemap, {"sitemaps": sitemaps}),
+    path("robots.txt", include("robots.urls")),
 ]
 
 # Serve media files in development only

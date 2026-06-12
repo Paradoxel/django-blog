@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     "django.contrib.sitemaps", # better SEO
     # third-party
     "captcha",
+    "robots",
     # local
     "apps.accounts.apps.AccountsConfig",
     "apps.core.apps.CoreConfig",
