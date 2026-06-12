@@ -4606,3 +4606,38 @@ body.mobile-nav-active #mobile-nav-toggle {
     object-fit: cover;
     display: block;
 }
+
+.single-recent-blog-post .thumb {
+    height: 250px;
+    overflow: hidden;
+    border-radius: 4px;
+}
+
+.single-recent-blog-post .thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.posts-list .feature-img {
+    height: 300px;
+    overflow: hidden;
+    border-radius: 4px;
+}
+
+.posts-list .feature-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.single-post-area .feature-img {
+    height: auto;
+    overflow: visible;
+}
+
+.single-post-area .feature-img img {
+    width: 100%;
+    height: auto;
+}
