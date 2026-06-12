@@ -180,7 +180,6 @@ class Comment(models.Model):
 
     name = models.CharField(max_length=150)
     email = models.EmailField(blank=True)  # optional for logged-in users
-    subject = models.CharField(max_length=255)
     message = models.TextField()
 
     is_approved = models.BooleanField(default=False)  # admin must approve before visible
