@@ -4,9 +4,11 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.sitemaps.views import sitemap
 from apps.core.sitemaps import StaticViewSitemap
-
+from apps.blog.sitemaps import BlogIndexSitemap,BlogPostSitemap
 sitemaps = {
     "static": StaticViewSitemap,
+    "blog":BlogIndexSitemap,
+    "blog-posts": BlogPostSitemap,
 }
 
 urlpatterns = [
@@ -14,7 +16,8 @@ urlpatterns = [
     path("", include("apps.core.urls")),
     path("blog/", include("apps.blog.urls")),
     path("captcha/", include("captcha.urls")),
-    path("sitemap.xml/", sitemap, {"sitemaps": sitemaps}),
+    path("sitemap-static.xml/", sitemap, {"sitemaps": {"static": StaticViewSitemap}}),
+    path("sitemap-blog.xml/", sitemap, {"sitemaps": {"blog-posts": BlogPostSitemap}}),
 ]
 
 # Serve media files in development only
