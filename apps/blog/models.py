@@ -142,3 +142,54 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+    
+
+
+class CommentQuerySet(models.QuerySet):
+    """Semantic filters for comment moderation and display."""
+
+    def approved(self):
+        """Return only approved comments — visible to public."""
+        return self.filter(is_approved=True)
+
+    def pending(self):
+        """Return comments waiting for admin approval."""
+        return self.filter(is_approved=False)
+
+
+class Comment(models.Model):
+    """
+    Blog comment — supports both guest and authenticated users.
+    Requires admin approval before becoming publicly visible.
+    """
+
+    post = models.ForeignKey(
+        Post,
+        on_delete=models.CASCADE,
+        related_name="comments",
+    )
+
+    # optional — None means guest comment
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,  # keep comment even if user is deleted
+        null=True,
+        blank=True,
+        related_name="comments",
+    )
+
+    name = models.CharField(max_length=150)
+    email = models.EmailField(blank=True)  # optional for logged-in users
+    subject = models.CharField(max_length=255)
+    message = models.TextField()
+
+    is_approved = models.BooleanField(default=False)  # admin must approve before visible
+    created_date = models.DateTimeField(auto_now_add=True)
+
+    objects = CommentQuerySet.as_manager()
+
+    class Meta:
+        ordering = ["-created_date"]
+
+    def __str__(self):
+        return f"{self.name} → {self.post.title}"
