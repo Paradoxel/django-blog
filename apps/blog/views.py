@@ -1,7 +1,10 @@
+from django.contrib import messages
 from django.db.models import Q, F
+from django.shortcuts import redirect
 from django.views.generic import ListView, DetailView
 
 from apps.blog.models import Post
+from apps.blog.forms import CommentForm
 
 
 class BlogView(ListView):
@@ -42,7 +45,8 @@ class BlogView(ListView):
 class PostDetailView(DetailView):
     """
     Display a single published post by slug.
-    Increments view_count on GET only — not on comment POST.
+    Increments view_count on GET only.
+    Handles comment submission via POST.
     """
 
     model = Post
@@ -55,14 +59,13 @@ class PostDetailView(DetailView):
 
     def get_object(self, queryset=None):
         post = super().get_object(queryset)
-        # Only increment on page visit
         if self.request.method == "GET":
             Post.objects.filter(pk=post.pk).update(view_count=F("view_count") + 1)
         return post
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        post = self.object 
+        post = self.object
 
         context["next_post"] = (
             Post.objects.published()
@@ -76,4 +79,27 @@ class PostDetailView(DetailView):
             .order_by("-published_date")
             .first()
         )
+        context["comments"] = post.comments.approved()
+        context["comment_form"] = CommentForm()
         return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = CommentForm(request.POST)
+
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = self.object
+            # attach user if logged in, otherwise guest comment
+            comment.user = request.user if request.user.is_authenticated else None
+            comment.save()
+            messages.success(
+                request,
+                "Your comment has been submitted and will be visible after approval."
+            )
+            return redirect("blog:detail", slug=self.object.slug)
+
+        # re-render form with validation errors
+        context = self.get_context_data()
+        context["comment_form"] = form
+        return self.render_to_response(context)
