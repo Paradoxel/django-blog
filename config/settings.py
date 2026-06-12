@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.humanize",
     "django.contrib.sites",  # Sites Framework
+    "django.contrib.sitemaps", # better SEO
     # third-party
     "captcha",
     # local
