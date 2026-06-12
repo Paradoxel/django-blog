@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.humanize",
+    "django.contrib.sites",  # Sites Framework
     # third-party
     "captcha",
     # local
@@ -36,6 +37,8 @@ INSTALLED_APPS = [
 
 AUTH_USER_MODEL = "accounts.User"  # custom user model
 
+# Sites Framework configuration
+SITE_ID = 1
 
 # --- Middleware ---
 
