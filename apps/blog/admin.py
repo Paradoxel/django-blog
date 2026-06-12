@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Category, Tag, Post
+from .models import Category, Tag, Post, Comment
 
 
 @admin.register(Category)
@@ -27,3 +27,11 @@ class PostAdmin(admin.ModelAdmin):
     search_fields = ('title', 'content', 'author__email')  
     list_filter = ('status',)  
     date_hierarchy = 'created_date'
+
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    """Admin configuration for Comment model."""
+
+    list_display = ('name', 'post', 'is_approved', 'created_date')
+    list_filter = ('is_approved',)
+    search_fields = ('name', 'email', 'message')
