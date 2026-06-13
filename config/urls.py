@@ -27,6 +27,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("apps.core.urls")),
     path("blog/", include("apps.blog.urls")),
+    path('accounts/',include("apps.accounts.urls")),
     path("captcha/", include("captcha.urls")),
     path("sitemap.xml/", sitemap, {"sitemaps": sitemaps}),
     path("robots.txt", include("robots.urls")),
