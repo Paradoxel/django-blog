@@ -1,4 +1,6 @@
-{% extends 'base.html' %} {% block content %}
+{% extends 'base.html' %} 
+{% block title %}{{ post.title }} | Django Blog{% endblock title %}
+{% block content %}
 {% load static %}
 {% load humanize %}
 {% load format_views %}
