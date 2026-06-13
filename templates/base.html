@@ -114,7 +114,15 @@
       </div>
     </header>
     <!-- #header -->
-
+    {% if messages %}
+    <div class="toast-container">
+        {% for message in messages %}
+            <div class="toast-message toast-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}
     {% block content %} {% endblock content %}
 
     <!-- start footer Area -->
@@ -250,5 +258,32 @@
     <script src="{% static 'js/owl.carousel.min.js' %}"></script>
     <script src="{% static 'js/mail-script.js' %}"></script>
     <script src="{% static 'js/main.js' %}"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const toasts = document.querySelectorAll(".toast-message");
+
+        toasts.forEach((toast) => {
+
+            // auto remove after 3s
+            setTimeout(() => {
+                toast.style.animation = "slideOut 0.4s ease forwards";
+
+                setTimeout(() => {
+                    toast.remove();
+                }, 400);
+
+            }, 3000);
+
+            // optional: click to close
+            toast.addEventListener("click", () => {
+                toast.style.animation = "slideOut 0.3s ease forwards";
+                setTimeout(() => toast.remove(), 300);
+            });
+
+        });
+
+    });
+    </script>
   </body>
 </html>

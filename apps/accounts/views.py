@@ -1,9 +1,13 @@
-from django.contrib.auth.views import LoginView,LogoutView
-from django.contrib.auth import get_user_model
+from django.contrib.auth.views import LoginView
+from django.contrib.auth import logout, get_user_model
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 
 from .forms import UserRegisterForm
+
 
 User = get_user_model()
 
@@ -25,7 +29,7 @@ class UserLoginView(LoginView):
 
 class UserRegisterView(CreateView):
     """
-    Handle user registration.
+    Handle user registration using custom user model.
     """
 
     model = User
@@ -34,8 +38,11 @@ class UserRegisterView(CreateView):
     success_url = reverse_lazy("accounts:login")
 
 
-class UserLogoutView(LogoutView):
+@login_required
+def user_logout(request):
     """
-    Handle user Log out.
+    Log out the current user and redirect to home page.
     """
-    next_page=reverse_lazy('core:home')
+    logout(request)
+    messages.success(request, "You have been logged out successfully.")
+    return redirect("core:home")

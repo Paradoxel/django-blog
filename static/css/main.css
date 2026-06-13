@@ -4716,3 +4716,76 @@ body.mobile-nav-active #mobile-nav-toggle {
     color: #007bff;
     text-decoration: none;
 }
+
+
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Toast base */
+.toast-message {
+    min-width: 240px;
+    max-width: 320px;
+
+    padding: 14px 18px;
+    border-radius: 10px;
+
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    animation: slideIn 0.35s ease forwards;
+}
+
+/* Success */
+.toast-success {
+    background: linear-gradient(135deg, #28a745, #20c997);
+}
+
+/* Error */
+.toast-error {
+    background: linear-gradient(135deg, #dc3545, #ff6b6b);
+}
+
+/* Warning */
+.toast-warning {
+    background: linear-gradient(135deg, #ffc107, #ff9800);
+    color: #000;
+}
+
+/* Animation */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-12px);
+    }
+}
+
