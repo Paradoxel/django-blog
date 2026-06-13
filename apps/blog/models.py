@@ -41,7 +41,6 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
-
 class PostQuerySet(models.QuerySet):
     """
     Semantic query interface for Post.
@@ -146,6 +145,12 @@ class Post(models.Model):
     
     def get_absolute_url(self):
         return reverse("blog:detail", kwargs={"slug": self.slug})
+    
+    def reading_time(self):
+        """Estimate reading time based on average 200 words per minute."""
+        word_count = len(self.content.split())
+        minutes = max(1, round(word_count / 200))
+        return minutes
     
 
 

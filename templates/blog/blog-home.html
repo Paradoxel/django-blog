@@ -108,6 +108,7 @@
 										<p class="user-name col-lg-12 col-md-12 col-6">  <a href="{% url 'blog:author' post.author.pk %}">{{post.author.get_full_name}}</a> <span class="lnr lnr-user"></span></p>
 										<p class="date col-lg-12 col-md-12 col-6"><a href="#">{{ post.published_date|naturaltime }}</a> <span class="lnr lnr-calendar-full"></span></p>
 										<p class="view col-lg-12 col-md-12 col-6"><a href="#">{{ post.view_count|format_views }}</a> <span class="lnr lnr-eye"></span></p>
+										<p class="view col-lg-12 col-md-12 col-6"><a href="#">{{ post.reading_time }} min read</a> <span class="lnr lnr-clock"></span></p>
 										<p class="comments col-lg-12 col-md-12 col-6"> <a href="{% url 'blog:detail' post.slug %}#comments">{{ post.comments.approved.count }} Comments</a> <span class="lnr lnr-bubble"></span></p>						
 									</div>
 								</div>
