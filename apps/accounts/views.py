@@ -1,4 +1,4 @@
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView,LogoutView
 from django.contrib.auth import get_user_model
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
@@ -32,3 +32,10 @@ class UserRegisterView(CreateView):
     form_class = UserRegisterForm
     template_name = "accounts/register.html"
     success_url = reverse_lazy("accounts:login")
+
+
+class UserLogoutView(LogoutView):
+    """
+    Handle user Log out.
+    """
+    next_page=reverse_lazy('core:home')
