@@ -146,20 +146,13 @@
               <div class="row">
                 <div class="col">
                   <ul>
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">Feature</a></li>
-                    <li><a href="#">Services</a></li>
-                    <li><a href="#">Portfolio</a></li>
+                    <li><a href="{% url 'core:home' %}">Home</a></li>
+                    <li><a href="{% url 'blog:index' %}">Blog</a></li>
+                    <li><a href="{% url 'core:about' %}">About</a></li>
+                    <li><a href="{% url 'core:contact' %}">Contact</a></li>
                   </ul>
                 </div>
-                <div class="col">
-                  <ul>
-                    <li><a href="#">Team</a></li>
-                    <li><a href="#">Pricing</a></li>
-                    <li><a href="#">Blog</a></li>
-                    <li><a href="#">Contact</a></li>
-                  </ul>
-                </div>
+
               </div>
             </div>
           </div>
@@ -234,6 +227,8 @@
           </p>
           <div class="col-lg-4 col-sm-12 footer-social">
             <a href="{% url 'blog:feed' %}" target="_blank" rel="noopener" title="RSS Feed">
+                <i class="fa fa-rss"></i>
+            </a>
             <a href="#"><i class="fa fa-facebook"></i></a>
             <a href="#"><i class="fa fa-twitter"></i></a>
             <a href="#"><i class="fa fa-dribbble"></i></a>
