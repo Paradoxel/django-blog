@@ -50,3 +50,12 @@ def tag_widget():
     """Return all tags for the tag cloud widget."""
     tags = Tag.objects.all()
     return {"tags": tags}
+
+
+@register.inclusion_tag('blog/partials/related_posts.html')
+def related_posts(post):
+    """Return up to 3 published posts sharing categories with the given post."""
+    posts=Post.objects.published().filter(
+        categories__in=post.categories.all()
+    ).exclude(pk=post.pk).distinct().order_by('-view_count')[:3]
+    return {'related_posts': posts}  

@@ -1,0 +1,25 @@
+{% load static %}
+<div class="related-posts-area">
+    <h4>Related Posts</h4>
+    <div class="row">
+        {% for post in related_posts %}
+        <div class="col-lg-4 col-md-4 col-sm-6">
+            <div class="related-post-card">
+                <a href="{{ post.get_absolute_url }}">
+                    <img src="{{ post.image.url }}" alt="{{ post.title }}" />
+                </a>
+                <div class="details">
+                    <a href="{{ post.get_absolute_url }}">
+                        <h6>{{ post.title|truncatewords:6 }}</h6>
+                    </a>
+                    <p class="date">{{ post.published_date|date:"M d, Y" }}</p>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <p class="text-muted">No related posts found.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
