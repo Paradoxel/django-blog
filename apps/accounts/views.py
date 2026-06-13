@@ -1,9 +1,34 @@
 from django.contrib.auth.views import LoginView
+from django.contrib.auth import get_user_model
 from django.urls import reverse_lazy
+from django.views.generic import CreateView
+
+from .forms import UserRegisterForm
+
+User = get_user_model()
+
 
 class UserLoginView(LoginView):
-    template_name='accounts/login.html'
-    redirect_authenticated_user=True
+    """
+    Handle user login using Django built-in authentication system.
+    """
+
+    template_name = "accounts/login.html"
+    redirect_authenticated_user = True
 
     def get_success_url(self):
-        return reverse_lazy('core:home')
+        """
+        Redirect user after successful login.
+        """
+        return reverse_lazy("core:home")
+
+
+class UserRegisterView(CreateView):
+    """
+    Handle user registration.
+    """
+
+    model = User
+    form_class = UserRegisterForm
+    template_name = "accounts/register.html"
+    success_url = reverse_lazy("accounts:login")
