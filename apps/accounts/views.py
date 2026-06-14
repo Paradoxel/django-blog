@@ -43,6 +43,7 @@ def user_logout(request):
     """
     Log out the current user and redirect to home page.
     """
-    logout(request)
-    messages.success(request, "You have been logged out successfully.")
+    if(request.method=='POST'):
+        logout(request)
+        messages.success(request, "You have been logged out successfully.")
     return redirect("core:home")
