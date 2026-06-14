@@ -4880,3 +4880,28 @@ body.mobile-nav-active #mobile-nav-toggle {
     color: #aaa;
     letter-spacing: 0.5px;
 }
+
+.logout-btn {
+    background: transparent;
+    border: 1px solid #ff4d4f;
+    color: #ff4d4f;
+
+    padding: 3px 8px;
+    font-size: 12px;
+    font-weight: 600;   
+    letter-spacing: 0.2px;
+
+    border-radius: 4px;
+    cursor: pointer;
+
+    transition: all 0.2s ease-in-out;
+}
+
+.logout-btn:hover {
+    background: #ff4d4f;
+    color: white;
+}
+
+.logout-btn:active {
+    transform: scale(0.96);
+}
