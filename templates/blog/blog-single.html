@@ -1,5 +1,21 @@
 {% extends 'base.html' %} 
 {% block title %}{{ post.title }} | Django Blog{% endblock title %}
+{% block meta %}
+<meta name="description" content="{{ post.excerpt|default:post.content|truncatewords:30 }}" />
+
+<!-- Open Graph -->
+<meta property="og:title" content="{{ post.title }}" />
+<meta property="og:description" content="{{ post.excerpt|default:post.content|truncatewords:30 }}" />
+<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ post.image.url }}" />
+<meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}{{ post.get_absolute_url }}" />
+<meta property="og:type" content="article" />
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="{{ post.title }}" />
+<meta name="twitter:description" content="{{ post.excerpt|default:post.content|truncatewords:30 }}" />
+<meta name="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{{ post.image.url }}" />
+{% endblock meta %}
 {% block content %}
 {% load static %}
 {% load humanize %}

@@ -10,11 +10,11 @@
     <!-- Favicon-->
     <link rel="shortcut icon" href="{% static 'img/fav.png' %}" />
     <!-- Author Meta -->
-    <meta name="author" content="colorlib" />
-    <!-- Meta Description -->
-    <meta name="description" content="" />
-    <!-- Meta Keyword -->
-    <meta name="keywords" content="" />
+    {% block meta %}
+    <meta name="description" content="A Django blog platform." />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Django Blog" />
+    {% endblock meta %}
     <!-- meta character set -->
     <meta charset="UTF-8" />
     <!-- Site Title -->
