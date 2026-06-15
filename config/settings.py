@@ -9,7 +9,7 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep secret in production!
-SECRET_KEY = os.getenv("SECRET_KEY")
+SECRET_KEY = os.getenv("SECRET_KEY", "temporary-build-key-not-used-in-production")
 
 # SECURITY WARNING: never run with DEBUG=True in production!
 # Locally your .env has DEBUG=True — on Railway it defaults to False
