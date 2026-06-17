@@ -144,4 +144,4 @@ if not DEBUG:
     AWS_S3_ENDPOINT_URL = os.getenv("B2_ENDPOINT_URL")
     AWS_S3_FILE_OVERWRITE = False
     AWS_DEFAULT_ACL = "public-read"
-    AWS_S3_REGION_NAME = "us-west-004"
+    AWS_S3_REGION_NAME = "us-east-005"
