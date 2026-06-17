@@ -136,13 +136,13 @@ CSRF_TRUSTED_ORIGINS = [
 # --- Media Storage (Backblaze B2) ---
 if not DEBUG:
     STORAGES = {
-        "default": {
-            "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
-        },
-        "staticfiles": {
-            "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-        },
-    }
+    "default": {
+        "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage", 
+    },
+}
 
     AWS_ACCESS_KEY_ID = os.getenv("B2_KEY_ID")
     AWS_SECRET_ACCESS_KEY = os.getenv("B2_APPLICATION_KEY")
