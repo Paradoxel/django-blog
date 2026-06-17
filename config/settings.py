@@ -121,8 +121,7 @@ STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"  # where collectstatic outputs for production
 
-# WhiteNoise compresses and caches static files automatically
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
 
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"
@@ -136,8 +135,15 @@ CSRF_TRUSTED_ORIGINS = [
 
 # --- Media Storage (Backblaze B2) ---
 if not DEBUG:
-    DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
-    
+    STORAGES = {
+        "default": {
+            "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+        },
+        "staticfiles": {
+            "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        },
+    }
+
     AWS_ACCESS_KEY_ID = os.getenv("B2_KEY_ID")
     AWS_SECRET_ACCESS_KEY = os.getenv("B2_APPLICATION_KEY")
     AWS_STORAGE_BUCKET_NAME = os.getenv("B2_BUCKET_NAME")
