@@ -136,3 +136,4 @@ if not DEBUG:
     AWS_QUERYSTRING_AUTH = False
     AWS_S3_REGION_NAME = os.getenv("SUPABASE_REGION", "us-east-1") 
     AWS_S3_SIGNATURE_VERSION = "s3v4"  
+    AWS_S3_CUSTOM_DOMAIN = f"{os.getenv('SUPABASE_PROJECT_ID')}.supabase.co/storage/v1/object/public/media"
