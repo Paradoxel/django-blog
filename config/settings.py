@@ -106,10 +106,7 @@ GOOGLE_MAPS_API_KEY = os.getenv("GOOGLE_MAPS_API_KEY", "")
 
 STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
-STATIC_ROOT = BASE_DIR / "staticfiles"  # where collectstatic outputs for production
-
-# WhiteNoise compresses and caches static files automatically
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"
@@ -119,21 +116,21 @@ CSRF_TRUSTED_ORIGINS = [
     if origin
 ]
 
-# --- Media Storage (Backblaze B2) ---
+# --- Media Storage (Supabase) ---
 if not DEBUG:
     STORAGES = {
-    "default": {
-        "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
-    },
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage", 
-    },
-}
+        "default": {
+            "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+        },
+        "staticfiles": {
+            "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+        },
+    }
 
-    AWS_ACCESS_KEY_ID = os.getenv("B2_KEY_ID")
-    AWS_SECRET_ACCESS_KEY = os.getenv("B2_APPLICATION_KEY")
-    AWS_STORAGE_BUCKET_NAME = os.getenv("B2_BUCKET_NAME")
-    AWS_S3_ENDPOINT_URL = os.getenv("B2_ENDPOINT_URL")
+    AWS_ACCESS_KEY_ID = os.getenv("SUPABASE_ACCESS_KEY")
+    AWS_SECRET_ACCESS_KEY = os.getenv("SUPABASE_SECRET_KEY")
+    AWS_STORAGE_BUCKET_NAME = "media"
+    AWS_S3_ENDPOINT_URL = os.getenv("SUPABASE_S3_ENDPOINT")
     AWS_S3_FILE_OVERWRITE = False
     AWS_DEFAULT_ACL = "public-read"
-    AWS_S3_REGION_NAME = "us-east-005"
+    AWS_QUERYSTRING_AUTH = False
