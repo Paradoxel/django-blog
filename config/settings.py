@@ -133,3 +133,15 @@ CSRF_TRUSTED_ORIGINS = [
     origin for origin in os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",")
     if origin
 ]
+
+# --- Media Storage (Backblaze B2) ---
+if not DEBUG:
+    DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+    
+    AWS_ACCESS_KEY_ID = os.getenv("B2_KEY_ID")
+    AWS_SECRET_ACCESS_KEY = os.getenv("B2_APPLICATION_KEY")
+    AWS_STORAGE_BUCKET_NAME = os.getenv("B2_BUCKET_NAME")
+    AWS_S3_ENDPOINT_URL = os.getenv("B2_ENDPOINT_URL")
+    AWS_S3_FILE_OVERWRITE = False
+    AWS_DEFAULT_ACL = "public-read"
+    AWS_S3_REGION_NAME = "us-west-004"
