@@ -4,6 +4,10 @@ A full-featured blog platform built with Django — designed as a portfolio proj
 
 ---
 
+## 🌐 Live Demo
+
+**[django-blog-production-93e6.up.railway.app](https://django-blog-production-93e6.up.railway.app/)**
+
 ## ✨ Features
 
 - **Custom authentication** — email-based login (no username), custom `User` model with `AbstractBaseUser`
@@ -29,13 +33,14 @@ A full-featured blog platform built with Django — designed as a portfolio proj
 | Layer | Technology |
 |---|---|
 | Framework | Django 6.0.5 |
-| Database | SQLite (development) |
+| Database | PostgreSQL (production), SQLite (development) |
 | Image handling | Pillow |
+| Media storage | Supabase Storage |
+| Static files | WhiteNoise |
+| Deployment | Railway |
 | CAPTCHA | django-simple-captcha |
 | Environment | python-dotenv |
 | Code style | Black |
-
----
 
 ## 📁 Project Structure
 
