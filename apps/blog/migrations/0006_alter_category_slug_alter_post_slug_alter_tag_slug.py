@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
             field=models.SlugField(blank=True, max_length=255, unique=True),
         ),
         migrations.AlterField(
-            modیel_name='post',
+            model_name='post',
             name='slug',
             field=models.SlugField(blank=True, max_length=255, unique=True),
         ),
