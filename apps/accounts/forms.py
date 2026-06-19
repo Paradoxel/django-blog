@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth import get_user_model
-
+from apps.accounts.models import Profile
 User = get_user_model()
 
 
@@ -56,3 +56,26 @@ class UserRegisterForm(forms.ModelForm):
             user.save()
 
         return user
+    
+
+
+class UserUpdateForm(forms.ModelForm):
+    """Form for updating User model fields."""
+    class Meta:
+        model = User
+        fields = ['first_name','last_name']
+
+
+class ProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = [
+            "avatar",
+            "bio",
+            "phone_number",
+            "website",
+            "github",
+            "twitter",
+            "facebook",
+            "linkedin",
+        ]
