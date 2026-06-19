@@ -9,7 +9,7 @@ class Tag(models.Model):
     """Content tag for labeling posts."""
 
     name = models.CharField(max_length=100, unique=True)
-    slug = models.SlugField(unique=True, blank=True) 
+    slug = models.SlugField(max_length=255,unique=True, blank=True) 
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -27,7 +27,7 @@ class Category(models.Model):
     """
 
     name = models.CharField(max_length=100, unique=True)
-    slug = models.SlugField(unique=True, blank=True) 
+    slug = models.SlugField(max_length=255,unique=True, blank=True) 
     description = models.TextField(blank=True)
 
     class Meta:
@@ -77,7 +77,7 @@ class Post(models.Model):
     )
 
     title = models.CharField(max_length=255)
-    slug = models.SlugField(unique=True, blank=True)  
+    slug = models.SlugField(max_length=255,unique=True, blank=True)  
 
     content = models.TextField()
     excerpt = models.CharField(max_length=300, blank=True)  # short preview 
@@ -119,12 +119,12 @@ class Post(models.Model):
     objects = PostQuerySet.as_manager()
 
     class Meta:
-        ordering = ["-published_date", "-created_date"]
+        ordering = ["-created_date"]
 
     def save(self, *args, **kwargs):
         # Build unique slug from title on first save only
         if not self.slug:
-            base_slug = slugify(self.title)
+            base_slug = slugify(self.title[:240])
             slug = base_slug
             counter = 1
 
@@ -135,8 +135,9 @@ class Post(models.Model):
             self.slug = slug
 
         # Auto-set published_date once on first publish — never overwrite
-        if self.status == self.Status.PUBLISHED and self.published_date is None:
-            self.published_date = timezone.now()
+        if self.status == self.Status.PUBLISHED:
+            if not self.published_date:
+                self.published_date = timezone.now()
 
         super().save(*args, **kwargs)
 
