@@ -15,18 +15,37 @@ class UserRegisterForm(forms.ModelForm):
     """
 
     password1 = forms.CharField(
-        widget=forms.PasswordInput,
+        widget=forms.PasswordInput(
+            attrs={
+                "placeholder": "Enter your password",
+                "class": "auth-input"
+            }
+        ),
         label="Password"
     )
 
     password2 = forms.CharField(
-        widget=forms.PasswordInput,
+        widget=forms.PasswordInput(
+            attrs={
+                "placeholder": "Confirm your password",
+                "class": "auth-input"
+            }
+        ),
         label="Confirm Password"
     )
 
     class Meta:
         model = User
-        fields = ["email"]  # just email 
+        fields = ["email"]
+
+        widgets = {
+            "email": forms.EmailInput(
+                attrs={
+                    "placeholder": "Enter your email address",
+                    "class": "auth-input"
+                }
+            )
+        }
 
     def clean(self):
         cleaned_data = super().clean()
