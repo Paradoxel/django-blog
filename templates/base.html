@@ -46,15 +46,19 @@
         <div class="container">
           <div class="row align-items-center">
             <div class="col-lg-6 col-sm-6 col-6 header-top-left">
-              <ul>
+              
+            <ul class="nav-list">
 
               {% if user.is_authenticated %}
 
-                  <li>
-                      <a href="{% url 'accounts:profile' %}" class="nav-account">
+                  <li class="nav-item dropdown">
+
+                      <!-- MAIN TRIGGER -->
+                      <a href="{% url 'accounts:profile' %}" class="nav-account-trigger">
+                          
                           <span class="nav-avatar">
                               {% if user.profile.avatar %}
-                                  <img src="{{ user.profile.avatar.url }}">
+                                  <img src="{{ user.profile.avatar.url }}" alt="avatar">
                               {% else %}
                                   👤
                               {% endif %}
@@ -63,16 +67,25 @@
                           <span class="nav-text">
                               My Account
                           </span>
-                      </a>
-                  </li>
 
-                  <li>
-                      <form method="post" action="{% url 'accounts:logout' %}" style="display:inline;">
-                          {% csrf_token %}
-                          <button type="submit" class="logout-btn">
-                              Logout
-                          </button>
-                      </form>
+                      </a>
+
+                      <!-- DROPDOWN -->
+                      <div class="nav-dropdown">
+
+                          <a href="{% url 'accounts:profile' %}">
+                              My Profile
+                          </a>
+
+                          <form method="post" action="{% url 'accounts:logout' %}">
+                              {% csrf_token %}
+                              <button type="submit" class="dropdown-logout">
+                                  Logout
+                              </button>
+                          </form>
+
+                      </div>
+
                   </li>
 
               {% else %}
@@ -92,6 +105,8 @@
               {% endif %}
 
               </ul>
+
+
             </div>
             <div class="col-lg-6 col-sm-6 col-6 header-top-right">
               <div class="header-social">

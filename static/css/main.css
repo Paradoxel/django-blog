@@ -5396,3 +5396,332 @@ body.mobile-nav-active #mobile-nav-toggle {
     position: relative;
     z-index: 1;
 }
+
+
+
+/* =========================
+   NAV LIST BASE
+   ========================= */
+
+.nav-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+
+/* =========================
+   ACCOUNT TRIGGER
+   ========================= */
+
+.nav-item.dropdown {
+    position: relative;
+}
+
+.nav-account-trigger {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 10px 14px;
+    border-radius: 999px;
+
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(12px);
+
+    box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+
+    text-decoration: none;
+
+    min-height: 42px;
+    transition: all 0.22s ease;
+}
+
+/* hover effect */
+.nav-account-trigger:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.12);
+}
+
+
+/* =========================
+   AVATAR
+   ========================= */
+
+.nav-avatar img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.nav-avatar {
+    font-size: 18px;
+}
+
+
+/* =========================
+   TEXT
+   ========================= */
+
+.nav-text {
+    font-size: 14px;
+    font-weight: 600;
+    color: #0f172a;
+}
+
+
+/* =========================
+   DROPDOWN MENU
+   ========================= */
+
+.nav-dropdown {
+    position: absolute;
+    top: 110%;
+    right: 0;
+
+    min-width: 180px;
+
+    background: #fff;
+    border-radius: 14px;
+
+    box-shadow: 0 25px 60px rgba(0,0,0,0.12);
+
+    padding: 8px;
+
+    display: none;
+    flex-direction: column;
+
+    z-index: 9999;
+}
+
+/* show dropdown on hover */
+.nav-item.dropdown:hover .nav-dropdown {
+    display: flex;
+}
+
+
+/* =========================
+   DROPDOWN ITEMS
+   ========================= */
+
+.nav-dropdown a {
+    padding: 10px 12px;
+    border-radius: 10px;
+
+    font-size: 13px;
+    color: #334155;
+    text-decoration: none;
+
+    transition: 0.2s;
+}
+
+.nav-dropdown a:hover {
+    background: #f1f5f9;
+}
+
+
+/* =========================
+   LOGOUT BUTTON
+   ========================= */
+
+.dropdown-logout {
+    width: 100%;
+    text-align: left;
+
+    padding: 10px 12px;
+    border: none;
+
+    background: transparent;
+
+    color: #ef4444;
+    font-size: 13px;
+
+    cursor: pointer;
+
+    border-radius: 10px;
+
+    transition: 0.2s;
+}
+
+.dropdown-logout:hover {
+    background: #fee2e2;
+}
+
+/* =========================
+   NAV LIST BASE
+   ========================= */
+
+.nav-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+
+/* =========================
+   ACCOUNT WRAPPER
+   ========================= */
+
+.nav-item.dropdown {
+    position: relative;
+
+    /* IMPORTANT: prevents hover gap bug */
+    padding-bottom: 8px;
+}
+
+
+/* =========================
+   ACCOUNT TRIGGER
+   ========================= */
+
+.nav-account-trigger {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 10px 14px;
+    border-radius: 999px;
+
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(12px);
+
+    box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+
+    text-decoration: none;
+
+    min-height: 42px;
+    transition: all 0.22s ease;
+}
+
+/* hover effect */
+.nav-account-trigger:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.12);
+}
+
+
+/* =========================
+   AVATAR
+   ========================= */
+
+.nav-avatar img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.nav-account-trigger {
+    gap: 14px;
+    padding: 10px 16px;
+}
+
+.nav-avatar {
+    font-size: 18px;
+}
+
+
+/* =========================
+   TEXT
+   ========================= */
+
+.nav-text {
+    font-size: 14px;
+    font-weight: 600;
+    color: #0f172a;
+}
+
+
+/* =========================
+   DROPDOWN MENU (FIXED UX)
+   ========================= */
+
+.nav-dropdown {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+
+    min-width: 180px;
+
+    background: #fff;
+    border-radius: 14px;
+
+    box-shadow: 0 25px 60px rgba(0,0,0,0.12);
+
+    padding: 8px;
+
+    display: flex;
+    flex-direction: column;
+
+    /* animation fix */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-6px);
+
+    transition: all 0.18s ease;
+
+    z-index: 9999;
+}
+
+/* KEEP OPEN ON HOVER (FIXED) */
+.nav-item.dropdown:hover .nav-dropdown,
+.nav-item.dropdown .nav-dropdown:hover {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+
+/* =========================
+   DROPDOWN ITEMS
+   ========================= */
+
+.nav-dropdown a {
+    padding: 10px 12px;
+    border-radius: 10px;
+
+    font-size: 13px;
+    color: #334155;
+    text-decoration: none;
+
+    transition: 0.2s;
+}
+
+.nav-dropdown a:hover {
+    background: #f1f5f9;
+}
+
+
+/* =========================
+   LOGOUT BUTTON
+   ========================= */
+
+.dropdown-logout {
+    width: 100%;
+    text-align: left;
+
+    padding: 10px 12px;
+    border: none;
+
+    background: transparent;
+
+    color: #ef4444;
+    font-size: 13px;
+
+    cursor: pointer;
+
+    border-radius: 10px;
+
+    transition: 0.2s;
+}
+
+.dropdown-logout:hover {
+    background: #fee2e2;
+}
