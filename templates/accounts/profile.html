@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+Account Settings
+{% endblock title %}
+
+{% block content %}
+
+<section class="settings-wrapper">
+
+    <div class="container">
+
+        <!-- HEADER -->
+        <div class="settings-hero">
+            <h1>Account Settings</h1>
+            <p>Manage your profile, activity, and preferences</p>
+        </div>
+
+        <form method="post" enctype="multipart/form-data" class="settings-form">
+            {% csrf_token %}
+
+            <div class="settings-grid">
+
+                <!-- SIDEBAR -->
+                <aside class="settings-side">
+
+                    <div class="user-card">
+                        <div class="avatar-ring">
+                            {% if user.profile.avatar %}
+                                <img src="{{ user.profile.avatar.url }}">
+                            {% else %}
+                                <img src="{% static 'img/default-avatar.png' %}">
+                            {% endif %}
+                        </div>
+
+                        <h3>{{ user.get_full_name|default:user.email }}</h3>
+                        <p class="muted">Member Account</p>
+                    </div>
+
+                    <div class="settings-nav">
+
+                        <div class="nav-item active">Profile</div>
+                        <div class="nav-item">Security</div>
+                        <div class="nav-item">Notifications</div>
+
+                        <div class="nav-divider"></div>
+
+                        <div class="nav-item">My Posts</div>
+                        <div class="nav-item">Liked Posts</div>
+                        <div class="nav-item">Saved Posts</div>
+                        <div class="nav-item">Comments</div>
+
+                        <div class="nav-divider"></div>
+
+                        <div class="nav-item danger">Delete Account</div>
+
+                    </div>
+
+                </aside>
+
+                <!-- MAIN -->
+                <main class="settings-main">
+
+                    <!-- USER FORM -->
+                    <div class="section-card">
+
+                        <div class="section-header">
+                            <h2>Personal Information</h2>
+                            <p>Update your basic account details</p>
+                        </div>
+
+                        <div class="section-body">
+
+                            <div class="form-group">
+                                <label>First Name</label>
+                                {{ form.first_name }}
+                                {% if form.first_name.errors %}
+                                    <div class="field-error">{{ form.first_name.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="form-group">
+                                <label>Last Name</label>
+                                {{ form.last_name }}
+                                {% if form.last_name.errors %}
+                                    <div class="field-error">{{ form.last_name.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- PROFILE FORM -->
+                    <div class="section-card">
+
+                        <div class="section-header">
+                            <h2>Profile Details</h2>
+                            <p>Your public profile information</p>
+                        </div>
+
+                        <div class="section-body">
+
+                            <div class="form-group">
+                                <label>Phone Number</label>
+                                {{ profile_form.phone_number }}
+                                {% if profile_form.phone_number.errors %}
+                                    <div class="field-error">
+                                        {{ profile_form.phone_number.errors.0 }}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="form-group">
+                                <label>Bio</label>
+                                {{ profile_form.bio }}
+                            </div>
+
+                            <div class="form-group">
+                                <label>Website</label>
+                                {{ profile_form.website }}
+                            </div>
+
+                            <div class="form-group">
+                                <label>GitHub</label>
+                                {{ profile_form.github }}
+                            </div>
+
+                            <div class="form-group">
+                                <label>LinkedIn</label>
+                                {{ profile_form.linkedin }}
+                            </div>
+
+                            <div class="form-group">
+                                <label>Avatar</label>
+                                {{ profile_form.avatar }}
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- ACTIVITY -->
+                    <div class="section-card">
+
+                        <div class="section-header">
+                            <h2>Activity Overview</h2>
+                            <p>Your engagement with content</p>
+                        </div>
+
+                        <div class="activity-grid">
+
+                            <div class="activity-box">
+                                <span>Posts Liked</span>
+                                <strong>12</strong>
+                            </div>
+
+                            <div class="activity-box">
+                                <span>Saved Posts</span>
+                                <strong>5</strong>
+                            </div>
+
+                            <div class="activity-box">
+                                <span>Comments</span>
+                                <strong>8</strong>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- ACTIONS -->
+                    <div class="settings-actions">
+                        <button type="submit" class="btn-save">
+                            Save Changes
+                        </button>
+                    </div>
+
+                </main>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+{% endblock content %}

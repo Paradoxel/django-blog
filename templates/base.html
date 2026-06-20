@@ -48,38 +48,48 @@
             <div class="col-lg-6 col-sm-6 col-6 header-top-left">
               <ul>
 
-                {% if user.is_authenticated %}
+              {% if user.is_authenticated %}
 
-                    <li>
-                        <a href="#">
-                            👋 Hello {{ user.get_full_name|default:user.email }}
-                        </a>
-                    </li>
+                  <li>
+                      <a href="{% url 'accounts:profile' %}" class="nav-account">
+                          <span class="nav-avatar">
+                              {% if user.profile.avatar %}
+                                  <img src="{{ user.profile.avatar.url }}">
+                              {% else %}
+                                  👤
+                              {% endif %}
+                          </span>
 
-                    <li>
-                        <form method="post" action="{% url 'accounts:logout' %}" style="display:inline;">
-                            {% csrf_token %}
-                            <button type="submit" class="logout-btn">
-                                Logout
-                            </button>
-                        </form>
-                    </li>
+                          <span class="nav-text">
+                              My Account
+                          </span>
+                      </a>
+                  </li>
 
-                {% else %}
+                  <li>
+                      <form method="post" action="{% url 'accounts:logout' %}" style="display:inline;">
+                          {% csrf_token %}
+                          <button type="submit" class="logout-btn">
+                              Logout
+                          </button>
+                      </form>
+                  </li>
 
-                    <li>
-                        <a href="{% url 'accounts:login' %}">
-                            Login
-                        </a>
-                    </li>
+              {% else %}
 
-                    <li>
-                        <a href="{% url 'accounts:register' %}">
-                            Register
-                        </a>
-                    </li>
+                  <li>
+                      <a href="{% url 'accounts:login' %}">
+                          Login
+                      </a>
+                  </li>
 
-                {% endif %}
+                  <li>
+                      <a href="{% url 'accounts:register' %}">
+                          Register
+                      </a>
+                  </li>
+
+              {% endif %}
 
               </ul>
             </div>
