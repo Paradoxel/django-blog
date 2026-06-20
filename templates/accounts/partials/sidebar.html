@@ -1,0 +1,45 @@
+{% load static %}
+
+<aside class="settings-side">
+
+    <!-- USER CARD -->
+    <div class="user-card">
+        <div class="avatar-ring">
+            {% if user.profile.avatar %}
+                <img src="{{ user.profile.avatar.url }}" alt="avatar">
+            {% else %}
+                <img src="{% static 'img/default-avatar.png' %}" alt="avatar">
+            {% endif %}
+        </div>
+
+        <h3>{{ user.get_full_name|default:user.email }}</h3>
+        <p class="muted">Member Account</p>
+    </div>
+
+    <!-- NAVIGATION -->
+    <div class="settings-nav">
+
+        <div class="nav-item active">Profile</div>
+        <div class="nav-item">Security</div>
+        <div class="nav-item">Notifications</div>
+
+        <div class="nav-divider"></div>
+
+        <div class="nav-group-title">Your Activity</div>
+        <!-- ENGAGEMENT -->
+        <div class="nav-item has-sub">
+            <span>Engagement</span>
+            <div class="sub-menu">
+                <a href="#">Liked Posts</a>
+                <a href="#">Commented Posts</a>
+                <a href="#">Saved Posts</a>
+            </div>
+        </div>
+
+        <div class="nav-divider"></div>
+
+        <div class="nav-item danger">Delete Account</div>
+
+    </div>
+
+</aside>

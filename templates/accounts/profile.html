@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
-
+{% load accounts_tags %}
 {% block title %}
 Account Settings
 {% endblock title %}
@@ -22,43 +22,8 @@ Account Settings
 
             <div class="settings-grid">
 
-                <!-- SIDEBAR -->
-                <aside class="settings-side">
-
-                    <div class="user-card">
-                        <div class="avatar-ring">
-                            {% if user.profile.avatar %}
-                                <img src="{{ user.profile.avatar.url }}">
-                            {% else %}
-                                <img src="{% static 'img/default-avatar.png' %}">
-                            {% endif %}
-                        </div>
-
-                        <h3>{{ user.get_full_name|default:user.email }}</h3>
-                        <p class="muted">Member Account</p>
-                    </div>
-
-                    <div class="settings-nav">
-
-                        <div class="nav-item active">Profile</div>
-                        <div class="nav-item">Security</div>
-                        <div class="nav-item">Notifications</div>
-
-                        <div class="nav-divider"></div>
-
-                        <div class="nav-item">My Posts</div>
-                        <div class="nav-item">Liked Posts</div>
-                        <div class="nav-item">Saved Posts</div>
-                        <div class="nav-item">Comments</div>
-
-                        <div class="nav-divider"></div>
-
-                        <div class="nav-item danger">Delete Account</div>
-
-                    </div>
-
-                </aside>
-
+                <!--side bar-->
+                {% user_sidebar user %}
                 <!-- MAIN -->
                 <main class="settings-main">
 
@@ -139,34 +104,6 @@ Account Settings
                         </div>
                     </div>
 
-                    <!-- ACTIVITY -->
-                    <div class="section-card">
-
-                        <div class="section-header">
-                            <h2>Activity Overview</h2>
-                            <p>Your engagement with content</p>
-                        </div>
-
-                        <div class="activity-grid">
-
-                            <div class="activity-box">
-                                <span>Posts Liked</span>
-                                <strong>12</strong>
-                            </div>
-
-                            <div class="activity-box">
-                                <span>Saved Posts</span>
-                                <strong>5</strong>
-                            </div>
-
-                            <div class="activity-box">
-                                <span>Comments</span>
-                                <strong>8</strong>
-                            </div>
-
-                        </div>
-
-                    </div>
 
                     <!-- ACTIONS -->
                     <div class="settings-actions">
