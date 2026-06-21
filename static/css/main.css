@@ -5832,3 +5832,30 @@ body.mobile-nav-active #mobile-nav-toggle {
 .view-post:hover {
     text-decoration: underline;
 }
+
+.action-btn.like-btn {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 15px;
+    color: #64748b;
+    transition: 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.action-btn.like-btn:hover {
+    transform: scale(1.05);
+    color: #ef4444;
+}
+
+/* ACTIVE STATE (liked) */
+.action-btn.like-btn.active {
+    color: #ef4444;
+    font-weight: 600;
+}
+
+.action-btn.like-btn.active:hover {
+    color: #dc2626;
+}

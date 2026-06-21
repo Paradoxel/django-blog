@@ -102,17 +102,31 @@
             <!-- POST ACTIONS (LIKE / SAVE) -->
             <div class="post-actions">
 
-                <form method="post" action="#" style="display:inline;">
-                    {% csrf_token %}
-                    <button type="submit" class="action-btn {% if is_liked %}active{% endif %}">
-                        ❤️ {{ likes_count }}
-                    </button>
-                </form>
+                            <form method="post" action="{% url 'blog:toggle_like' post.slug %}" style="display:inline;">
+                            {% csrf_token %}
 
-                <form method="post" action="#" style="display:inline;">
+                            <button type="submit"
+                                    class="action-btn like-btn {% if is_liked %}active{% endif %}">
+
+                                {% if is_liked %}
+                                    ❤️ {{ likes_count }}
+                                {% else %}
+                                    🤍 {{ likes_count }}
+                                {% endif %}
+
+                            </button>
+                        </form>
+
+                <form method="post" action="{% url 'blog:toggle_save' post.slug %}" style="display:inline;">
                     {% csrf_token %}
                     <button type="submit" class="action-btn {% if is_saved %}active{% endif %}">
-                        🔖 Save
+                        
+                        {% if is_saved %}
+                            🔖 Saved
+                        {% else %}
+                            🔖 Save
+                        {% endif %}
+
                     </button>
                 </form>
 
