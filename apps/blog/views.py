@@ -67,6 +67,17 @@ class PostDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         post = self.object
 
+
+        if user:=self.request.user.is_authenticated:
+            context['ls_liked'] = post.likes.filter(user=user).exists()
+            context['is_saved'] = post.saved_by.filter(user=user).exists()
+        else:
+            context["is_liked"] = False
+            context["is_saved"] = False
+
+        context['likes_count']=post.likes.count()
+
+
         context["next_post"] = (
             Post.objects.published()
             .filter(published_date__gt=post.published_date)
