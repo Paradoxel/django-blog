@@ -1,7 +1,7 @@
-{% extends 'base.html' %}
-{% block title %}
-Engagement
-{% endblock %}
+{% extends "base.html" %}
+{% load static %}
+{% load accounts_tags %}
+{% block title %}Engagement{% endblock %}
 
 {% block content %}
 
@@ -15,111 +15,113 @@ Engagement
             <p>Track your activity across the platform</p>
         </div>
 
-        <!-- FILTER -->
-        <div class="section-card">
+        <div class="settings-grid">
 
-            <div class="section-header">
-                <h2>Activity Feed</h2>
-                <p>Your comments on posts</p>
-            </div>
+            <!-- SIDEBAR (same system as profile) -->
+            {% user_sidebar user %}
 
-            <div class="section-body">
+            <!-- MAIN CONTENT -->
+            <main class="settings-main">
 
-                <div class="activity-filter">
+                <form method="get" id="activity-form">
+
                     <label for="activity-type">Activity Type</label>
 
-                    <select id="activity-type">
-                        <option selected>Comments</option>
+                    <select id="activity-type" name="activity_type" onchange="this.form.submit()">
+
+                        <option value="comments" {% if activity_type == "comments" %}selected{% endif %}>
+                            Comments
+                        </option>
+
+                        <option value="likes" {% if activity_type == "likes" %}selected{% endif %}>
+                            Likes
+                        </option>
+
+                        <option value="saved" {% if activity_type == "saved" %}selected{% endif %}>
+                            Saved Posts
+                        </option>
+                        <option value="all" {% if activity_type == "all" %}selected{% endif %}>
+                            All Activity
+                        </option>
+
                     </select>
 
-                </div>
+                </form>
 
-            </div>
+                <!-- CONTENT -->
+                <div class="section-card">
 
-        </div>
+                    {% if activities %}
 
-        <!-- CONTENT -->
-        <div class="section-card">
+                        <div class="activity-list">
 
-            {% if comments %}
+                            {% for item in activities %}
 
-                <div class="activity-list">
+                                <div class="activity-card">
 
-                    {% for comment in comments %}
+                                    <!-- POST PREVIEW -->
+                                    <div class="activity-top">
 
-                        <div class="activity-card">
+                                        <div class="activity-thumb">
+                                            {% if item.post.image %}
+                                                <a href="{% url 'blog:detail' item.post.slug %}">
+                                                    <img src="{{ item.post.image.url }}">
+                                                </a>
+                                            {% endif %}
+                                        </div>
 
-                            <!-- TOP ROW -->
-                            <div class="activity-top">
+                                        <div class="activity-info">
 
-                                <!-- POST IMAGE -->
-                                <div class="activity-thumb">
-                                    {% if comment.post.image %}
-                                        <a href="{% url 'blog:detail' comment.post.slug %}"><img src="{{ comment.post.image.url }}"></a>
-                                    {% else %}
-                                        <div class="thumb-placeholder"></div>
-                                    {% endif %}
+                                            <a href="{% url 'blog:detail' item.post.slug %}" class="activity-title">
+                                                {{ item.post.title }}
+                                            </a>
+
+                                            <p class="activity-excerpt">
+                                                {{ item.post.content|truncatechars:100 }}
+                                            </p>
+
+                                        </div>
+
+                                    </div>
+
+                                    <!-- TYPE INFO -->
+                                    <div class="activity-meta">
+
+                                        {% if item.type == "comment" %}
+                                            💬 {{ item.text }}
+
+                                        {% elif item.type == "like" %}
+                                            ❤️ Liked this post
+
+                                        {% elif item.type == "saved" %}
+                                            🔖 Saved this post
+                                        {% endif %}
+
+                                    </div>
+
+                                    <!-- DATE -->
+                                    <div class="activity-footer">
+                                        <span>{{ item.date|date:"M d, Y" }}</span>
+                                    </div>
+
                                 </div>
 
-                                <!-- POST INFO -->
-                                <div class="activity-info">
-
-                                    <a href="{{ comment.post.get_absolute_url }}" class="activity-title">
-                                        {{ comment.post.title }}
-                                    </a>
-
-                                    <p class="activity-excerpt">
-                                        {{ comment.post.content|truncatechars:100 }}
-                                    </p>
-
-                                </div>
-
-                            </div>
-
-                            <!-- COMMENT -->
-                            <div class="activity-comment">
-                                <p>{{ comment.message }}</p>
-                            </div>
-
-                            <!-- FOOTER -->
-                            <div class="activity-footer">
-
-                                <span class="activity-date">
-                                    {{ comment.created_date|date:"M d, Y" }}
-                                </span>
-
-                                {% if comment.is_approved %}
-                                    <span class="badge badge-success">Approved</span>
-                                {% else %}
-                                    <span class="badge badge-warning">Pending</span>
-                                {% endif %}
-
-                                <a href="{{ comment.post.get_absolute_url }}" class="view-post">
-                                    View Post →
-                                </a>
-
-                            </div>
+                            {% endfor %}
 
                         </div>
 
-                    {% endfor %}
+                    {% else %}
+
+                        <div class="empty-state">
+                            <h3>No Activity Yet</h3>
+                            <p>Start interacting with posts.</p>
+                        </div>
+
+                    {% endif %}
 
                 </div>
 
-            {% else %}
-
-                <!-- EMPTY -->
-                <div class="empty-state">
-
-                    <h3>No Activity Yet</h3>
-
-                    <p>
-                        Your comments will appear here once you start engaging with posts.
-                    </p>
-
-                </div>
-
-            {% endif %}
+            </main>
 
         </div>
 

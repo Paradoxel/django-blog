@@ -7,7 +7,7 @@ from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView,UpdateView,TemplateView
 from apps.accounts.forms import UserUpdateForm,ProfileUpdateForm
-from apps.blog.models import Comment
+from apps.blog.models import Comment,Like,SavedPost
 from .forms import UserRegisterForm
 
 
@@ -100,14 +100,36 @@ class UpdateUserProfile(LoginRequiredMixin,UpdateView):
     
 
 
-class UserEngagementView(LoginRequiredMixin,TemplateView):
-    template_name='accounts/engagement.html'
+class UserEngagementView(LoginRequiredMixin, TemplateView):
+    template_name = "accounts/engagement.html"
+
+    def get_activity_type(self):
+        return self.request.GET.get("activity_type", "comments")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["comments"] = (
-            Comment.objects
-            .filter(user=self.request.user)
-            .select_related("post")
-        )
+
+        user = self.request.user
+        activity_type = self.get_activity_type()
+
+        context["activity_type"] = activity_type
+
+        activities = []
+
+        if activity_type == "comments":
+            activities = Comment.objects.filter(user=user).select_related("post")
+
+        elif activity_type == "likes":
+            activities = Like.objects.filter(user=user).select_related("post")
+
+        elif activity_type == "saved":
+            activities = SavedPost.objects.filter(user=user).select_related("post")
+
+        elif activity_type == "all":
+            activities = list(Comment.objects.filter(user=user)) + \
+                         list(Like.objects.filter(user=user)) + \
+                         list(SavedPost.objects.filter(user=user))
+
+        context["activities"] = activities
+
         return context
