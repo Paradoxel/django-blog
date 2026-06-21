@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% block title %}
+Engagement
+{% endblock %}
+
+{% block content %}
+
+<section class="settings-wrapper">
+
+    <div class="container">
+
+        <!-- HEADER -->
+        <div class="settings-hero">
+            <h1>Engagement</h1>
+            <p>Track your activity across the platform</p>
+        </div>
+
+        <!-- FILTER -->
+        <div class="section-card">
+
+            <div class="section-header">
+                <h2>Activity Feed</h2>
+                <p>Your comments on posts</p>
+            </div>
+
+            <div class="section-body">
+
+                <div class="activity-filter">
+                    <label for="activity-type">Activity Type</label>
+
+                    <select id="activity-type">
+                        <option selected>Comments</option>
+                    </select>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- CONTENT -->
+        <div class="section-card">
+
+            {% if comments %}
+
+                <div class="activity-list">
+
+                    {% for comment in comments %}
+
+                        <div class="activity-card">
+
+                            <!-- TOP ROW -->
+                            <div class="activity-top">
+
+                                <!-- POST IMAGE -->
+                                <div class="activity-thumb">
+                                    {% if comment.post.image %}
+                                        <a href="{% url 'blog:detail' comment.post.slug %}"><img src="{{ comment.post.image.url }}"></a>
+                                    {% else %}
+                                        <div class="thumb-placeholder"></div>
+                                    {% endif %}
+                                </div>
+
+                                <!-- POST INFO -->
+                                <div class="activity-info">
+
+                                    <a href="{{ comment.post.get_absolute_url }}" class="activity-title">
+                                        {{ comment.post.title }}
+                                    </a>
+
+                                    <p class="activity-excerpt">
+                                        {{ comment.post.content|truncatechars:100 }}
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                            <!-- COMMENT -->
+                            <div class="activity-comment">
+                                <p>{{ comment.message }}</p>
+                            </div>
+
+                            <!-- FOOTER -->
+                            <div class="activity-footer">
+
+                                <span class="activity-date">
+                                    {{ comment.created_date|date:"M d, Y" }}
+                                </span>
+
+                                {% if comment.is_approved %}
+                                    <span class="badge badge-success">Approved</span>
+                                {% else %}
+                                    <span class="badge badge-warning">Pending</span>
+                                {% endif %}
+
+                                <a href="{{ comment.post.get_absolute_url }}" class="view-post">
+                                    View Post →
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <!-- EMPTY -->
+                <div class="empty-state">
+
+                    <h3>No Activity Yet</h3>
+
+                    <p>
+                        Your comments will appear here once you start engaging with posts.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

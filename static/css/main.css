@@ -5330,48 +5330,6 @@ body.mobile-nav-active #mobile-nav-toggle {
    SIDE FLYOUT MENU
    ========================= */
 
-.nav-item.has-sub {
-    position: relative;
-}
-
-/* hidden submenu */
-.sub-menu {
-    position: absolute;
-    left: 105%;
-    top: 0;
-    min-width: 180px;
-    background: white;
-    border-radius: 14px;
-    box-shadow: 0 25px 70px rgba(0,0,0,0.12);
-    padding: 8px;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateX(-10px);
-    transition: all 0.2s ease;
-    z-index: 50;
-}
-
-/* show on hover */
-.nav-item.has-sub:hover .sub-menu {
-    opacity: 1;
-    visibility: visible;
-    transform: translateX(0);
-}
-
-/* submenu links */
-.sub-menu a {
-    display: block;
-    padding: 10px 12px;
-    border-radius: 10px;
-    font-size: 13px;
-    color: #334155;
-    text-decoration: none;
-    transition: 0.2s;
-}
-
-.sub-menu a:hover {
-    background: #f1f5f9;
-}
 
 /* DANGER */
 .nav-item.danger {
@@ -5724,4 +5682,153 @@ body.mobile-nav-active #mobile-nav-toggle {
 
 .dropdown-logout:hover {
     background: #fee2e2;
+}
+
+/* =========================
+   ENGAGEMENT PAGE
+   ========================= */
+
+.activity-filter {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-width: 260px;
+}
+
+.activity-filter label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #475569;
+}
+
+.activity-filter select {
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    background: white;
+    font-size: 14px;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.empty-state h3 {
+    margin-bottom: 10px;
+    color: #0f172a;
+}
+
+.empty-state p {
+    color: #64748b;
+    font-size: 14px;
+}
+
+.activity-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+/* CARD */
+.activity-card {
+    padding: 16px;
+    border-radius: 16px;
+    background: #fff;
+    border: 1px solid #eef2f7;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+}
+
+/* TOP ROW */
+.activity-top {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+}
+
+/* POST IMAGE */
+.activity-thumb img {
+    width: 70px;
+    height: 70px;
+    border-radius: 12px;
+    object-fit: cover;
+}
+
+.thumb-placeholder {
+    width: 70px;
+    height: 70px;
+    border-radius: 12px;
+    background: #e2e8f0;
+}
+
+/* TEXT AREA */
+.activity-info {
+    flex: 1;
+}
+
+.activity-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #0f172a;
+    text-decoration: none;
+}
+
+.activity-title:hover {
+    color: #4f46e5;
+}
+
+.activity-excerpt {
+    font-size: 13px;
+    color: #64748b;
+    margin-top: 4px;
+}
+
+/* COMMENT */
+.activity-comment {
+    margin-top: 10px;
+    padding: 10px 12px;
+    background: #f8fafc;
+    border-radius: 12px;
+    font-size: 13px;
+    color: #334155;
+}
+
+/* FOOTER */
+.activity-footer {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+}
+
+/* BADGES */
+.badge-success {
+    background: #dcfce7;
+    color: #166534;
+    padding: 4px 8px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 11px;
+}
+
+.badge-warning {
+    background: #fef9c3;
+    color: #854d0e;
+    padding: 4px 8px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 11px;
+}
+
+/* VIEW LINK */
+.view-post {
+    margin-left: auto;
+    font-size: 12px;
+    color: #4f46e5;
+    text-decoration: none;
+}
+
+.view-post:hover {
+    text-decoration: underline;
 }

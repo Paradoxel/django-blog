@@ -5,9 +5,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView,UpdateView
+from django.views.generic import CreateView,UpdateView,TemplateView
 from apps.accounts.forms import UserUpdateForm,ProfileUpdateForm
-
+from apps.blog.models import Comment
 from .forms import UserRegisterForm
 
 
@@ -97,3 +97,17 @@ class UpdateUserProfile(LoginRequiredMixin,UpdateView):
         
     def form_invalid(self, form):
         return self.render_to_response(self.get_context_data(form=form))
+    
+
+
+class UserEngagementView(LoginRequiredMixin,TemplateView):
+    template_name='accounts/engagement.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["comments"] = (
+            Comment.objects
+            .filter(user=self.request.user)
+            .select_related("post")
+        )
+        return context

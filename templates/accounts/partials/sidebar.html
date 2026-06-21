@@ -26,15 +26,10 @@
         <div class="nav-divider"></div>
 
         <div class="nav-group-title">Your Activity</div>
-        <!-- ENGAGEMENT -->
-        <div class="nav-item has-sub">
-            <span>Engagement</span>
-            <div class="sub-menu">
-                <a href="#">Liked Posts</a>
-                <a href="#">Commented Posts</a>
-                <a href="#">Saved Posts</a>
-            </div>
-        </div>
+
+        <a href="{% url 'accounts:engagement' %}" class="nav-item">
+            Engagement
+        </a>
 
         <div class="nav-divider"></div>
 
