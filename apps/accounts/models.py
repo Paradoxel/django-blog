@@ -38,16 +38,30 @@ def avatar_upload_path(instance, filename):
     return f"avatars/{instance.user.id}/{filename}"
 
 
+
+
+
+# type of user
+class UserTypes(models.TextChoices):
+    READER = "reader", "Reader"
+    WRITER = "writer", "Writer"
 class Profile(models.Model):
     """
     Extended user profile created automatically via signal on User creation.
     Stores optional personal info and social links.
     """
 
+    
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="profile",
+    )
+
+    user_type = models.CharField(
+        max_length=20,
+        choices=UserTypes.choices,
+        default=UserTypes.READER
     )
 
     phone_number = models.CharField(
