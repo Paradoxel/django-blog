@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% load accounts_tags %}
+
 {% block title %}Engagement{% endblock %}
 
 {% block content %}
@@ -17,17 +18,22 @@
 
         <div class="settings-grid">
 
-            <!-- SIDEBAR (same system as profile) -->
+            <!-- SIDEBAR -->
             {% user_sidebar user %}
 
-            <!-- MAIN CONTENT -->
+            <!-- MAIN -->
             <main class="settings-main">
 
+                <!-- FILTER -->
                 <form method="get" id="activity-form">
 
                     <label for="activity-type">Activity Type</label>
 
                     <select id="activity-type" name="activity_type" onchange="this.form.submit()">
+
+                        <option value="all" {% if activity_type == "all" %}selected{% endif %}>
+                            All Activity
+                        </option>
 
                         <option value="comments" {% if activity_type == "comments" %}selected{% endif %}>
                             Comments
@@ -39,9 +45,6 @@
 
                         <option value="saved" {% if activity_type == "saved" %}selected{% endif %}>
                             Saved Posts
-                        </option>
-                        <option value="all" {% if activity_type == "all" %}selected{% endif %}>
-                            All Activity
                         </option>
 
                     </select>
@@ -87,13 +90,13 @@
                                     <!-- TYPE INFO -->
                                     <div class="activity-meta">
 
-                                        {% if item.type == "comment" %}
-                                            💬 {{ item.text }}
+                                        {% if item.activity_type == "comment" %}
+                                            💬 {{ item.message }}
 
-                                        {% elif item.type == "like" %}
+                                        {% elif item.activity_type == "like" %}
                                             ❤️ Liked this post
 
-                                        {% elif item.type == "saved" %}
+                                        {% elif item.activity_type == "saved" %}
                                             🔖 Saved this post
                                         {% endif %}
 
@@ -101,7 +104,7 @@
 
                                     <!-- DATE -->
                                     <div class="activity-footer">
-                                        <span>{{ item.date|date:"M d, Y" }}</span>
+                                        <span>{{ item.created_date|date:"M d, Y" }}</span>
                                     </div>
 
                                 </div>
@@ -120,6 +123,18 @@
                     {% endif %}
 
                 </div>
+
+                <!-- WRITER ONLY SECTION -->
+                {% if is_writer %}
+                <div class="section-card">
+                    <h2>Writer Tools</h2>
+                    <p>Manage and create your posts.</p>
+
+                    <a href="{% url 'blog:my_posts' %}" class="btn-primary">
+                        My Posts
+                    </a>
+                </div>
+                {% endif %}
 
             </main>
 

@@ -9,8 +9,8 @@ from django.views.generic import CreateView,UpdateView,TemplateView
 from apps.accounts.forms import UserUpdateForm,ProfileUpdateForm
 from apps.blog.models import Comment,Like,SavedPost
 from .forms import UserRegisterForm
-
-
+from apps.accounts.models import UserTypes
+from itertools import chain
 User = get_user_model()
 
 
@@ -104,7 +104,8 @@ class UserEngagementView(LoginRequiredMixin, TemplateView):
     template_name = "accounts/engagement.html"
 
     def get_activity_type(self):
-        return self.request.GET.get("activity_type", "comments")
+        # default should be ALL
+        return self.request.GET.get("activity_type", "all")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -116,19 +117,54 @@ class UserEngagementView(LoginRequiredMixin, TemplateView):
 
         activities = []
 
+        # --------------------
+        # COMMENTS
+        # --------------------
         if activity_type == "comments":
             activities = Comment.objects.filter(user=user).select_related("post")
+            for a in activities:
+                a.activity_type = "comment"
 
+        # --------------------
+        # LIKES
+        # --------------------
         elif activity_type == "likes":
             activities = Like.objects.filter(user=user).select_related("post")
+            for a in activities:
+                a.activity_type = "like"
 
+        # --------------------
+        # SAVED
+        # --------------------
         elif activity_type == "saved":
             activities = SavedPost.objects.filter(user=user).select_related("post")
+            for a in activities:
+                a.activity_type = "saved"
 
-        elif activity_type == "all":
-            activities = list(Comment.objects.filter(user=user)) + \
-                         list(Like.objects.filter(user=user)) + \
-                         list(SavedPost.objects.filter(user=user))
+        # --------------------
+        # ALL (DEFAULT)
+        # --------------------
+        else:
+            comments = Comment.objects.filter(user=user).select_related("post")
+            likes = Like.objects.filter(user=user).select_related("post")
+            saved = SavedPost.objects.filter(user=user).select_related("post")
+
+            activities = sorted(
+                list(comments) + list(likes) + list(saved),
+                key=lambda x: x.created_date,
+                reverse=True
+            )
+
+            for a in activities:
+                if isinstance(a, Comment):
+                    a.activity_type = "comment"
+                elif isinstance(a, Like):
+                    a.activity_type = "like"
+                elif isinstance(a, SavedPost):
+                    a.activity_type = "saved"
+
+        # writer check
+        context["is_writer"] = self.request.user.profile.user_type == UserTypes.WRITER
 
         context["activities"] = activities
 

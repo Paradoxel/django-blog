@@ -4,6 +4,7 @@
 
     <!-- USER CARD -->
     <div class="user-card">
+
         <div class="avatar-ring">
             {% if user.profile.avatar %}
                 <img src="{{ user.profile.avatar.url }}" alt="avatar">
@@ -13,7 +14,15 @@
         </div>
 
         <h3>{{ user.get_full_name|default:user.email }}</h3>
-        <p class="muted">Member Account</p>
+
+        <p class="muted">
+            {% if user.profile.user_type == "writer" %}
+                Writer Account
+            {% else %}
+                Reader Account
+            {% endif %}
+        </p>
+
     </div>
 
     <!-- NAVIGATION -->
@@ -30,6 +39,18 @@
         <a href="{% url 'accounts:engagement' %}" class="nav-item">
             Engagement
         </a>
+
+        {% if user.profile.user_type == "writer" %}
+
+            <div class="nav-divider"></div>
+
+            <div class="nav-group-title">Writer Tools</div>
+
+            <a href="#" class="nav-item">
+                My Posts
+            </a>
+
+        {% endif %}
 
         <div class="nav-divider"></div>
 
