@@ -236,3 +236,20 @@ class Like(models.Model):
 
     def __str__(self):
         return f"{self.user} liked {self.post}"
+    
+
+class SavedPost(models.Model):
+    # Represents a "saved/bookmarked" post by a user.
+    # User who saved the post
+    user=models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,related_name='saved_posts')
+    # Post that was saved
+    post=models.ForeignKey(Post,on_delete=models.CASCADE,related_name='saved_by')
+    # When the post was saved
+    created_date = models.DateTimeField(auto_now_add=True)
+    class Meta:
+        # newest saved items first
+        ordering = ["-created_date"]
+        # prevent duplicate saves
+        unique_together = ("user", "post")
+    def __str__(self):
+        return f"{self.user} saved {self.post}"
