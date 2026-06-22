@@ -62,7 +62,7 @@
 
                                         <!-- STATUS BADGE (CLEAN VERSION) -->
                                         <div class="post-status">
-                                            <span class="badge">
+                                            <span class="badge badge-{{ post.status }}">
                                                 {{ post.status_label }}
                                             </span>
                                         </div>
@@ -78,17 +78,20 @@
                                     <div class="post-actions">
 
                                         <!-- Preview -->
-                                        <a href="{% url 'blog:detail' post.slug %}" class="btn btn-light">
-                                            👁 Preview
-                                        </a>
+                                        {% if post.status == "published" %}
+                                            <a href="{{ post.get_absolute_url }}" class="btn btn-light btn-action">
+                                                👁 Preview
+                                            </a>
+                                        {% endif %}
 
                                         <!-- Edit -->
-                                        <a href="{% url 'accounts:post_edit' post.slug %}" class="btn btn-primary">
+                                        <a href="{% url 'accounts:post_edit' post.slug %}" class="btn btn-primary btn-action">
                                             ✏ Edit
                                         </a>
 
                                         <!-- Delete -->
-                                        <a href="{% url 'accounts:post_delete' post.slug %}" class="btn btn-danger">
+                                        <a href="{% url 'accounts:post_delete' post.slug %}"
+                                        class="btn btn-danger btn-action">
                                             🗑 Delete
                                         </a>
 
