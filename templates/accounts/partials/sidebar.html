@@ -28,15 +28,27 @@
     <!-- NAVIGATION -->
     <div class="settings-nav">
 
-        <div class="nav-item active">Profile</div>
-        <div class="nav-item">Security</div>
-        <div class="nav-item">Notifications</div>
+        <a href="{% url 'accounts:profile' %}"
+           class="nav-item {% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
+            Profile
+        </a>
+
+        <a href="#"
+           class="nav-item {% if request.resolver_match.url_name == 'security' %}active{% endif %}">
+            Security
+        </a>
+
+        <a href="#"
+           class="nav-item {% if request.resolver_match.url_name == 'notifications' %}active{% endif %}">
+            Notifications
+        </a>
 
         <div class="nav-divider"></div>
 
         <div class="nav-group-title">Your Activity</div>
 
-        <a href="{% url 'accounts:engagement' %}" class="nav-item">
+        <a href="{% url 'accounts:engagement' %}"
+           class="nav-item {% if request.resolver_match.url_name == 'engagement' %}active{% endif %}">
             Engagement
         </a>
 
@@ -46,7 +58,8 @@
 
             <div class="nav-group-title">Writer Tools</div>
 
-            <a href="#" class="nav-item">
+            <a href="{% url 'accounts:my_posts' %}"
+               class="nav-item {% if request.resolver_match.url_name == 'my_posts' %}active{% endif %}">
                 My Posts
             </a>
 
@@ -54,7 +67,10 @@
 
         <div class="nav-divider"></div>
 
-        <div class="nav-item danger">Delete Account</div>
+        <a href="#"
+           class="nav-item danger">
+            Delete Account
+        </a>
 
     </div>
 

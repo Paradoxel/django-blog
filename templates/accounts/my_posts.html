@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+{% load static %}
+{% load accounts_tags %}
+{% block title %}My Posts{% endblock %}
+
+{% block content %}
+
+<section class="settings-wrapper">
+
+    <div class="container">
+
+        <!-- HEADER -->
+        <div class="settings-hero">
+            <h1>My Posts</h1>
+            <p>Manage your created posts</p>
+        </div>
+
+        <div class="settings-grid">
+
+            <!-- SIDEBAR -->
+            {% user_sidebar user %}
+
+            <!-- MAIN CONTENT -->
+            <main class="settings-main">
+
+                <!-- ACTION BAR -->
+                <div class="section-card">
+
+                    <div class="section-header">
+                        <h2>Your Posts</h2>
+                        <p>Create, edit or manage your content</p>
+                    </div>
+
+                    <div class="section-body">
+
+                        <a href="#" class="btn-primary">
+                            + Create New Post
+                        </a>
+
+                    </div>
+
+                </div>
+
+                <!-- POSTS LIST -->
+                <div class="section-card">
+
+                    {% if posts %}
+
+                        <div class="activity-list">
+
+                            {% for post in posts %}
+
+                                <div class="activity-card">
+
+                                    <!-- POST IMAGE -->
+                                    <div class="activity-top">
+
+                                        <div class="activity-thumb">
+                                            {% if post.image %}
+                                                <a href="{% url 'blog:detail' post.slug %}">
+                                                    <img src="{{ post.image.url }}">
+                                                </a>
+                                            {% else %}
+                                                <div class="thumb-placeholder"></div>
+                                            {% endif %}
+                                        </div>
+
+                                        <!-- INFO -->
+                                        <div class="activity-info">
+
+                                            <a href="{% url 'blog:detail' post.slug %}" class="activity-title">
+                                                {{ post.title }}
+                                            </a>
+
+                                            <p class="activity-excerpt">
+                                                {{ post.content|truncatechars:120 }}
+                                            </p>
+
+                                        </div>
+
+                                    </div>
+
+                                    <!-- META -->
+                                    <div class="activity-meta">
+
+                                        <span>📅 {{ post.created_date|date:"M d, Y" }}</span>
+
+                                        {% if post.is_published %}
+                                            <span class="badge badge-success">Published</span>
+                                        {% else %}
+                                            <span class="badge badge-warning">Draft</span>
+                                        {% endif %}
+
+                                    </div>
+
+                                    <!-- ACTIONS -->
+                                    <div class="activity-footer">
+
+                                        <a href="{% url 'blog:detail' post.slug %}" class="btn-small">
+                                            View
+                                        </a>
+
+                                        <a href="#" class="btn-small">
+                                            Edit
+                                        </a>
+
+                                        <a href="#" class="btn-small danger">
+                                            Delete
+                                        </a>
+
+                                    </div>
+
+                                </div>
+
+                            {% endfor %}
+
+                        </div>
+
+                    {% else %}
+
+                        <!-- EMPTY STATE -->
+                        <div class="empty-state">
+
+                            <h3>No Posts Yet</h3>
+                            <p>Create your first post and start publishing content.</p>
+
+                            <a href="#" class="btn-primary">
+                                Create Post
+                            </a>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </main>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

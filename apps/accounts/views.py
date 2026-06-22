@@ -11,6 +11,9 @@ from apps.blog.models import Comment,Like,SavedPost
 from .forms import UserRegisterForm
 from apps.accounts.models import UserTypes
 from itertools import chain
+from django.views.generic import ListView
+from apps.blog.models import Post
+from apps.accounts.permissions import WriterRequiredMixin
 User = get_user_model()
 
 
@@ -169,3 +172,13 @@ class UserEngagementView(LoginRequiredMixin, TemplateView):
         context["activities"] = activities
 
         return context
+    
+
+
+class MyPostsView(LoginRequiredMixin,WriterRequiredMixin,ListView):
+    model=Post
+    template_name='accounts/my_posts.html'
+    context_object_name='posts'
+    def get_queryset(self):
+        return Post.objects.filter(author=self.request.user)
+    
