@@ -1,6 +1,6 @@
 from django import forms
-
-from .models import Comment
+from captcha.fields import CaptchaField
+from .models import Comment,Post
 
 
 class CommentForm(forms.ModelForm):
@@ -31,3 +31,22 @@ class CommentForm(forms.ModelForm):
                 }
             ),
         }
+
+
+
+class PostForm(forms.ModelForm):
+    captcha = CaptchaField(
+        error_messages={
+            "invalid": "Incorrect captcha code. Please try again."
+        }
+    )
+    class Meta:
+        model=Post
+        fields = [
+            "title",
+            "content",
+            "excerpt",
+            "image",
+            "primary_tag",
+            "categories",
+        ]

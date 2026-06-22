@@ -5859,3 +5859,7 @@ body.mobile-nav-active #mobile-nav-toggle {
 .action-btn.like-btn.active:hover {
     color: #dc2626;
 }
+
+.captcha-box img {
+    margin-bottom: 10px;
+}
