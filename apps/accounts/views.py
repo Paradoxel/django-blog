@@ -11,7 +11,7 @@ from apps.blog.models import Comment,Like,SavedPost
 from .forms import UserRegisterForm
 from apps.accounts.models import UserTypes
 from itertools import chain
-from django.views.generic import ListView
+from django.views.generic import ListView,DeleteView
 from apps.blog.models import Post
 from apps.accounts.permissions import WriterRequiredMixin
 from apps.blog.forms import PostForm
@@ -210,4 +210,14 @@ class PostUpdateView(LoginRequiredMixin,WriterRequiredMixin,UpdateView):
     def form_valid(self, form):
         form.instance.status=Post.Status.DRAFT
         return super().form_valid(form)
+    
+
+class PostDeleteView(LoginRequiredMixin,WriterRequiredMixin,DeleteView):
+    model=Post
+    template_name = "accounts/post_confirm_delete.html"
+    success_url = reverse_lazy("accounts:my_posts")
+    slug_field='slug'
+    slug_url_kwarg='slug'
+    def get_queryset(self):
+        return Post.objects.filter(author=self.request.user)
     
