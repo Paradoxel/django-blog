@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}My Posts{% endblock %}
 {% load accounts_tags %}
+
+{% block title %}My Posts{% endblock %}
+
 {% block content %}
 
 <section class="settings-wrapper">
@@ -49,41 +51,47 @@
 
                             {% for post in posts %}
 
-                                <div class="activity-card">
+                                <div class="activity-card post-card">
 
-                                    <!-- TITLE -->
-                                    <div class="activity-top">
+                                    <!-- HEADER -->
+                                    <div class="post-header">
 
-                                        <div class="activity-info">
+                                        <div class="post-title">
+                                            {{ post.title }}
+                                        </div>
 
-                                            <a href="{{ post.get_absolute_url }}" class="activity-title">
-                                                {{ post.title }}
-                                            </a>
-
-                                            <p class="activity-excerpt">
-                                                {{ post.content|truncatechars:120 }}
-                                            </p>
-
+                                        <!-- STATUS BADGE (CLEAN VERSION) -->
+                                        <div class="post-status">
+                                            <span class="badge">
+                                                {{ post.status_label }}
+                                            </span>
                                         </div>
 
                                     </div>
 
-                                    <!-- STATUS -->
-                                    <div class="activity-meta">
+                                    <!-- BODY -->
+                                    <p class="post-excerpt">
+                                        {{ post.excerpt|default:post.content|truncatechars:120 }}
+                                    </p>
 
-                                        {% if post.status == "draft" %}
-                                            🟡 Draft
-                                        {% elif post.status == "published" %}
-                                            🟢 Published
-                                        {% elif post.status == "archived" %}
-                                            ⚫ Archived
-                                        {% endif %}
+                                    <!-- FOOTER ACTIONS -->
+                                    <div class="post-actions">
 
-                                    </div>
+                                        <!-- Preview -->
+                                        <a href="{% url 'blog:detail' post.slug %}" class="btn btn-light">
+                                            👁 Preview
+                                        </a>
 
-                                    <!-- FOOTER -->
-                                    <div class="activity-footer">
-                                        <span>{{ post.created_date|date:"M d, Y" }}</span>
+                                        <!-- Edit -->
+                                        <a href="{% url 'accounts:post_edit' post.slug %}" class="btn btn-primary">
+                                            ✏ Edit
+                                        </a>
+
+                                        <!-- Delete -->
+                                        <a href="#" class="btn btn-danger">
+                                            🗑 Delete
+                                        </a>
+
                                     </div>
 
                                 </div>

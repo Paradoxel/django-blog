@@ -198,3 +198,16 @@ class CreatePostView(LoginRequiredMixin,WriterRequiredMixin,CreateView):
 
         # STEP 3: save normally
         return super().form_valid(form)
+    
+
+
+class PostUpdateView(LoginRequiredMixin,WriterRequiredMixin,UpdateView):
+    model=Post
+    form_class=PostForm
+    template_name='accounts/post_form.html'
+    success_url = reverse_lazy("accounts:my_posts")
+    slug_field = "slug"
+    def form_valid(self, form):
+        form.instance.status=Post.Status.DRAFT
+        return super().form_valid(form)
+    

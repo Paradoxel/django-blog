@@ -151,6 +151,15 @@ class Post(models.Model):
         word_count = len(self.content.split())
         minutes = max(1, round(word_count / 200))
         return minutes
+
+    @property
+    def status_label(self):
+        mapping = {
+        "draft": "Under review by admin",
+        "published": "Approved & Live",
+        "archived": "Rejected by admin",
+        }
+        return mapping.get(self.status,"Unknown")
     
 
 
