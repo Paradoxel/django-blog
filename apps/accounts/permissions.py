@@ -1,6 +1,6 @@
 from django.core.exceptions import PermissionDenied
 from apps.accounts.models import UserTypes
-from django.shortcuts import redirect
+
 
 class WriterRequiredMixin:
     """
