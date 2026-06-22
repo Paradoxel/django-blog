@@ -1,8 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
-{% load accounts_tags %}
 {% block title %}My Posts{% endblock %}
-
+{% load accounts_tags %}
 {% block content %}
 
 <section class="settings-wrapper">
@@ -12,7 +11,7 @@
         <!-- HEADER -->
         <div class="settings-hero">
             <h1>My Posts</h1>
-            <p>Manage your created posts</p>
+            <p>Manage your created content</p>
         </div>
 
         <div class="settings-grid">
@@ -20,20 +19,20 @@
             <!-- SIDEBAR -->
             {% user_sidebar user %}
 
-            <!-- MAIN CONTENT -->
+            <!-- MAIN -->
             <main class="settings-main">
 
                 <!-- ACTION BAR -->
                 <div class="section-card">
 
                     <div class="section-header">
-                        <h2>Your Posts</h2>
-                        <p>Create, edit or manage your content</p>
+                        <h2>Writer Dashboard</h2>
+                        <p>Create and manage your posts</p>
                     </div>
 
                     <div class="section-body">
 
-                        <a href="#" class="btn-primary">
+                        <a href="{% url 'accounts:post_create' %}" class="btn-primary">
                             + Create New Post
                         </a>
 
@@ -52,23 +51,12 @@
 
                                 <div class="activity-card">
 
-                                    <!-- POST IMAGE -->
+                                    <!-- TITLE -->
                                     <div class="activity-top">
 
-                                        <div class="activity-thumb">
-                                            {% if post.image %}
-                                                <a href="{% url 'blog:detail' post.slug %}">
-                                                    <img src="{{ post.image.url }}">
-                                                </a>
-                                            {% else %}
-                                                <div class="thumb-placeholder"></div>
-                                            {% endif %}
-                                        </div>
-
-                                        <!-- INFO -->
                                         <div class="activity-info">
 
-                                            <a href="{% url 'blog:detail' post.slug %}" class="activity-title">
+                                            <a href="{{ post.get_absolute_url }}" class="activity-title">
                                                 {{ post.title }}
                                             </a>
 
@@ -80,34 +68,22 @@
 
                                     </div>
 
-                                    <!-- META -->
+                                    <!-- STATUS -->
                                     <div class="activity-meta">
 
-                                        <span>📅 {{ post.created_date|date:"M d, Y" }}</span>
-
-                                        {% if post.is_published %}
-                                            <span class="badge badge-success">Published</span>
-                                        {% else %}
-                                            <span class="badge badge-warning">Draft</span>
+                                        {% if post.status == "draft" %}
+                                            🟡 Draft
+                                        {% elif post.status == "published" %}
+                                            🟢 Published
+                                        {% elif post.status == "archived" %}
+                                            ⚫ Archived
                                         {% endif %}
 
                                     </div>
 
-                                    <!-- ACTIONS -->
+                                    <!-- FOOTER -->
                                     <div class="activity-footer">
-
-                                        <a href="{% url 'blog:detail' post.slug %}" class="btn-small">
-                                            View
-                                        </a>
-
-                                        <a href="#" class="btn-small">
-                                            Edit
-                                        </a>
-
-                                        <a href="#" class="btn-small danger">
-                                            Delete
-                                        </a>
-
+                                        <span>{{ post.created_date|date:"M d, Y" }}</span>
                                     </div>
 
                                 </div>
@@ -118,16 +94,9 @@
 
                     {% else %}
 
-                        <!-- EMPTY STATE -->
                         <div class="empty-state">
-
                             <h3>No Posts Yet</h3>
-                            <p>Create your first post and start publishing content.</p>
-
-                            <a href="#" class="btn-primary">
-                                Create Post
-                            </a>
-
+                            <p>Create your first article and start writing.</p>
                         </div>
 
                     {% endif %}

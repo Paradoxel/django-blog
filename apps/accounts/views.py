@@ -14,6 +14,7 @@ from itertools import chain
 from django.views.generic import ListView
 from apps.blog.models import Post
 from apps.accounts.permissions import WriterRequiredMixin
+from apps.blog.forms import PostForm
 User = get_user_model()
 
 
@@ -182,3 +183,18 @@ class MyPostsView(LoginRequiredMixin,WriterRequiredMixin,ListView):
     def get_queryset(self):
         return Post.objects.filter(author=self.request.user)
     
+
+class CreatePostView(LoginRequiredMixin,WriterRequiredMixin,CreateView):
+    model = Post
+    form_class = PostForm
+    template_name = "accounts/post_form.html"
+    success_url = reverse_lazy("accounts:my_posts")
+    def form_valid(self, form):
+        # STEP 1: attach author automatically (security)
+        form.instance.author = self.request.user
+
+        # STEP 2: force CMS workflow state
+        form.instance.status = Post.Status.DRAFT
+
+        # STEP 3: save normally
+        return super().form_valid(form)

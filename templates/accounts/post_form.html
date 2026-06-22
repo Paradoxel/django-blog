@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% load static %}
+{% load accounts_tags %}
+{% block title %}Create Post{% endblock %}
+
+{% block content %}
+
+<section class="settings-wrapper">
+
+    <div class="container">
+
+        <!-- HEADER -->
+        <div class="settings-hero">
+            <h1>Create New Post</h1>
+            <p>Write and publish your content</p>
+        </div>
+
+        <div class="settings-grid">
+
+            <!-- SIDEBAR -->
+            {% user_sidebar user %}
+
+            <!-- MAIN -->
+            <main class="settings-main">
+
+                <div class="section-card">
+
+                    <div class="section-header">
+                        <h2>Post Editor</h2>
+                        <p>Fill in the details below</p>
+                    </div>
+
+                    <div class="section-body">
+
+                        <form method="post" enctype="multipart/form-data">
+
+                            {% csrf_token %}
+
+                            <!-- TITLE -->
+                            <div class="form-group">
+                                <label>Title</label>
+                                {{ form.title }}
+                            </div>
+
+                            <!-- EXCERPT -->
+                            <div class="form-group">
+                                <label>Excerpt</label>
+                                {{ form.excerpt }}
+                            </div>
+
+                            <!-- CONTENT -->
+                            <div class="form-group">
+                                <label>Content</label>
+                                {{ form.content }}
+                            </div>
+
+                            <!-- IMAGE -->
+                            <div class="form-group">
+                                <label>Image</label>
+                                {{ form.image }}
+                            </div>
+
+                            <!-- TAG -->
+                            <div class="form-group">
+                                <label>Primary Tag</label>
+                                {{ form.primary_tag }}
+                            </div>
+
+                            <!-- CATEGORIES -->
+                            <div class="form-group">
+                                <label>Categories</label>
+                                {{ form.categories }}
+                            </div>
+
+                            <!-- CAPTCHA (NEW PART 🔥) -->
+                            <div class="form-group captcha-box">
+                                <label>Security Check</label>
+                                {{ form.captcha }}
+
+                                {% if form.captcha.errors %}
+                                    <div class="field-error">
+                                        {{ form.captcha.errors.0 }}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <!-- ACTIONS -->
+                            <div class="settings-actions">
+
+                                <button type="submit" class="btn-save">
+                                    Save as Draft
+                                </button>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </main>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

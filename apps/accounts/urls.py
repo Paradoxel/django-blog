@@ -5,7 +5,8 @@ from .views import (UserLoginView,
                     user_logout,
                     UpdateUserProfile,
                     UserEngagementView,
-                    MyPostsView)
+                    MyPostsView,
+                    CreatePostView)
 
 app_name = "accounts"
 
@@ -15,5 +16,6 @@ urlpatterns = [
     path("logout/", user_logout , name="logout"),
     path('profile/',UpdateUserProfile.as_view(),name='profile'),
     path('engagement/',UserEngagementView.as_view(),name='engagement'),
-    path('my_posts/',MyPostsView.as_view(),name='my_posts')
+    path('my_posts/',MyPostsView.as_view(),name='my_posts'),
+    path("posts/create/", CreatePostView.as_view(), name="post_create"),
 ]
