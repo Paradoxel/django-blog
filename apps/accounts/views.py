@@ -104,77 +104,40 @@ class UpdateUserProfile(LoginRequiredMixin,UpdateView):
     
 
 
-class UserEngagementView(LoginRequiredMixin, TemplateView):
+class UserEngagementView(LoginRequiredMixin, ListView):
     template_name = "accounts/engagement.html"
+    paginate_by = 3
+    context_object_name = "activities"
 
-    def get_activity_type(self):
-        # default should be ALL
-        return self.request.GET.get("activity_type", "all")
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
+    def get_queryset(self):
         user = self.request.user
-        activity_type = self.get_activity_type()
+        activity_type = self.request.GET.get("activity_type", "all")
 
-        context["activity_type"] = activity_type
-
-        activities = []
-
-        # --------------------
-        # COMMENTS
-        # --------------------
         if activity_type == "comments":
-            activities = Comment.objects.filter(user=user).select_related("post")
-            for a in activities:
-                a.activity_type = "comment"
+            return Comment.objects.filter(user=user).select_related("post")
 
-        # --------------------
-        # LIKES
-        # --------------------
         elif activity_type == "likes":
-            activities = Like.objects.filter(user=user).select_related("post")
-            for a in activities:
-                a.activity_type = "like"
+            return Like.objects.filter(user=user).select_related("post")
 
-        # --------------------
-        # SAVED
-        # --------------------
         elif activity_type == "saved":
-            activities = SavedPost.objects.filter(user=user).select_related("post")
-            for a in activities:
-                a.activity_type = "saved"
+            return SavedPost.objects.filter(user=user).select_related("post")
 
-        # --------------------
-        # ALL (DEFAULT)
-        # --------------------
         else:
             comments = Comment.objects.filter(user=user).select_related("post")
             likes = Like.objects.filter(user=user).select_related("post")
             saved = SavedPost.objects.filter(user=user).select_related("post")
 
-            activities = sorted(
-                list(comments) + list(likes) + list(saved),
-                key=lambda x: x.created_date,
-                reverse=True
-            )
+            activities = list(chain(comments, likes, saved))
+            activities.sort(key=lambda x: x.created_date, reverse=True)
 
-            for a in activities:
-                if isinstance(a, Comment):
-                    a.activity_type = "comment"
-                elif isinstance(a, Like):
-                    a.activity_type = "like"
-                elif isinstance(a, SavedPost):
-                    a.activity_type = "saved"
+            return activities
 
-        # writer check
-        context["is_writer"] = self.request.user.profile.user_type == UserTypes.WRITER
 
-        context["activities"] = activities
-
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        activity_type = self.request.GET.get('activity_type','all')
+        context['activity_type'] = activity_type
         return context
-    
-
 
 class MyPostsView(LoginRequiredMixin,WriterRequiredMixin,ListView):
     model=Post

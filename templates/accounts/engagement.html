@@ -24,32 +24,43 @@
             <!-- MAIN -->
             <main class="settings-main">
 
-                <!-- FILTER -->
-                <form method="get" id="activity-form">
+                <!-- FILTER CARD -->
+                <div class="section-card">
 
-                    <label for="activity-type">Activity Type</label>
+                    <div class="section-header">
+                        <h2>Activity Filter</h2>
+                        <p>Select type of engagement</p>
+                    </div>
 
-                    <select id="activity-type" name="activity_type" onchange="this.form.submit()">
+                    <div class="section-body">
 
-                        <option value="all" {% if activity_type == "all" %}selected{% endif %}>
-                            All Activity
-                        </option>
+                        <form method="get" id="activity-form" class="filter-form">
 
-                        <option value="comments" {% if activity_type == "comments" %}selected{% endif %}>
-                            Comments
-                        </option>
+                            <select id="activity-type" name="activity_type" onchange="this.form.submit()">
 
-                        <option value="likes" {% if activity_type == "likes" %}selected{% endif %}>
-                            Likes
-                        </option>
+                                <option value="all" {% if activity_type == "all" %}selected{% endif %}>
+                                    All Activity
+                                </option>
 
-                        <option value="saved" {% if activity_type == "saved" %}selected{% endif %}>
-                            Saved Posts
-                        </option>
+                                <option value="comments" {% if activity_type == "comments" %}selected{% endif %}>
+                                    Comments
+                                </option>
 
-                    </select>
+                                <option value="likes" {% if activity_type == "likes" %}selected{% endif %}>
+                                    Likes
+                                </option>
 
-                </form>
+                                <option value="saved" {% if activity_type == "saved" %}selected{% endif %}>
+                                    Saved Posts
+                                </option>
+
+                            </select>
+
+                        </form>
+
+                    </div>
+
+                </div>
 
                 <!-- CONTENT -->
                 <div class="section-card">
@@ -63,31 +74,37 @@
                                 <div class="activity-card">
 
                                     <!-- POST PREVIEW -->
-                                    <div class="activity-top">
+                                    {% if item.post %}
 
-                                        <div class="activity-thumb">
-                                            {% if item.post.image %}
-                                                <a href="{% url 'blog:detail' item.post.slug %}">
-                                                    <img src="{{ item.post.image.url }}">
+                                        <div class="activity-top">
+
+                                            <div class="activity-thumb">
+
+                                                {% if item.post.image %}
+                                                    <a href="{% url 'blog:detail' item.post.slug %}">
+                                                        <img src="{{ item.post.image.url }}" alt="{{ item.post.title }}">
+                                                    </a>
+                                                {% endif %}
+
+                                            </div>
+
+                                            <div class="activity-info">
+
+                                                <a href="{% url 'blog:detail' item.post.slug %}" class="activity-title">
+                                                    {{ item.post.title }}
                                                 </a>
-                                            {% endif %}
-                                        </div>
 
-                                        <div class="activity-info">
+                                                <p class="activity-excerpt">
+                                                    {{ item.post.content|truncatechars:100 }}
+                                                </p>
 
-                                            <a href="{% url 'blog:detail' item.post.slug %}" class="activity-title">
-                                                {{ item.post.title }}
-                                            </a>
-
-                                            <p class="activity-excerpt">
-                                                {{ item.post.content|truncatechars:100 }}
-                                            </p>
+                                            </div>
 
                                         </div>
 
-                                    </div>
+                                    {% endif %}
 
-                                    <!-- TYPE INFO -->
+                                    <!-- META -->
                                     <div class="activity-meta">
 
                                         {% if item.activity_type == "comment" %}
@@ -102,7 +119,7 @@
 
                                     </div>
 
-                                    <!-- DATE -->
+                                    <!-- FOOTER -->
                                     <div class="activity-footer">
                                         <span>{{ item.created_date|date:"M d, Y" }}</span>
                                     </div>
@@ -112,6 +129,31 @@
                             {% endfor %}
 
                         </div>
+
+                        <!-- PAGINATION -->
+                        {% if is_paginated %}
+
+                            <div class="pagination">
+
+                                {% if page_obj.has_previous %}
+                                    <a href="?page={{ page_obj.previous_page_number }}&activity_type={{ activity_type }}">
+                                        ← Previous
+                                    </a>
+                                {% endif %}
+
+                                <span>
+                                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                                </span>
+
+                                {% if page_obj.has_next %}
+                                    <a href="?page={{ page_obj.next_page_number }}&activity_type={{ activity_type }}">
+                                        Next →
+                                    </a>
+                                {% endif %}
+
+                            </div>
+
+                        {% endif %}
 
                     {% else %}
 
@@ -124,15 +166,23 @@
 
                 </div>
 
-                <!-- WRITER ONLY SECTION -->
+                <!-- WRITER SECTION -->
                 {% if is_writer %}
                 <div class="section-card">
-                    <h2>Writer Tools</h2>
-                    <p>Manage and create your posts.</p>
 
-                    <a href="{% url 'accounts:my_posts' %}" class="btn-primary">
-                        My Posts
-                    </a>
+                    <div class="section-header">
+                        <h2>Writer Tools</h2>
+                        <p>Manage and create your posts</p>
+                    </div>
+
+                    <div class="section-body">
+
+                        <a href="{% url 'accounts:my_posts' %}" class="btn-secondary">
+                            My Posts
+                        </a>
+
+                    </div>
+
                 </div>
                 {% endif %}
 
