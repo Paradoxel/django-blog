@@ -135,8 +135,26 @@ class UserEngagementView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        activity_type = self.request.GET.get('activity_type','all')
-        context['activity_type'] = activity_type
+
+        user = self.request.user
+        activity_type = self.request.GET.get("activity_type", "all")
+
+        context["activity_type"] = activity_type
+
+        context["comments_count"] = Comment.objects.filter(user=user).count()
+        context["likes_count"] = Like.objects.filter(user=user).count()
+        context["saved_count"] = SavedPost.objects.filter(user=user).count()
+
+        context["total_activity"] = (
+            context["comments_count"]
+            + context["likes_count"]
+            + context["saved_count"]
+        )
+
+        context["is_writer"] = (
+            user.profile.user_type == UserTypes.WRITER
+        )
+
         return context
 
 class MyPostsView(LoginRequiredMixin,WriterRequiredMixin,ListView):

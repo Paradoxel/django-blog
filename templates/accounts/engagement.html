@@ -8,49 +8,61 @@
 
 <section class="settings-wrapper">
 
-    <div class="container">
 
-        <!-- HEADER -->
-        <div class="settings-hero">
-            <h1>Engagement</h1>
-            <p>Track your activity across the platform</p>
-        </div>
+<div class="container">
 
-        <div class="settings-grid">
+    <!-- HEADER -->
+    <div class="settings-hero">
+        <h1>Engagement</h1>
+        <p>Track your activity across the platform</p>
+    </div>
 
-            <!-- SIDEBAR -->
-            {% user_sidebar user %}
+    <div class="settings-grid">
 
-            <!-- MAIN -->
-            <main class="settings-main">
+        <!-- SIDEBAR -->
+        {% user_sidebar user %}
 
-                <!-- FILTER CARD -->
-                <div class="section-card">
+        <!-- MAIN -->
+        <main class="settings-main">
 
-                    <div class="section-header">
-                        <h2>Activity Filter</h2>
-                        <p>Select type of engagement</p>
-                    </div>
+            <!-- DASHBOARD -->
+            <div class="section-card">
 
-                    <div class="section-body">
+                <div class="section-header">
+                    <h2>Activity Dashboard</h2>
+                    <p>Filter and monitor your engagement</p>
+                </div>
 
-                        <form method="get" id="activity-form" class="filter-form">
+                <div class="section-body">
 
-                            <select id="activity-type" name="activity_type" onchange="this.form.submit()">
+                    <div class="activity-toolbar">
 
-                                <option value="all" {% if activity_type == "all" %}selected{% endif %}>
+                        <!-- FILTER -->
+                        <form method="get"
+                              id="activity-form"
+                              class="filter-form">
+
+                            <select id="activity-type"
+                                    name="activity_type"
+                                    onchange="this.form.submit()">
+
+                                <option value="all"
+                                    {% if activity_type == "all" %}selected{% endif %}>
                                     All Activity
                                 </option>
 
-                                <option value="comments" {% if activity_type == "comments" %}selected{% endif %}>
+                                <option value="comments"
+                                    {% if activity_type == "comments" %}selected{% endif %}>
                                     Comments
                                 </option>
 
-                                <option value="likes" {% if activity_type == "likes" %}selected{% endif %}>
+                                <option value="likes"
+                                    {% if activity_type == "likes" %}selected{% endif %}>
                                     Likes
                                 </option>
 
-                                <option value="saved" {% if activity_type == "saved" %}selected{% endif %}>
+                                <option value="saved"
+                                    {% if activity_type == "saved" %}selected{% endif %}>
                                     Saved Posts
                                 </option>
 
@@ -58,116 +70,157 @@
 
                         </form>
 
+                        <!-- STATS -->
+                        <div class="activity-stats-inline">
+
+                            <div class="mini-stat">
+                                <span>{{ comments_count }}</span>
+                                <small>Comments</small>
+                            </div>
+
+                            <div class="mini-stat">
+                                <span>{{ likes_count }}</span>
+                                <small>Likes</small>
+                            </div>
+
+                            <div class="mini-stat">
+                                <span>{{ saved_count }}</span>
+                                <small>Saved</small>
+                            </div>
+
+                            <div class="mini-stat">
+                                <span>{{ total_activity }}</span>
+                                <small>Total</small>
+                            </div>
+
+                        </div>
+
                     </div>
 
                 </div>
 
-                <!-- CONTENT -->
-                <div class="section-card">
+            </div>
 
-                    {% if activities %}
+            <!-- ACTIVITY FEED -->
+            <div class="section-card">
 
-                        <div class="activity-list">
+                <div class="section-header">
+                    <h2>Recent Activity</h2>
+                    <p>Your latest interactions</p>
+                </div>
 
-                            {% for item in activities %}
+                {% if activities %}
 
-                                <div class="activity-card">
+                    <div class="activity-list">
 
-                                    <!-- POST PREVIEW -->
-                                    {% if item.post %}
+                        {% for item in activities %}
 
-                                        <div class="activity-top">
+                            <div class="activity-card">
 
-                                            <div class="activity-thumb">
+                                {% if item.post %}
 
-                                                {% if item.post.image %}
-                                                    <a href="{% url 'blog:detail' item.post.slug %}">
-                                                        <img src="{{ item.post.image.url }}" alt="{{ item.post.title }}">
-                                                    </a>
-                                                {% endif %}
+                                    <div class="activity-top">
 
-                                            </div>
+                                        <div class="activity-thumb">
 
-                                            <div class="activity-info">
-
-                                                <a href="{% url 'blog:detail' item.post.slug %}" class="activity-title">
-                                                    {{ item.post.title }}
+                                            {% if item.post.image %}
+                                                <a href="{% url 'blog:detail' item.post.slug %}">
+                                                    <img src="{{ item.post.image.url }}"
+                                                         alt="{{ item.post.title }}">
                                                 </a>
-
-                                                <p class="activity-excerpt">
-                                                    {{ item.post.content|truncatechars:100 }}
-                                                </p>
-
-                                            </div>
+                                            {% endif %}
 
                                         </div>
 
+                                        <div class="activity-info">
+
+                                            <a href="{% url 'blog:detail' item.post.slug %}"
+                                               class="activity-title">
+                                                {{ item.post.title }}
+                                            </a>
+
+                                            <p class="activity-excerpt">
+                                                {{ item.post.content|truncatechars:100 }}
+                                            </p>
+
+                                        </div>
+
+                                    </div>
+
+                                {% endif %}
+
+                                <div class="activity-meta">
+
+                                    {% if item.activity_type == "comment" %}
+                                        💬 {{ item.message }}
+
+                                    {% elif item.activity_type == "like" %}
+                                        ❤️ Liked this post
+
+                                    {% elif item.activity_type == "saved" %}
+                                        🔖 Saved this post
+
                                     {% endif %}
-
-                                    <!-- META -->
-                                    <div class="activity-meta">
-
-                                        {% if item.activity_type == "comment" %}
-                                            💬 {{ item.message }}
-
-                                        {% elif item.activity_type == "like" %}
-                                            ❤️ Liked this post
-
-                                        {% elif item.activity_type == "saved" %}
-                                            🔖 Saved this post
-                                        {% endif %}
-
-                                    </div>
-
-                                    <!-- FOOTER -->
-                                    <div class="activity-footer">
-                                        <span>{{ item.created_date|date:"M d, Y" }}</span>
-                                    </div>
 
                                 </div>
 
-                            {% endfor %}
-
-                        </div>
-
-                        <!-- PAGINATION -->
-                        {% if is_paginated %}
-
-                            <div class="pagination">
-
-                                {% if page_obj.has_previous %}
-                                    <a href="?page={{ page_obj.previous_page_number }}&activity_type={{ activity_type }}">
-                                        ← Previous
-                                    </a>
-                                {% endif %}
-
-                                <span>
-                                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
-                                </span>
-
-                                {% if page_obj.has_next %}
-                                    <a href="?page={{ page_obj.next_page_number }}&activity_type={{ activity_type }}">
-                                        Next →
-                                    </a>
-                                {% endif %}
+                                <div class="activity-footer">
+                                    <span>
+                                        {{ item.created_date|date:"M d, Y" }}
+                                    </span>
+                                </div>
 
                             </div>
 
-                        {% endif %}
+                        {% endfor %}
 
-                    {% else %}
+                    </div>
 
-                        <div class="empty-state">
-                            <h3>No Activity Yet</h3>
-                            <p>Start interacting with posts.</p>
+                    {% if is_paginated %}
+
+                        <div class="pagination">
+
+                            {% if page_obj.has_previous %}
+                                <a href="?page={{ page_obj.previous_page_number }}&activity_type={{ activity_type }}">
+                                    ← Previous
+                                </a>
+                            {% endif %}
+
+                            <span>
+                                Page {{ page_obj.number }}
+                                of
+                                {{ page_obj.paginator.num_pages }}
+                            </span>
+
+                            {% if page_obj.has_next %}
+                                <a href="?page={{ page_obj.next_page_number }}&activity_type={{ activity_type }}">
+                                    Next →
+                                </a>
+                            {% endif %}
+
                         </div>
 
                     {% endif %}
 
-                </div>
+                {% else %}
 
-                <!-- WRITER SECTION -->
-                {% if is_writer %}
+                    <div class="empty-state">
+
+                        <h3>No Activity Yet</h3>
+
+                        <p>
+                            Start interacting with posts.
+                        </p>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+            <!-- WRITER SECTION -->
+            {% if is_writer %}
+
                 <div class="section-card">
 
                     <div class="section-header">
@@ -177,20 +230,23 @@
 
                     <div class="section-body">
 
-                        <a href="{% url 'accounts:my_posts' %}" class="btn-secondary">
+                        <a href="{% url 'accounts:my_posts' %}"
+                           class="btn-secondary">
                             My Posts
                         </a>
 
                     </div>
 
                 </div>
-                {% endif %}
 
-            </main>
+            {% endif %}
 
-        </div>
+        </main>
 
     </div>
+
+</div>
+
 
 </section>
 

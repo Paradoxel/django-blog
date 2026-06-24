@@ -6086,3 +6086,64 @@ margin-top:20px;
     background:#fee2e2;
     color:#991b1b;
 }
+
+.activity-toolbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:1.5rem;
+flex-wrap:wrap;
+}
+
+.activity-stats-inline{
+display:flex;
+align-items:center;
+gap:1rem;
+flex-wrap:wrap;
+}
+
+.mini-stat{
+text-align:center;
+min-width:90px;
+padding:.75rem 1rem;
+border:1px solid var(--border-color);
+border-radius:12px;
+background:var(--surface-color);
+}
+
+.mini-stat span{
+display:block;
+font-size:1.25rem;
+font-weight:700;
+line-height:1;
+}
+
+.mini-stat small{
+display:block;
+margin-top:.35rem;
+color:var(--text-muted);
+font-size:.8rem;
+}
+
+.filter-form select{
+min-width:220px;
+}
+
+@media (max-width:768px){
+
+
+.activity-toolbar{
+    flex-direction:column;
+    align-items:stretch;
+}
+
+.activity-stats-inline{
+    justify-content:center;
+}
+
+.filter-form select{
+    width:100%;
+}
+
+
+}
