@@ -1,5 +1,5 @@
 from django.contrib import admin
-
+from django.utils import timezone
 from .models import (Category, 
                     Tag,
                     Post,
@@ -29,12 +29,28 @@ class PostAdmin(admin.ModelAdmin):
     """Admin configuration for Post model."""
 
     list_display = ('title', 'author', 'status', 'view_count', 'published_date')
-    search_fields = ('title', 'content', 'author__email','likes_count')  
+    search_fields = ('title', 'content', 'author__email')  
     list_filter = ('status',)  
     date_hierarchy = 'created_date'
 
     def likes_count(self,obj):
         return obj.likes.count()
+    
+    actions=[
+        'approve_posts',
+        'reject_posts',
+    ]
+    @admin.action(description="Approve selected posts")
+    def approve_posts(self,request,queryset):
+        for post in queryset:
+            post.status=Post.Status.PUBLISHED
+            post.save()
+
+    @admin.action(description="Reject selected posts")
+    def reject_posts(self,request,queryset):
+        queryset.update(status=Post.Status.ARCHIVED)
+
+
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):

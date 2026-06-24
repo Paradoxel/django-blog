@@ -2,12 +2,13 @@ from django.contrib import messages
 from django.db.models import Q, F
 from django.shortcuts import redirect
 from django.shortcuts import get_object_or_404
-from django.views.generic import ListView, DetailView,View
+from django.views.generic import ListView, DetailView,View,CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from apps.blog.models import Post,Like,SavedPost
 from apps.blog.forms import CommentForm
-
-
+from apps.accounts.permissions import WriterRequiredMixin
+from apps.blog.forms import PostForm
+from django.urls import reverse_lazy
 class BlogView(ListView):
     """
     Display paginated list of published blog posts.
@@ -141,3 +142,6 @@ class ToggleSaveView(LoginRequiredMixin,View):
         else:
             post.saved_by.create(user=request.user)
         return redirect("blog:detail",slug=post.slug)
+
+
+
