@@ -1,109 +1,182 @@
 {% extends "base.html" %}
 {% load static %}
 {% load accounts_tags %}
+
 {% block title %}Create Post{% endblock %}
 
 {% block content %}
 
 <section class="settings-wrapper">
 
-    <div class="container">
+<div class="container">
 
-        <!-- HEADER -->
-        <div class="settings-hero">
-            <h1>Create New Post</h1>
-            <p>Write and publish your content</p>
-        </div>
+```
+<!-- HERO -->
+<div class="settings-hero">
+    <h1>Create New Post</h1>
+    <p>
+        Share your ideas, publish articles, and engage with your audience.
+    </p>
+</div>
 
-        <div class="settings-grid">
+<div class="settings-grid">
 
-            <!-- SIDEBAR -->
-            {% user_sidebar user %}
+    <!-- SIDEBAR -->
+    {% user_sidebar user %}
 
-            <!-- MAIN -->
-            <main class="settings-main">
+    <!-- MAIN -->
+    <main class="settings-main">
 
-                <div class="section-card">
+        <form method="post"
+              enctype="multipart/form-data"
+              class="settings-form">
 
-                    <div class="section-header">
-                        <h2>Post Editor</h2>
-                        <p>Fill in the details below</p>
+            {% csrf_token %}
+
+            <!-- POST BASICS -->
+            <div class="section-card">
+
+                <div class="section-header">
+                    <h2>✍️ Post Basics</h2>
+                    <p>
+                        Start with the information readers see first.
+                    </p>
+                </div>
+
+                <div class="section-body">
+
+                    <div class="form-group">
+                        <label>Post Title</label>
+                        {{ form.title }}
                     </div>
 
-                    <div class="section-body">
-
-                        <form method="post" enctype="multipart/form-data">
-
-                            {% csrf_token %}
-
-                            <!-- TITLE -->
-                            <div class="form-group">
-                                <label>Title</label>
-                                {{ form.title }}
-                            </div>
-
-                            <!-- EXCERPT -->
-                            <div class="form-group">
-                                <label>Excerpt</label>
-                                {{ form.excerpt }}
-                            </div>
-
-                            <!-- CONTENT -->
-                            <div class="form-group">
-                                <label>Content</label>
-                                {{ form.content }}
-                            </div>
-
-                            <!-- IMAGE -->
-                            <div class="form-group">
-                                <label>Image</label>
-                                {{ form.image }}
-                            </div>
-
-                            <!-- TAG -->
-                            <div class="form-group">
-                                <label>Primary Tag</label>
-                                {{ form.primary_tag }}
-                            </div>
-
-                            <!-- CATEGORIES -->
-                            <div class="form-group">
-                                <label>Categories</label>
-                                {{ form.categories }}
-                            </div>
-
-                            <!-- CAPTCHA (NEW PART 🔥) -->
-                            <div class="form-group captcha-box">
-                                <label>Security Check</label>
-                                {{ form.captcha }}
-
-                                {% if form.captcha.errors %}
-                                    <div class="field-error">
-                                        {{ form.captcha.errors.0 }}
-                                    </div>
-                                {% endif %}
-                            </div>
-
-                            <!-- ACTIONS -->
-                            <div class="settings-actions">
-
-                                <button type="submit" class="btn-save">
-                                    Save as Draft
-                                </button>
-
-                            </div>
-
-                        </form>
-
+                    <div class="form-group">
+                        <label>Short Description</label>
+                        {{ form.excerpt }}
                     </div>
 
                 </div>
 
-            </main>
+            </div>
 
-        </div>
+            <!-- CONTENT -->
+            <div class="section-card">
 
+                <div class="section-header">
+                    <h2>📝 Content</h2>
+                    <p>
+                        Write your article and tell your story.
+                    </p>
+                </div>
+
+                <div class="section-body">
+
+                    <div class="form-group">
+                        <label>Article Content</label>
+                        {{ form.content }}
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- FEATURED IMAGE -->
+            <div class="section-card">
+
+                <div class="section-header">
+                    <h2>🖼️ Featured Image</h2>
+                    <p>
+                        Upload a cover image that represents your article.
+                    </p>
+                </div>
+
+                <div class="section-body">
+
+                    <div class="form-group">
+                        <label>Cover Image</label>
+                        {{ form.image }}
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- ORGANIZATION -->
+            <div class="section-card">
+
+                <div class="section-header">
+                    <h2>🏷️ Organization</h2>
+                    <p>
+                        Categorize your content so readers can discover it easily.
+                    </p>
+                </div>
+
+                <div class="section-body">
+
+                    <div class="form-group">
+                        <label>Primary Tag</label>
+                        {{ form.primary_tag }}
+                    </div>
+
+                    <div class="form-group">
+                        <label>Categories</label>
+                        {{ form.categories }}
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- VERIFICATION -->
+            <div class="section-card">
+
+                <div class="section-header">
+                    <h2>🔒 Verification</h2>
+                    <p>
+                        Complete the verification before saving your article.
+                    </p>
+                </div>
+
+                <div class="section-body">
+
+                    <div class="form-group captcha-box">
+
+    <label>Security Verification</label>
+
+    <div class="captcha-wrapper">
+        {{ form.captcha }}
     </div>
+
+    {% if form.captcha.errors %}
+        <div class="field-error">
+            {{ form.captcha.errors.0 }}
+        </div>
+    {% endif %}
+
+</div>
+
+                </div>
+
+            </div>
+
+            <!-- ACTIONS -->
+            <div class="settings-actions">
+
+                <button type="submit"
+                        class="btn-save">
+                    💾 Save Draft
+                </button>
+
+            </div>
+
+        </form>
+
+    </main>
+
+</div>
+```
+
+</div>
 
 </section>
 
