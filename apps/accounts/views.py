@@ -15,6 +15,8 @@ from django.views.generic import ListView,DeleteView
 from apps.blog.models import Post
 from apps.accounts.permissions import WriterRequiredMixin
 from apps.blog.forms import PostForm
+from django.contrib.auth.views import PasswordChangeView
+from apps.accounts.forms import CustomPasswordChangeForm
 User = get_user_model()
 
 
@@ -201,4 +203,22 @@ class PostDeleteView(LoginRequiredMixin,WriterRequiredMixin,DeleteView):
     slug_url_kwarg='slug'
     def get_queryset(self):
         return Post.objects.filter(author=self.request.user)
+    
+
+
+class UserSecurityView(LoginRequiredMixin,TemplateView):
+    template_name='accounts/security/security.html'
+
+
+
+class UserPasswordChangeView(LoginRequiredMixin,PasswordChangeView):
+    template_name = "accounts/security/security_password.html"
+    success_url = reverse_lazy("accounts:security")
+    form_class = CustomPasswordChangeForm
+    def form_valid(self, form):
+        messages.success(
+            self.request,
+            "Password updated successfully."
+        )
+        return super().form_valid(form)
     

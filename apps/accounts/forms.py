@@ -1,6 +1,8 @@
 from django import forms
 from django.contrib.auth import get_user_model
 from apps.accounts.models import Profile
+from django.contrib.auth.forms import PasswordChangeForm
+
 User = get_user_model()
 
 
@@ -79,3 +81,28 @@ class ProfileUpdateForm(forms.ModelForm):
             "facebook",
             "linkedin",
         ]
+
+
+from django.contrib.auth.forms import PasswordChangeForm
+
+
+class CustomPasswordChangeForm(PasswordChangeForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields["old_password"].widget.attrs.update({
+            "class": "form-control",
+            "placeholder": "Current password",
+
+        })
+
+        self.fields["new_password1"].widget.attrs.update({
+            "class": "form-control",
+            "placeholder": "New password",
+        })
+
+        self.fields["new_password2"].widget.attrs.update({
+            "class": "form-control",
+            "placeholder": "Confirm new password",
+        })

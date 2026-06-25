@@ -33,7 +33,7 @@
             Profile
         </a>
 
-        <a href="#"
+        <a href="{% url 'accounts:security' %}"
            class="nav-item {% if request.resolver_match.url_name == 'security' %}active{% endif %}">
             Security
         </a>

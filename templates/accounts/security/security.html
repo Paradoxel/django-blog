@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% load static %}
+{% load accounts_tags %}
+
+{% block title %}Security{% endblock %}
+
+{% block content %}
+
+<section class="settings-wrapper">
+
+```
+<div class="container">
+
+    <div class="settings-hero">
+        <h1>Security</h1>
+        <p>
+            Manage your account security and protection settings.
+        </p>
+    </div>
+
+    <div class="settings-grid">
+
+        {% user_sidebar user %}
+
+        <main class="settings-main">
+
+            <div class="section-card">
+
+                <div class="section-header">
+                    <h2>Security Settings</h2>
+                    <p>
+                        Manage password, devices and account protection.
+                    </p>
+                </div>
+
+                <div class="security-list">
+
+                    <a href="{% url 'accounts:security_password' %}"
+                       class="security-item">
+
+                        <div class="security-item-icon">
+                            🔐
+                        </div>
+
+                        <div class="security-item-content">
+
+                            <h3>Password</h3>
+
+                            <p>
+                                Change and manage your password.
+                            </p>
+
+                        </div>
+
+                        <span class="security-item-action">
+                            Manage →
+                        </span>
+
+                    </a>
+
+                    <a href="#"
+                       class="security-item">
+
+                        <div class="security-item-icon">
+                            💻
+                        </div>
+
+                        <div class="security-item-content">
+
+                            <h3>Sessions</h3>
+
+                            <p>
+                                Manage active devices and sessions.
+                            </p>
+
+                        </div>
+
+                        <span class="security-item-action">
+                            Manage →
+                        </span>
+
+                    </a>
+
+                    <div class="security-item disabled">
+
+                        <div class="security-item-icon">
+                            📜
+                        </div>
+
+                        <div class="security-item-content">
+
+                            <h3>Login Activity</h3>
+
+                            <p>
+                                View recent sign-ins and account activity.
+                            </p>
+
+                        </div>
+
+                        <span class="security-coming-soon">
+                            Coming Soon
+                        </span>
+
+                    </div>
+
+                    <div class="security-item disabled">
+
+                        <div class="security-item-icon">
+                            🛡️
+                        </div>
+
+                        <div class="security-item-content">
+
+                            <h3>Two-Factor Authentication</h3>
+
+                            <p>
+                                Add an extra layer of protection.
+                            </p>
+
+                        </div>
+
+                        <span class="security-coming-soon">
+                            Coming Soon
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+</div>
+```
+
+</section>
+
+{% endblock %}
