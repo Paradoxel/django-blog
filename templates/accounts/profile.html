@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% load accounts_tags %}
+
 {% block title %}
 Account Settings
 {% endblock title %}
@@ -9,116 +10,171 @@ Account Settings
 
 <section class="settings-wrapper">
 
-    <div class="container">
+```
+<div class="container">
 
-        <!-- HEADER -->
-        <div class="settings-hero">
-            <h1>Account Settings</h1>
-            <p>Manage your profile, activity, and preferences</p>
+    <!-- HERO -->
+    <div class="settings-hero">
+        <h1>Account Settings</h1>
+        <p>
+            Manage your profile, personalize your presence, and keep your information up to date.
+        </p>
+    </div>
+
+    <form method="post"
+          enctype="multipart/form-data"
+          class="settings-form">
+
+        {% csrf_token %}
+
+        <div class="settings-grid">
+
+            <!-- SIDEBAR -->
+            {% user_sidebar user %}
+
+            <!-- MAIN -->
+            <main class="settings-main">
+
+                <!-- PROFILE SUMMARY -->
+                <div class="section-card profile-summary-card">
+
+                    <div class="profile-summary">
+
+                        <div class="profile-avatar">
+
+                            {% if user.profile.avatar %}
+                                <img src="{{ user.profile.avatar.url }}"
+                                     alt="{{ user.username }}">
+                            {% endif %}
+
+                        </div>
+
+                        <div class="profile-summary-info">
+
+                            <h2>
+                                {{ user.get_full_name|default:user.email }}
+                            </h2>
+
+                            <p>
+                                Customize how your profile appears across the platform.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- PERSONAL INFORMATION -->
+                <div class="section-card">
+
+                    <div class="section-header">
+                        <h2>👤 Personal Information</h2>
+                        <p>
+                            Your core account information.
+                        </p>
+                    </div>
+
+                    <div class="section-body">
+
+                        <div class="form-group">
+                            <label>First Name</label>
+
+                            {{ form.first_name }}
+
+                            {% if form.first_name.errors %}
+                                <div class="field-error">
+                                    {{ form.first_name.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label>Last Name</label>
+
+                            {{ form.last_name }}
+
+                            {% if form.last_name.errors %}
+                                <div class="field-error">
+                                    {{ form.last_name.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- PROFILE DETAILS -->
+                <div class="section-card">
+
+                    <div class="section-header">
+                        <h2>🌐 Profile Details</h2>
+                        <p>
+                            Information visible on your public profile.
+                        </p>
+                    </div>
+
+                    <div class="section-body">
+
+                        <div class="form-group">
+                            <label>Profile Picture</label>
+                            {{ profile_form.avatar }}
+                        </div>
+
+                        <div class="form-group">
+                            <label>Phone Number</label>
+
+                            {{ profile_form.phone_number }}
+
+                            {% if profile_form.phone_number.errors %}
+                                <div class="field-error">
+                                    {{ profile_form.phone_number.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label>Bio</label>
+                            {{ profile_form.bio }}
+                        </div>
+
+                        <div class="form-group">
+                            <label>Website</label>
+                            {{ profile_form.website }}
+                        </div>
+
+                        <div class="form-group">
+                            <label>GitHub</label>
+                            {{ profile_form.github }}
+                        </div>
+
+                        <div class="form-group">
+                            <label>LinkedIn</label>
+                            {{ profile_form.linkedin }}
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- ACTIONS -->
+                <div class="settings-actions">
+
+                    <button type="submit" class="btn-save">
+                        Save Profile Changes
+                    </button>
+
+                </div>
+
+            </main>
+
         </div>
 
-        <form method="post" enctype="multipart/form-data" class="settings-form">
-            {% csrf_token %}
+    </form>
 
-            <div class="settings-grid">
-
-                <!--side bar-->
-                {% user_sidebar user %}
-                <!-- MAIN -->
-                <main class="settings-main">
-
-                    <!-- USER FORM -->
-                    <div class="section-card">
-
-                        <div class="section-header">
-                            <h2>Personal Information</h2>
-                            <p>Update your basic account details</p>
-                        </div>
-
-                        <div class="section-body">
-
-                            <div class="form-group">
-                                <label>First Name</label>
-                                {{ form.first_name }}
-                                {% if form.first_name.errors %}
-                                    <div class="field-error">{{ form.first_name.errors.0 }}</div>
-                                {% endif %}
-                            </div>
-
-                            <div class="form-group">
-                                <label>Last Name</label>
-                                {{ form.last_name }}
-                                {% if form.last_name.errors %}
-                                    <div class="field-error">{{ form.last_name.errors.0 }}</div>
-                                {% endif %}
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <!-- PROFILE FORM -->
-                    <div class="section-card">
-
-                        <div class="section-header">
-                            <h2>Profile Details</h2>
-                            <p>Your public profile information</p>
-                        </div>
-
-                        <div class="section-body">
-
-                            <div class="form-group">
-                                <label>Phone Number</label>
-                                {{ profile_form.phone_number }}
-                                {% if profile_form.phone_number.errors %}
-                                    <div class="field-error">
-                                        {{ profile_form.phone_number.errors.0 }}
-                                    </div>
-                                {% endif %}
-                            </div>
-
-                            <div class="form-group">
-                                <label>Bio</label>
-                                {{ profile_form.bio }}
-                            </div>
-
-                            <div class="form-group">
-                                <label>Website</label>
-                                {{ profile_form.website }}
-                            </div>
-
-                            <div class="form-group">
-                                <label>GitHub</label>
-                                {{ profile_form.github }}
-                            </div>
-
-                            <div class="form-group">
-                                <label>LinkedIn</label>
-                                {{ profile_form.linkedin }}
-                            </div>
-
-                            <div class="form-group">
-                                <label>Avatar</label>
-                                {{ profile_form.avatar }}
-                            </div>
-
-                        </div>
-                    </div>
-
-
-                    <!-- ACTIONS -->
-                    <div class="settings-actions">
-                        <button type="submit" class="btn-save">
-                            Save Changes
-                        </button>
-                    </div>
-
-                </main>
-
-            </div>
-
-        </form>
-
-    </div>
+</div>
+```
 
 </section>
 
