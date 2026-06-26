@@ -11,7 +11,8 @@ from .views import (UserLoginView,
                     PostDeleteView,
                     UserSecurityView,
                     UserPasswordChangeView,
-                    UserSessionsView)
+                    UserSessionsView,
+                    LogoutSessionView)
 
 app_name = "accounts"
 
@@ -28,6 +29,8 @@ urlpatterns = [
     path('security/',UserSecurityView.as_view(),name='security'),
     path('security/password/',UserPasswordChangeView.as_view(),name='security_password'),
     path('security/sessions/',UserSessionsView.as_view(),name='security_sessions'),
+    path('security/sessions/logout/<str:session_key>/',LogoutSessionView.as_view(),name='logout_session'),
+    #path('security/sessions/logout-others/',LogoutOtherSessionsView.as_view(),name="logout_other_sessions"),
 
 
 ]

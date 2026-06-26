@@ -20,6 +20,8 @@ from apps.accounts.forms import CustomPasswordChangeForm
 from django.contrib.sessions.models import Session
 from django.utils import timezone
 from django.views.generic import TemplateView
+from django.views.generic import View
+from django.shortcuts import get_object_or_404
 User = get_user_model()
 
 
@@ -247,3 +249,19 @@ class UserSessionsView(LoginRequiredMixin, TemplateView):
 
         context["sessions"] = active_sessions
         return context
+    
+
+
+class LogoutSessionView(LoginRequiredMixin,View):
+    def post(self,request,*args,**kwargs):
+        session_key=request.POST.get("session_key")
+        if not session_key:
+            messages.error(request,"Invalid session.")
+            return redirect('accounts:security_sessions')
+        session=get_object_or_404(Session.objects.filter(expire_date__gte=timezone.now()),session_key=session_key)
+        session.delete()
+        messages.success(
+                request,
+                "Session signed out successfully."
+            )
+        return redirect("accounts:security_sessions")

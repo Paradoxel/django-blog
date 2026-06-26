@@ -6991,3 +6991,51 @@ cursor:pointer;
     }
 
 }
+
+/* ===========================
+   Session Footer
+=========================== */
+
+.session-footer{
+    display:flex;
+    justify-content:flex-end;
+    margin-top:1.25rem;
+}
+
+/* form shouldn't affect layout */
+.session-footer form{
+    margin:0;
+}
+
+/* Logout Button */
+.btn-session{
+    padding:.7rem 1.3rem;
+
+    border:none;
+    border-radius:12px;
+
+    background:#ef4444;
+    color:#fff;
+
+    font-size:.9rem;
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:all .25s ease;
+}
+
+.btn-session:hover{
+    background:#dc2626;
+    transform:translateY(-2px);
+    box-shadow:0 8px 18px rgba(239,68,68,.28);
+}
+
+.btn-session:active{
+    transform:translateY(0);
+}
+
+.btn-session:focus-visible{
+    outline:3px solid rgba(239,68,68,.25);
+    outline-offset:3px;
+}

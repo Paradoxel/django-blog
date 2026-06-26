@@ -112,16 +112,27 @@
 
                 </div>
 
-                <div class="session-footer">
+                    <form method="post"
 
-                    <button
-                        class="btn-session"
-                        disabled
-                        title="Coming soon">
+                    action="{% url 'accounts:logout_session' session.session_key %}  ">
 
-                        Sign Out
+                    {% csrf_token %}
+
+                    <input type="hidden"
+
+                    name="session_key"
+
+                    value="{{ session.session_key }}">
+
+                    <button type="submit"
+
+                    class="btn-session active">
+
+                    Sign Out
 
                     </button>
+
+                    </form>
 
                 </div>
 
