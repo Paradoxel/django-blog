@@ -229,39 +229,71 @@ class UserPasswordChangeView(LoginRequiredMixin,PasswordChangeView):
     
 
 
-class UserSessionsView(LoginRequiredMixin, TemplateView):
+class UserSessionsView(LoginRequiredMixin, ListView):
+    model = Session
     template_name = "accounts/security/security_sessions.html"
+    context_object_name = "sessions"
+    paginate_by = 3
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        active_sessions = []
-
-        sessions = Session.objects.filter(
+    def get_queryset(self):
+        queryset = Session.objects.filter(
             expire_date__gte=timezone.now()
         )
 
-        for session in sessions:
+        result = []
+
+        for session in queryset:
             data = session.get_decoded()
 
-            if data.get("_auth_user_id") == str(self.request.user.id):
-                active_sessions.append(session)
+            if data.get("_auth_user_id") == str(self.request.user.pk):
+                result.append({
+                    "session_key": session.session_key,
+                    "expire_date": session.expire_date,
+                    "is_current": (
+                        session.session_key ==
+                        self.request.session.session_key
+                    ),
+                })
 
-        context["sessions"] = active_sessions
-        return context
-    
+        return result
 
 
-class LogoutSessionView(LoginRequiredMixin,View):
-    def post(self,request,*args,**kwargs):
-        session_key=request.POST.get("session_key")
-        if not session_key:
-            messages.error(request,"Invalid session.")
-            return redirect('accounts:security_sessions')
-        session=get_object_or_404(Session.objects.filter(expire_date__gte=timezone.now()),session_key=session_key)
+
+class LogoutSessionView(LoginRequiredMixin, View):
+
+    def post(self, request, session_key, *args, **kwargs):
+
+        session = get_object_or_404(
+            Session.objects.filter(expire_date__gte=timezone.now()),
+            session_key=session_key,
+        )
+
+        data = session.get_decoded()
+
+        if data.get("_auth_user_id") != str(request.user.pk):
+            messages.error(request, "Invalid session.")
+            return redirect("accounts:security_sessions")
+
         session.delete()
+
         messages.success(
-                request,
-                "Session signed out successfully."
-            )
+            request,
+            "Session signed out successfully.",
+        )
+
+        return redirect("accounts:security_sessions")
+
+class LogoutOtherSessionsView(LoginRequiredMixin,View):
+    def post(self,request,*args,**kwargs):
+        current_session_key = request.session.session_key
+        sessions=Session.objects.filter(expire_date__gte=timezone.now())
+        for session in sessions:
+            data = session.get_decoded()
+            if data.get("_auth_user_id") == str(request.user.id):
+                    if session.session_key != current_session_key:
+                        session.delete()
+        messages.success(
+            request,
+            "All other sessions have been signed out."
+        )
         return redirect("accounts:security_sessions")

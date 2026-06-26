@@ -7039,3 +7039,184 @@ cursor:pointer;
     outline:3px solid rgba(239,68,68,.25);
     outline-offset:3px;
 }
+
+.sessions-actions{
+    margin-top:24px;
+    padding-top:20px;
+    border-top:1px solid rgba(255,255,255,.08);
+
+    display:flex;
+    justify-content:flex-end;
+}
+
+.btn-danger{
+    background:linear-gradient(135deg,#ef4444,#dc2626);
+    color:#fff;
+
+    border:none;
+    border-radius:12px;
+
+    padding:12px 22px;
+
+    font-weight:600;
+    cursor:pointer;
+
+    transition:.25s;
+}
+
+.btn-danger:hover{
+    transform:translateY(-2px);
+
+    box-shadow:
+        0 12px 30px rgba(239,68,68,.35);
+}
+
+.btn-danger:active{
+    transform:scale(.98);
+}
+
+.sessions-list{
+    display:flex;
+    flex-direction:column;
+    gap:22px;
+    margin-top:22px;
+}
+
+.session-card{
+    width:100%;
+    background:#fff;
+    border:1px solid #e8edf7;
+    border-radius:18px;
+    padding:24px;
+    transition:.25s;
+}
+
+.session-card:hover{
+    border-color:#d8e4ff;
+    transform:translateY(-2px);
+    box-shadow:0 15px 35px rgba(15,23,42,.06);
+}
+
+.session-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:22px;
+}
+
+.session-device{
+    display:flex;
+    align-items:center;
+    gap:18px;
+}
+
+.session-icon{
+    width:58px;
+    height:58px;
+    border-radius:16px;
+    background:#eef4ff;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:28px;
+}
+
+.session-device h3{
+    margin:0;
+    font-size:1.08rem;
+    font-weight:700;
+}
+
+.session-device p{
+    margin-top:5px;
+    color:#6b7280;
+}
+
+.session-meta{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:18px;
+    margin-bottom:24px;
+}
+
+.meta-item{
+    background:#f8fafc;
+    padding:16px;
+    border-radius:14px;
+}
+
+.meta-label{
+    display:block;
+    color:#6b7280;
+    font-size:.83rem;
+    margin-bottom:6px;
+}
+
+.meta-item strong{
+    color:#111827;
+    font-size:.95rem;
+}
+
+.status-active{
+    color:#16a34a;
+}
+
+.session-footer{
+    display:flex;
+    justify-content:flex-end;
+    border-top:1px solid #edf2f7;
+    padding-top:18px;
+}
+
+.btn-session{
+    padding:11px 22px;
+    border:none;
+    border-radius:12px;
+    background:#ef4444;
+    color:#fff;
+    font-weight:600;
+    cursor:pointer;
+    transition:.25s;
+}
+
+.btn-session:hover{
+    background:#dc2626;
+}
+
+.sessions-actions{
+    margin-top:22px;
+    display:flex;
+    justify-content:flex-end;
+}
+
+.btn-danger{
+    background:#111827;
+    color:#fff;
+    border:none;
+    padding:12px 22px;
+    border-radius:12px;
+    cursor:pointer;
+    transition:.25s;
+}
+
+.btn-danger:hover{
+    background:#000;
+}
+
+.inline-form{
+    display:inline;
+}
+
+.link-button{
+    background:none;
+    border:none;
+    color:#dc3545;
+    cursor:pointer;
+    padding:0;
+    font:inherit;
+    text-decoration:underline;
+}
+
+.link-button:hover{
+    color:#b02a37;
+}

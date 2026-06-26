@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 {% load accounts_tags %}
 
-{% block title %}Active Sessions{% endblock %}
+{% block title %}
+Active Sessions
+{% endblock %}
 
 {% block content %}
 
@@ -13,7 +15,7 @@
     <div class="settings-hero">
         <h1>Active Sessions</h1>
         <p>
-            Review devices currently signed in to your account and monitor account access.
+            Review and manage every device currently signed in to your account.
         </p>
     </div>
 
@@ -35,7 +37,8 @@
                         <h2>Security Overview</h2>
 
                         <p>
-                            {{ sessions|length }} active session{{ sessions|length|pluralize }}
+                            {{ page_obj.paginator.count }}
+                            active session{{ page_obj.paginator.count|pluralize }}
                         </p>
 
                     </div>
@@ -46,7 +49,32 @@
 
                 </div>
 
+                {% if sessions %}
+
+                <div class="sessions-actions">
+
+                    <form method="post"
+                          action="{% url 'accounts:logout_other_sessions' %}">
+
+                        {% csrf_token %}
+
+                        <button
+                            type="submit"
+                            class="btn-danger">
+
+                            Sign Out Other Sessions
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+                {% endif %}
+
             </div>
+
+            <!-- SESSIONS -->
 
             {% for session in sessions %}
 
@@ -57,82 +85,116 @@
                     <div class="session-device">
 
                         <div class="session-icon">
-                            💻
+
+                            {% if session.is_current %}
+                                🖥️
+                            {% else %}
+                                💻
+                            {% endif %}
+
                         </div>
 
                         <div>
 
-                            <h3>Current Device</h3>
+                            {% if session.is_current %}
+                                <h3>This Device</h3>
+                            {% else %}
+                                <h3>Signed-in Device</h3>
+                            {% endif %}
 
                             <p>
-                                Browser information will appear here
+                                Session ID:
+                                <code>{{ session.session_key|truncatechars:18 }}</code>
                             </p>
 
                         </div>
 
                     </div>
 
-                    <span class="session-badge">
-                        Active
-                    </span>
+                    {% if session.is_current %}
+
+                        <span class="session-badge current">
+                            Current
+                        </span>
+
+                    {% else %}
+
+                        <span class="session-badge">
+                            Active
+                        </span>
+
+                    {% endif %}
 
                 </div>
 
                 <div class="session-meta">
 
                     <div class="meta-item">
-                        <span class="meta-label">
-                            Signed In
-                        </span>
 
-                        <strong>
-                            Today
-                        </strong>
-                    </div>
-
-                    <div class="meta-item">
                         <span class="meta-label">
-                            Session Expires
+                            Expires
                         </span>
 
                         <strong>
                             {{ session.expire_date|date:"M d, Y · H:i" }}
                         </strong>
+
                     </div>
 
                     <div class="meta-item">
+
                         <span class="meta-label">
                             Status
                         </span>
 
-                        <strong class="status-active">
-                            Current Session
-                        </strong>
+                        {% if session.is_current %}
+
+                            <strong class="status-active">
+                                Current Session
+                            </strong>
+
+                        {% else %}
+
+                            <strong>
+                                Active
+                            </strong>
+
+                        {% endif %}
+
                     </div>
 
                 </div>
 
-                    <form method="post"
+                <div class="session-footer">
 
-                    action="{% url 'accounts:logout_session' session.session_key %}  ">
+                    {% if session.is_current %}
 
-                    {% csrf_token %}
+                        <button
+                            class="btn-session disabled"
+                            disabled>
 
-                    <input type="hidden"
+                            Current Session
 
-                    name="session_key"
+                        </button>
 
-                    value="{{ session.session_key }}">
+                    {% else %}
 
-                    <button type="submit"
+                        <form method="post"
+                              action="{% url 'accounts:logout_session' session.session_key %}">
 
-                    class="btn-session active">
+                            {% csrf_token %}
 
-                    Sign Out
+                            <button
+                                type="submit"
+                                class="btn-session active">
 
-                    </button>
+                                Sign Out
 
-                    </form>
+                            </button>
+
+                        </form>
+
+                    {% endif %}
 
                 </div>
 
@@ -145,13 +207,13 @@
                 <div class="empty-state">
 
                     <div class="empty-icon">
-                        🖥️
+                        🔒
                     </div>
 
                     <h3>No Active Sessions</h3>
 
                     <p>
-                        No active login sessions were found for your account.
+                        We couldn't find any active login sessions for your account.
                     </p>
 
                 </div>
@@ -159,6 +221,46 @@
             </div>
 
             {% endfor %}
+
+            <!-- PAGINATION -->
+
+            {% if is_paginated %}
+
+            <div class="pagination-wrapper">
+
+                {% if page_obj.has_previous %}
+
+                    <a href="?page={{ page_obj.previous_page_number }}"
+                       class="pagination-btn">
+
+                        Previous
+
+                    </a>
+
+                {% endif %}
+
+                <span class="pagination-info">
+
+                    Page {{ page_obj.number }}
+                    of
+                    {{ page_obj.paginator.num_pages }}
+
+                </span>
+
+                {% if page_obj.has_next %}
+
+                    <a href="?page={{ page_obj.next_page_number }}"
+                       class="pagination-btn">
+
+                        Next
+
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+            {% endif %}
 
         </main>
 
