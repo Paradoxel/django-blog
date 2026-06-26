@@ -17,6 +17,9 @@ from apps.accounts.permissions import WriterRequiredMixin
 from apps.blog.forms import PostForm
 from django.contrib.auth.views import PasswordChangeView
 from apps.accounts.forms import CustomPasswordChangeForm
+from django.contrib.sessions.models import Session
+from django.utils import timezone
+from django.views.generic import TemplateView
 User = get_user_model()
 
 
@@ -222,3 +225,25 @@ class UserPasswordChangeView(LoginRequiredMixin,PasswordChangeView):
         )
         return super().form_valid(form)
     
+
+
+class UserSessionsView(LoginRequiredMixin, TemplateView):
+    template_name = "accounts/security/security_sessions.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        active_sessions = []
+
+        sessions = Session.objects.filter(
+            expire_date__gte=timezone.now()
+        )
+
+        for session in sessions:
+            data = session.get_decoded()
+
+            if data.get("_auth_user_id") == str(self.request.user.id):
+                active_sessions.append(session)
+
+        context["sessions"] = active_sessions
+        return context
