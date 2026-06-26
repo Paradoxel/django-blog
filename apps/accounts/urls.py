@@ -10,7 +10,8 @@ from .views import (UserLoginView,
                     PostUpdateView,
                     PostDeleteView,
                     UserSecurityView,
-                    UserPasswordChangeView)
+                    UserPasswordChangeView,
+                    UserSessionsView)
 
 app_name = "accounts"
 
@@ -25,7 +26,8 @@ urlpatterns = [
     path("posts/<slug:slug>/edit/", PostUpdateView.as_view(), name="post_edit"),
     path('posts/<slug:slug>/delete/',PostDeleteView.as_view(),name='post_delete'),
     path('security/',UserSecurityView.as_view(),name='security'),
-    path('security/password/',UserPasswordChangeView.as_view(),name='security_password')
+    path('security/password/',UserPasswordChangeView.as_view(),name='security_password'),
+    path('security/sessions/',UserSessionsView.as_view(),name='security_sessions'),
 
 
 ]

@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+{% load accounts_tags %}
+
+{% block title %}Active Sessions{% endblock %}
+
+{% block content %}
+
+<section class="settings-wrapper">
+
+<div class="container">
+
+    <!-- HERO -->
+    <div class="settings-hero">
+        <h1>Active Sessions</h1>
+        <p>
+            Review devices currently signed in to your account and monitor account access.
+        </p>
+    </div>
+
+    <div class="settings-grid">
+
+        <!-- SIDEBAR -->
+        {% user_sidebar user %}
+
+        <!-- MAIN -->
+        <main class="settings-main">
+
+            <!-- OVERVIEW -->
+            <div class="section-card">
+
+                <div class="sessions-summary">
+
+                    <div>
+
+                        <h2>Security Overview</h2>
+
+                        <p>
+                            {{ sessions|length }} active session{{ sessions|length|pluralize }}
+                        </p>
+
+                    </div>
+
+                    <span class="security-badge">
+                        Protected
+                    </span>
+
+                </div>
+
+            </div>
+
+            {% for session in sessions %}
+
+            <div class="session-card">
+
+                <div class="session-header">
+
+                    <div class="session-device">
+
+                        <div class="session-icon">
+                            💻
+                        </div>
+
+                        <div>
+
+                            <h3>Current Device</h3>
+
+                            <p>
+                                Browser information will appear here
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <span class="session-badge">
+                        Active
+                    </span>
+
+                </div>
+
+                <div class="session-meta">
+
+                    <div class="meta-item">
+                        <span class="meta-label">
+                            Signed In
+                        </span>
+
+                        <strong>
+                            Today
+                        </strong>
+                    </div>
+
+                    <div class="meta-item">
+                        <span class="meta-label">
+                            Session Expires
+                        </span>
+
+                        <strong>
+                            {{ session.expire_date|date:"M d, Y · H:i" }}
+                        </strong>
+                    </div>
+
+                    <div class="meta-item">
+                        <span class="meta-label">
+                            Status
+                        </span>
+
+                        <strong class="status-active">
+                            Current Session
+                        </strong>
+                    </div>
+
+                </div>
+
+                <div class="session-footer">
+
+                    <button
+                        class="btn-session"
+                        disabled
+                        title="Coming soon">
+
+                        Sign Out
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            {% empty %}
+
+            <div class="section-card">
+
+                <div class="empty-state">
+
+                    <div class="empty-icon">
+                        🖥️
+                    </div>
+
+                    <h3>No Active Sessions</h3>
+
+                    <p>
+                        No active login sessions were found for your account.
+                    </p>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </main>
+
+    </div>
+
+</div>
+
+</section>
+
+{% endblock %}
