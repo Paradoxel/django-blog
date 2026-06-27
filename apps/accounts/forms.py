@@ -106,3 +106,30 @@ class CustomPasswordChangeForm(PasswordChangeForm):
             "class": "form-control",
             "placeholder": "Confirm new password",
         })
+
+
+
+class DeleteAccountForm(forms.Form):
+    email = forms.EmailField()
+
+    password = forms.CharField(
+        widget=forms.PasswordInput
+    )
+
+    def __init__(self, *args, user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.user = user
+
+    def clean_email(self):
+        email=self.cleaned_data.get('email')
+        if email.lower() !=self.user.email.lower():
+            raise forms.ValidationError("Email does not match your account.")
+        return email
+        
+    def clean_password(self):
+        password=self.cleaned_data.get('password')
+        if not self.user.check_password(password):
+           raise forms.ValidationError(
+                "Password is incorrect."
+            )
+        return password
