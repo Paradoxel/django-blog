@@ -14,7 +14,8 @@ from .views import (UserLoginView,
                     UserSessionsView,
                     LogoutSessionView,
                     LogoutOtherSessionsView,
-                    DeleteAccountView)
+                    DeleteAccountView,
+                    DeleteAccountConfirmView)
 
 app_name = "accounts"
 
@@ -33,7 +34,8 @@ urlpatterns = [
     path('security/sessions/',UserSessionsView.as_view(),name='security_sessions'),
     path('security/sessions/logout/<str:session_key>/',LogoutSessionView.as_view(),name='logout_session'),
     path('security/sessions/logout-other/',LogoutOtherSessionsView.as_view(),name="logout_other_sessions"),
-    path('security/delete-account/',DeleteAccountView.as_view(),name='delete_account')
+    path('security/delete-account/',DeleteAccountView.as_view(),name='delete_account'),
+    path('security/delete-account/confirm/',DeleteAccountConfirmView.as_view(),name="delete_account_confirm"),
 
 
 ]

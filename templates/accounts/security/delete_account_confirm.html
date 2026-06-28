@@ -1,0 +1,175 @@
+
+{% extends "base.html" %}
+{% load accounts_tags %}
+
+{% block title %}
+Delete Account Confirmation
+{% endblock %}
+
+{% block content %}
+
+<section class="settings-wrapper">
+
+    <div class="container">
+
+        <!-- HERO -->
+        <div class="settings-hero">
+
+            <h1>Delete Account</h1>
+
+            <p>
+                This is the final confirmation before your account is permanently deleted.
+            </p>
+
+        </div>
+
+        <div class="settings-grid">
+
+            <!-- SIDEBAR -->
+            {% user_sidebar user %}
+
+            <!-- MAIN -->
+            <main class="settings-main">
+
+                <div class="delete-confirm-card">
+
+                    <div class="delete-confirm-header">
+
+                        <div class="warning-icon">
+                            ⚠
+                        </div>
+
+                        <h2>
+                            Permanently Delete Your Account
+                        </h2>
+
+                        <p>
+
+                            You're about to permanently remove your account.
+                            This action cannot be undone.
+
+                        </p>
+
+                    </div>
+
+                    <div class="delete-summary">
+
+                        <div class="summary-item">
+
+                            <span class="summary-icon">👤</span>
+
+                            <div>
+
+                                <h3>Profile</h3>
+
+                                <p>
+                                    Your profile and account information will be permanently removed.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        <div class="summary-item">
+
+                            <span class="summary-icon">🔐</span>
+
+                            <div>
+
+                                <h3>Sessions</h3>
+
+                                <p>
+                                    All active login sessions will immediately be terminated.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        <div class="summary-item">
+
+                            <span class="summary-icon">⚙️</span>
+
+                            <div>
+
+                                <h3>Settings</h3>
+
+                                <p>
+                                    Your account preferences and security settings will be deleted.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        <div class="summary-item">
+
+                            <span class="summary-icon">🚫</span>
+
+                            <div>
+
+                                <h3>No Recovery</h3>
+
+                                <p>
+                                    Once deleted, your account cannot be restored.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="confirmation-box">
+
+                        <h3>
+                            Final Confirmation
+                        </h3>
+
+                        <p>
+
+                            By continuing, you confirm that you understand this action is
+                            irreversible and all associated account data will be permanently removed.
+
+                        </p>
+
+                    </div>
+
+                    <form method="post">
+
+                        {% csrf_token %}
+
+                        <div class="delete-actions">
+
+                            <a
+                                href="{% url 'accounts:profile' %}"
+                                class="btn-secondary">
+
+                                ← Keep My Account
+
+                            </a>
+
+                            <button
+                                type="submit"
+                                class="btn-danger">
+
+                                Delete My Account →
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </main>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
+
