@@ -322,7 +322,7 @@ class DeleteAccountView(LoginRequiredMixin,FormView):
 
 class DeleteAccountConfirmView(LoginRequiredMixin,DeleteAccountVerificationRequiredMixin,TemplateView):
     template_name = "accounts/security/delete_account_confirm.html"
-    success_url = reverse_lazy('core:index')
+    success_url = reverse_lazy('core:home')
     def post(self, request, *args, **kwargs):
 
         with transaction.atomic():
