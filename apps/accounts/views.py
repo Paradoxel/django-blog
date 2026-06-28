@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView,UpdateView,TemplateView
-from apps.accounts.forms import UserUpdateForm,ProfileUpdateForm
+from apps.accounts.forms import UserUpdateForm,ProfileUpdateForm,DeleteAccountForm
 from apps.blog.models import Comment,Like,SavedPost
 from .forms import UserRegisterForm
 from apps.accounts.models import UserTypes
@@ -19,7 +19,7 @@ from django.contrib.auth.views import PasswordChangeView
 from apps.accounts.forms import CustomPasswordChangeForm
 from django.contrib.sessions.models import Session
 from django.utils import timezone
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView,FormView
 from django.views.generic import View
 from django.shortcuts import get_object_or_404
 User = get_user_model()
@@ -297,3 +297,22 @@ class LogoutOtherSessionsView(LoginRequiredMixin,View):
             "All other sessions have been signed out."
         )
         return redirect("accounts:security_sessions")
+    
+
+
+
+class DeleteAccountView(LoginRequiredMixin,FormView):
+    template_name = "accounts/security/delete_account.html"
+    form_class = DeleteAccountForm
+    success_url = reverse_lazy("accounts:delete_account_confirm")
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user']=self.request.user
+        return kwargs
+    
+    
+    def form_valid(self, form):
+        self.request.session["delete_account_verified"] = True
+        return super().form_valid(form)
+    
