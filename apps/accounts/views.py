@@ -5,6 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
+from django.db import transaction
 from django.views.generic import CreateView,UpdateView,TemplateView
 from apps.accounts.forms import UserUpdateForm,ProfileUpdateForm,DeleteAccountForm
 from apps.blog.models import Comment,Like,SavedPost
@@ -13,7 +14,7 @@ from apps.accounts.models import UserTypes
 from itertools import chain
 from django.views.generic import ListView,DeleteView
 from apps.blog.models import Post
-from apps.accounts.permissions import WriterRequiredMixin
+from apps.accounts.permissions import WriterRequiredMixin,DeleteAccountVerificationRequiredMixin
 from apps.blog.forms import PostForm
 from django.contrib.auth.views import PasswordChangeView
 from apps.accounts.forms import CustomPasswordChangeForm
@@ -316,3 +317,27 @@ class DeleteAccountView(LoginRequiredMixin,FormView):
         self.request.session["delete_account_verified"] = True
         return super().form_valid(form)
     
+
+
+
+class DeleteAccountConfirmView(LoginRequiredMixin,DeleteAccountVerificationRequiredMixin,TemplateView):
+    template_name = "accounts/security/delete_account_confirm.html"
+    success_url = reverse_lazy('core:index')
+    def post(self, request, *args, **kwargs):
+
+        with transaction.atomic():
+
+            user = request.user
+
+            request.session.pop("delete_account_verified", None)
+
+            logout(request)
+
+            user.delete()
+
+            messages.success(
+                request,
+                "Your account has been permanently deleted."
+            )
+
+        return redirect(self.success_url)
