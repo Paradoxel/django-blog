@@ -110,12 +110,15 @@ class CustomPasswordChangeForm(PasswordChangeForm):
 
 
 class DeleteAccountForm(forms.Form):
-    email = forms.EmailField()
-
-    password = forms.CharField(
-        widget=forms.PasswordInput
+    email = forms.EmailField(
+        widget=forms.EmailInput(
+        )
     )
 
+    password = forms.CharField(
+        widget=forms.PasswordInput(
+        )
+    )
     def __init__(self, *args, user=None, **kwargs):
         super().__init__(*args, **kwargs)
         self.user = user

@@ -13,7 +13,8 @@ from .views import (UserLoginView,
                     UserPasswordChangeView,
                     UserSessionsView,
                     LogoutSessionView,
-                    LogoutOtherSessionsView)
+                    LogoutOtherSessionsView,
+                    DeleteAccountView)
 
 app_name = "accounts"
 
@@ -32,6 +33,7 @@ urlpatterns = [
     path('security/sessions/',UserSessionsView.as_view(),name='security_sessions'),
     path('security/sessions/logout/<str:session_key>/',LogoutSessionView.as_view(),name='logout_session'),
     path('security/sessions/logout-other/',LogoutOtherSessionsView.as_view(),name="logout_other_sessions"),
+    path('security/delete-account/',DeleteAccountView.as_view(),name='delete_account')
 
 
 ]
