@@ -7,14 +7,14 @@ from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.db import transaction
 from django.views.generic import CreateView,UpdateView,TemplateView
-from apps.accounts.forms import UserUpdateForm,ProfileUpdateForm,DeleteAccountForm
+from apps.accounts.forms import UserUpdateForm,ProfileUpdateForm,DeleteAccountForm,WriterRequestForm
 from apps.blog.models import Comment,Like,SavedPost
-from .forms import UserRegisterForm
-from apps.accounts.models import UserTypes
+from .forms import UserRegisterForm,WriterRequest
+from apps.accounts.models import UserTypes,Status
 from itertools import chain
 from django.views.generic import ListView,DeleteView
 from apps.blog.models import Post
-from apps.accounts.permissions import WriterRequiredMixin,DeleteAccountVerificationRequiredMixin
+from apps.accounts.permissions import WriterRequiredMixin,DeleteAccountVerificationRequiredMixin,ReaderRequiredMixin
 from apps.blog.forms import PostForm
 from django.contrib.auth.views import PasswordChangeView
 from apps.accounts.forms import CustomPasswordChangeForm
@@ -344,4 +344,18 @@ class DeleteAccountConfirmView(LoginRequiredMixin,DeleteAccountVerificationRequi
     
 
 
-class BecomeWriterView()
+class BecomeWriterView(LoginRequiredMixin,ReaderRequiredMixin,CreateView):
+    template_name = ''
+    form_class=WriterRequestForm
+    success_url = reverse_lazy("accounts:profile")
+    
+    
+
+    def form_valid(self, form):
+        user = self.request.user
+        if WriterRequest.objects.filter(status=Status.PENDING,user=user).exists():
+            messages.info(self.request,"You already have a pending writer application.")
+            return redirect('accounts:profile')
+        form.instance.user=self.request.user
+        return super().form_valid(form)
+    
