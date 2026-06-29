@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth import get_user_model
-from apps.accounts.models import Profile
+from apps.accounts.models import Profile,WriterRequest
 from django.contrib.auth.forms import PasswordChangeForm
 
 User = get_user_model()
@@ -136,3 +136,9 @@ class DeleteAccountForm(forms.Form):
                 "Password is incorrect."
             )
         return password
+    
+
+class WriterRequestForm(forms.ModelForm):
+    class Meta:
+        model = WriterRequest
+        fields = ["reason"]
