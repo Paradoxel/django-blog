@@ -341,3 +341,7 @@ class DeleteAccountConfirmView(LoginRequiredMixin,DeleteAccountVerificationRequi
             )
 
         return redirect(self.success_url)
+    
+
+
+class BecomeWriterView()

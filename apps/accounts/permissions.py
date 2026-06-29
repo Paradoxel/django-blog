@@ -24,3 +24,11 @@ class DeleteAccountVerificationRequiredMixin:
             return redirect("accounts:delete_account")
 
         return super().dispatch(request, *args, **kwargs)
+    
+
+
+class ReaderRequiredMixin:
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.profile.user_type != UserTypes.READER:
+            return redirect("accounts:profile")
+        return super().dispatch(request, *args, **kwargs)
