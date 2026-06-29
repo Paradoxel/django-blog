@@ -12,4 +12,14 @@ urlpatterns = [
     path('author/<int:pk>/',views.BlogView.as_view(),name='author'),
     path("feed/", LatestPostsFeed(), name="feed"),
     path("<slug:slug>/", views.PostDetailView.as_view(), name="detail"),
+    path(
+        "post/<slug:slug>/like/",
+        views.ToggleLikeView.as_view(),
+        name="toggle_like"
+    ),
+    path(
+        "post/<slug:slug>/save/",
+        views.ToggleSaveView.as_view(),
+        name="toggle_save"
+    ),
 ]

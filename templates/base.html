@@ -46,42 +46,67 @@
         <div class="container">
           <div class="row align-items-center">
             <div class="col-lg-6 col-sm-6 col-6 header-top-left">
-              <ul>
+              
+            <ul class="nav-list">
 
-                {% if user.is_authenticated %}
+              {% if user.is_authenticated %}
 
-                    <li>
-                        <a href="#">
-                            👋 Hello {{ user.get_full_name|default:user.email }}
-                        </a>
-                    </li>
+                  <li class="nav-item dropdown">
 
-                    <li>
-                        <form method="post" action="{% url 'accounts:logout' %}" style="display:inline;">
-                            {% csrf_token %}
-                            <button type="submit" class="logout-btn">
-                                Logout
-                            </button>
-                        </form>
-                    </li>
+                      <!-- MAIN TRIGGER -->
+                      <a href="{% url 'accounts:profile' %}" class="nav-account-trigger">
+                          
+                          <span class="nav-avatar">
+                              {% if user.profile.avatar %}
+                                  <img src="{{ user.profile.avatar.url }}" alt="avatar">
+                              {% else %}
+                                  👤
+                              {% endif %}
+                          </span>
 
-                {% else %}
+                          <span class="nav-text">
+                              My Account
+                          </span>
 
-                    <li>
-                        <a href="{% url 'accounts:login' %}">
-                            Login
-                        </a>
-                    </li>
+                      </a>
 
-                    <li>
-                        <a href="{% url 'accounts:register' %}">
-                            Register
-                        </a>
-                    </li>
+                      <!-- DROPDOWN -->
+                      <div class="nav-dropdown">
 
-                {% endif %}
+                          <a href="{% url 'accounts:profile' %}">
+                              My Profile
+                          </a>
+
+                          <form method="post" action="{% url 'accounts:logout' %}">
+                              {% csrf_token %}
+                              <button type="submit" class="dropdown-logout">
+                                  Logout
+                              </button>
+                          </form>
+
+                      </div>
+
+                  </li>
+
+              {% else %}
+
+                  <li>
+                      <a href="{% url 'accounts:login' %}">
+                          Login
+                      </a>
+                  </li>
+
+                  <li>
+                      <a href="{% url 'accounts:register' %}">
+                          Register
+                      </a>
+                  </li>
+
+              {% endif %}
 
               </ul>
+
+
             </div>
             <div class="col-lg-6 col-sm-6 col-6 header-top-right">
               <div class="header-social">

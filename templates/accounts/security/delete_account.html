@@ -1,0 +1,185 @@
+
+{% extends "base.html" %}
+{% load accounts_tags %}
+
+{% block title %}Delete Account{% endblock %}
+
+{% block content %}
+
+<section class="settings-wrapper">
+
+    <div class="container">
+
+        <div class="settings-hero">
+
+            <h1>Delete Account</h1>
+
+            <p>
+                Permanently remove your account after verifying your identity.
+            </p>
+
+        </div>
+
+        <div class="settings-grid">
+
+            {% user_sidebar user %}
+
+            <main class="settings-main">
+
+                <div class="delete-account-card">
+
+                    <div class="delete-header">
+
+                        <div class="delete-icon">
+                            ⚠
+                        </div>
+
+                        <h2>Permanently Delete Your Account</h2>
+
+                        <p>
+
+                            This action is permanent. Once your account has been deleted,
+                            it cannot be recovered.
+
+                        </p>
+
+                    </div>
+
+                    <div class="delete-warning">
+
+                        <h3>Before You Continue</h3>
+
+                        <ul>
+
+                            <li>Your profile will be permanently deleted.</li>
+
+                            <li>Your account settings will be removed.</li>
+
+                            <li>All active sessions will be terminated.</li>
+
+                            <li>You will immediately lose access.</li>
+
+                            <li>This action cannot be undone.</li>
+
+                        </ul>
+
+                    </div>
+
+                    <div class="delete-form">
+
+                        <h3>Verify Your Identity</h3>
+
+                        <p>
+
+                            Enter your account credentials to continue.
+
+                        </p>
+
+                        <form method="post" autocomplete="off">
+
+                            {% csrf_token %}
+
+                            <div class="form-group">
+
+                                <label for="{{ form.email.id_for_label }}">
+
+                                    Email Address
+
+                                </label>
+
+                                <input
+                                    id="{{ form.email.id_for_label }}"
+                                    type="email"
+                                    name="{{ form.email.html_name }}"
+                                    value=""
+                                    placeholder="Enter your email address"
+                                    autocomplete="off"
+                                    class="form-control">
+
+                                {% if form.email.errors %}
+
+                                    <small class="field-error">
+
+                                        {{ form.email.errors.0 }}
+
+                                    </small>
+
+                                {% endif %}
+
+                            </div>
+
+                            <div class="form-group">
+
+                                <label for="{{ form.password.id_for_label }}">
+
+                                    Password
+
+                                </label>
+
+                                <input
+                                    id="{{ form.password.id_for_label }}"
+                                    type="password"
+                                    name="{{ form.password.html_name }}"
+                                    value=""
+                                    placeholder="Enter your current password"
+                                    autocomplete="new-password"
+                                    class="form-control">
+
+                                {% if form.password.errors %}
+
+                                    <small class="field-error">
+
+                                        {{ form.password.errors.0 }}
+
+                                    </small>
+
+                                {% endif %}
+
+                            </div>
+
+                            {% if form.non_field_errors %}
+
+                                <div class="field-error">
+
+                                    {{ form.non_field_errors }}
+
+                                </div>
+
+                            {% endif %}
+
+                            <div class="delete-actions">
+
+                                <a
+                                    href="{% url 'accounts:profile' %}"
+                                    class="btn-secondary">
+
+                                    Cancel
+
+                                </a>
+
+                                <button
+                                    type="submit"
+                                    class="btn-danger">
+
+                                    Continue →
+
+                                </button>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </main>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
+

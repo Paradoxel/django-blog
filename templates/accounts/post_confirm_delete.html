@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% load static %}
+{% load accounts_tags %}
+
+{% block title %}Delete Post{% endblock %}
+
+{% block content %}
+
+<section class="settings-wrapper">
+
+```
+<div class="container">
+
+    <!-- HEADER -->
+    <div class="settings-hero">
+        <h1>Delete Post</h1>
+        <p>This action cannot be undone</p>
+    </div>
+
+    <div class="settings-grid">
+
+        <!-- SIDEBAR -->
+        {% user_sidebar user %}
+
+        <!-- MAIN -->
+        <main class="settings-main">
+
+            <div class="section-card">
+
+                <div class="section-header">
+                    <h2>Delete Confirmation</h2>
+                    <p>Please review the information below carefully.</p>
+                </div>
+
+                <div class="section-body">
+
+                    <div class="delete-warning">
+
+                        <div class="warning-badge">
+                            ⚠ Dangerous Action
+                        </div>
+
+                        <h2>Delete Post</h2>
+
+                        <p class="warning-description">
+                            You are about to permanently remove this post
+                            from the platform.
+                        </p>
+
+                        <div class="delete-preview-card">
+
+                            <div class="preview-row">
+                                <span class="preview-label">
+                                    Title
+                                </span>
+
+                                <span class="preview-value">
+                                    {{ object.title }}
+                                </span>
+                            </div>
+
+                            <div class="preview-row">
+                                <span class="preview-label">
+                                    Status
+                                </span>
+
+                                <span class="preview-value">
+                                    {{ object.status_label }}
+                                </span>
+                            </div>
+
+                            <div class="preview-row">
+                                <span class="preview-label">
+                                    Created
+                                </span>
+
+                                <span class="preview-value">
+                                    {{ object.created_date|date:"M d, Y" }}
+                                </span>
+                            </div>
+
+                        </div>
+
+                        <p class="warning-note">
+                            Once deleted, this post cannot be recovered.
+                        </p>
+
+                    </div>
+
+                    <form method="post">
+
+                        {% csrf_token %}
+
+                        <div class="settings-actions">
+
+                            <a href="{% url 'accounts:my_posts' %}"
+                               class="btn-light">
+                                Keep Post
+                            </a>
+
+                            <button type="submit"
+                                    class="btn-danger">
+                                Delete Permanently
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+</div>
+```
+
+</section>
+
+{% endblock %}

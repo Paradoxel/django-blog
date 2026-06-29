@@ -152,6 +152,15 @@ class Post(models.Model):
         word_count = len(self.content.split())
         minutes = max(1, round(word_count / 200))
         return minutes
+
+    @property
+    def status_label(self):
+        mapping = {
+        "draft": "Under review by admin",
+        "published": "Approved & Live",
+        "archived": "Rejected by admin",
+        }
+        return mapping.get(self.status,"Unknown")
     
 
 
@@ -202,3 +211,55 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"{self.name} → {self.post.title}"
+    
+
+
+
+class Like(models.Model):
+    """
+    Represents a "like" action performed by a user on a post.
+    """
+
+    # The user who liked the post
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="likes"
+    )
+
+    # The post that was liked
+    post = models.ForeignKey(
+        Post,
+        on_delete=models.CASCADE,
+        related_name="likes"
+    )
+
+    # Timestamp of when the like was created
+    created_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        # newest likes first
+        ordering = ["-created_date"]
+
+        # prevent duplicate likes (same user cannot like same post twice)
+        unique_together = ("user", "post")
+
+    def __str__(self):
+        return f"{self.user} liked {self.post}"
+    
+
+class SavedPost(models.Model):
+    # Represents a "saved/bookmarked" post by a user.
+    # User who saved the post
+    user=models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,related_name='saved_posts')
+    # Post that was saved
+    post=models.ForeignKey(Post,on_delete=models.CASCADE,related_name='saved_by')
+    # When the post was saved
+    created_date = models.DateTimeField(auto_now_add=True)
+    class Meta:
+        # newest saved items first
+        ordering = ["-created_date"]
+        # prevent duplicate saves
+        unique_together = ("user", "post")
+    def __str__(self):
+        return f"{self.user} saved {self.post}"
