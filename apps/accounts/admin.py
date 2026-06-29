@@ -69,6 +69,7 @@ class WriterRequestAdmin(admin.ModelAdmin):
 
     readonly_fields = (
         "status",
+        'created_at',
         "reviewed_at",
     )
 
