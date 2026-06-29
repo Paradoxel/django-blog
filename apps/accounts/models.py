@@ -92,3 +92,27 @@ class Profile(models.Model):
 
     def __str__(self):
         return f"{self.user.get_full_name()}'s profile"
+    
+
+
+
+
+
+
+
+
+
+
+
+
+class Status(models.TextChoices):
+    PENDING  = 'pending',  'Pending'
+    APPROVED = 'approved', 'Approved'
+    REJECTED = 'rejected', 'Rejected'
+
+class WriterRequest(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    status = models.CharField(max_length=10,choices=Status.choices,default=Status.PENDING)
+    reason = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    reviewed_at = models.DateTimeField(null=True,blank=True)
