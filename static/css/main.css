@@ -8154,3 +8154,47 @@ css
 
 }
 
+.btn-writer{
+    display:block;
+
+    width:100%;
+
+    padding:12px 18px;
+
+    text-align:center;
+
+    text-decoration:none;
+
+    color:#ffffff;
+
+    background:#111827;
+
+    border-radius:10px;
+
+    font-weight:600;
+
+    transition:all .25s ease;
+}
+
+.btn-writer:visited{
+    color:#ffffff;
+}
+
+.btn-writer:hover{
+    color:#ffffff;
+
+    background:#0f172a;
+
+    transform:translateY(-2px);
+
+    box-shadow:0 10px 25px rgba(15,23,42,.20);
+}
+
+.btn-writer:focus{
+    color:#ffffff;
+    outline:none;
+}
+
+.btn-writer:active{
+    transform:translateY(0);
+}

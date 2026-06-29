@@ -16,11 +16,43 @@
         <h3>{{ user.get_full_name|default:user.email }}</h3>
 
         <p class="muted">
-            {% if user.profile.user_type == "writer" %}
+            
+
+
+        {% if user.profile.user_type == "writer" %}
+
+            <p class="muted">
                 Writer Account
-            {% else %}
+            </p>
+
+        {% else %}
+
+            <p class="muted">
                 Reader Account
-            {% endif %}
+            </p>
+
+            <div class="writer-cta">
+
+                <p class="writer-cta-title">
+                    Want to publish articles?
+                </p>
+
+                <a href="#"
+                class="btn-writer">
+
+                    Become a Writer
+
+                </a>
+
+            </div>
+
+        {% endif %}
+
+
+
+
+
+
         </p>
 
     </div>
