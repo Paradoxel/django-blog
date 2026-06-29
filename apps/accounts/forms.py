@@ -1,5 +1,7 @@
 from django import forms
 from django.contrib.auth import get_user_model
+from apps.accounts.models import Profile,WriterRequest
+from django.contrib.auth.forms import PasswordChangeForm
 
 User = get_user_model()
 
@@ -67,3 +69,87 @@ class UserRegisterForm(forms.ModelForm):
             user.save()
 
         return user
+    
+
+
+class UserUpdateForm(forms.ModelForm):
+    """Form for updating User model fields."""
+    class Meta:
+        model = User
+        fields = ['first_name','last_name']
+
+
+class ProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = [
+            "avatar",
+            "bio",
+            "phone_number",
+            "website",
+            "github",
+            "twitter",
+            "facebook",
+            "linkedin",
+        ]
+
+
+from django.contrib.auth.forms import PasswordChangeForm
+
+
+class CustomPasswordChangeForm(PasswordChangeForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields["old_password"].widget.attrs.update({
+            "class": "form-control",
+            "placeholder": "Current password",
+
+        })
+
+        self.fields["new_password1"].widget.attrs.update({
+            "class": "form-control",
+            "placeholder": "New password",
+        })
+
+        self.fields["new_password2"].widget.attrs.update({
+            "class": "form-control",
+            "placeholder": "Confirm new password",
+        })
+
+
+
+class DeleteAccountForm(forms.Form):
+    email = forms.EmailField(
+        widget=forms.EmailInput(
+        )
+    )
+
+    password = forms.CharField(
+        widget=forms.PasswordInput(
+        )
+    )
+    def __init__(self, *args, user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.user = user
+
+    def clean_email(self):
+        email=self.cleaned_data.get('email')
+        if email.lower() !=self.user.email.lower():
+            raise forms.ValidationError("Email does not match your account.")
+        return email
+        
+    def clean_password(self):
+        password=self.cleaned_data.get('password')
+        if not self.user.check_password(password):
+           raise forms.ValidationError(
+                "Password is incorrect."
+            )
+        return password
+    
+
+class WriterRequestForm(forms.ModelForm):
+    class Meta:
+        model = WriterRequest
+        fields = ["reason"]

@@ -1,0 +1,273 @@
+{% extends "base.html" %}
+{% load accounts_tags %}
+
+{% block title %}
+Active Sessions
+{% endblock %}
+
+{% block content %}
+
+<section class="settings-wrapper">
+
+<div class="container">
+
+    <!-- HERO -->
+    <div class="settings-hero">
+        <h1>Active Sessions</h1>
+        <p>
+            Review and manage every device currently signed in to your account.
+        </p>
+    </div>
+
+    <div class="settings-grid">
+
+        <!-- SIDEBAR -->
+        {% user_sidebar user %}
+
+        <!-- MAIN -->
+        <main class="settings-main">
+
+            <!-- OVERVIEW -->
+            <div class="section-card">
+
+                <div class="sessions-summary">
+
+                    <div>
+
+                        <h2>Security Overview</h2>
+
+                        <p>
+                            {{ page_obj.paginator.count }}
+                            active session{{ page_obj.paginator.count|pluralize }}
+                        </p>
+
+                    </div>
+
+                    <span class="security-badge">
+                        Protected
+                    </span>
+
+                </div>
+
+                {% if sessions %}
+
+                <div class="sessions-actions">
+
+                    <form method="post"
+                          action="{% url 'accounts:logout_other_sessions' %}">
+
+                        {% csrf_token %}
+
+                        <button
+                            type="submit"
+                            class="btn-danger">
+
+                            Sign Out Other Sessions
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+            <!-- SESSIONS -->
+
+            {% for session in sessions %}
+
+            <div class="session-card">
+
+                <div class="session-header">
+
+                    <div class="session-device">
+
+                        <div class="session-icon">
+
+                            {% if session.is_current %}
+                                🖥️
+                            {% else %}
+                                💻
+                            {% endif %}
+
+                        </div>
+
+                        <div>
+
+                            {% if session.is_current %}
+                                <h3>This Device</h3>
+                            {% else %}
+                                <h3>Signed-in Device</h3>
+                            {% endif %}
+
+                            <p>
+                                Session ID:
+                                <code>{{ session.session_key|truncatechars:18 }}</code>
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    {% if session.is_current %}
+
+                        <span class="session-badge current">
+                            Current
+                        </span>
+
+                    {% else %}
+
+                        <span class="session-badge">
+                            Active
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+                <div class="session-meta">
+
+                    <div class="meta-item">
+
+                        <span class="meta-label">
+                            Expires
+                        </span>
+
+                        <strong>
+                            {{ session.expire_date|date:"M d, Y · H:i" }}
+                        </strong>
+
+                    </div>
+
+                    <div class="meta-item">
+
+                        <span class="meta-label">
+                            Status
+                        </span>
+
+                        {% if session.is_current %}
+
+                            <strong class="status-active">
+                                Current Session
+                            </strong>
+
+                        {% else %}
+
+                            <strong>
+                                Active
+                            </strong>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+                <div class="session-footer">
+
+                    {% if session.is_current %}
+
+                        <button
+                            class="btn-session disabled"
+                            disabled>
+
+                            Current Session
+
+                        </button>
+
+                    {% else %}
+
+                        <form method="post"
+                              action="{% url 'accounts:logout_session' session.session_key %}">
+
+                            {% csrf_token %}
+
+                            <button
+                                type="submit"
+                                class="btn-session active">
+
+                                Sign Out
+
+                            </button>
+
+                        </form>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            {% empty %}
+
+            <div class="section-card">
+
+                <div class="empty-state">
+
+                    <div class="empty-icon">
+                        🔒
+                    </div>
+
+                    <h3>No Active Sessions</h3>
+
+                    <p>
+                        We couldn't find any active login sessions for your account.
+                    </p>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+            <!-- PAGINATION -->
+
+            {% if is_paginated %}
+
+            <div class="pagination-wrapper">
+
+                {% if page_obj.has_previous %}
+
+                    <a href="?page={{ page_obj.previous_page_number }}"
+                       class="pagination-btn">
+
+                        Previous
+
+                    </a>
+
+                {% endif %}
+
+                <span class="pagination-info">
+
+                    Page {{ page_obj.number }}
+                    of
+                    {{ page_obj.paginator.num_pages }}
+
+                </span>
+
+                {% if page_obj.has_next %}
+
+                    <a href="?page={{ page_obj.next_page_number }}"
+                       class="pagination-btn">
+
+                        Next
+
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+            {% endif %}
+
+        </main>
+
+    </div>
+
+</div>
+
+</section>
+
+{% endblock %}

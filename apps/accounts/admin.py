@@ -1,8 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
-from .models import User, Profile
-
+from .models import User, Profile,WriterRequest,UserTypes,Status
+from django.utils import timezone
 
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
@@ -42,3 +42,65 @@ class ProfileAdmin(admin.ModelAdmin):
     list_display = ('user', 'phone_number', 'created_date')
     search_fields = ('user__email', 'phone_number')
     date_hierarchy = 'created_date'  # date-based drilldown navigation
+
+
+
+
+
+
+@admin.register(WriterRequest)
+class WriterRequestAdmin(admin.ModelAdmin):
+
+    list_display = [
+        "user",
+        "status",
+        "created_at",
+        "reviewed_at",
+    ]
+
+    search_fields = [
+        "user__email",
+        "reason",
+    ]
+
+    list_filter = [
+        "status",
+    ]
+
+    readonly_fields = (
+        "status",
+        'created_at',
+        "reviewed_at",
+    )
+
+    actions = [
+        "approve_requests",
+        "reject_requests",
+    ]
+
+    @admin.action(description="Approve selected writer requests")
+    def approve_requests(self, request, queryset):
+
+        queryset.update(
+            status=Status.APPROVED,
+            reviewed_at=timezone.now(),
+        )
+
+        for writer_request in queryset:
+
+            profile = writer_request.user.profile
+            profile.user_type = UserTypes.WRITER
+            profile.save()
+
+    @admin.action(description="Reject selected writer requests")
+    def reject_requests(self, request, queryset):
+
+        queryset.update(
+            status=Status.REJECTED,
+            reviewed_at=timezone.now(),
+        )
+        for writer_request in queryset:
+            profile = writer_request.user.profile
+            profile.user_type=UserTypes.READER
+            profile.save()
+

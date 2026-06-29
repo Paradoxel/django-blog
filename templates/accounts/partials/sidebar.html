@@ -1,0 +1,104 @@
+{% load static %}
+
+<aside class="settings-side">
+
+    <!-- USER CARD -->
+    <div class="user-card">
+
+        <div class="avatar-ring">
+            {% if user.profile.avatar %}
+                <img src="{{ user.profile.avatar.url }}" alt="avatar">
+            {% else %}
+                <img src="{% static 'img/default-avatar.png' %}" alt="avatar">
+            {% endif %}
+        </div>
+
+        <h3>{{ user.get_full_name|default:user.email }}</h3>
+
+        <p class="muted">
+            
+
+
+        {% if user.profile.user_type == "writer" %}
+
+            <p class="muted">
+                Writer Account
+            </p>
+
+        {% else %}
+
+            <p class="muted">
+                Reader Account
+            </p>
+
+            <div class="writer-cta">
+
+                <p class="writer-cta-title">
+                    Want to publish articles?
+                </p>
+
+                <a href="{% url 'accounts:become_writer' %}"
+                class="btn-writer">
+
+                    Become a Writer
+
+                </a>
+
+            </div>
+
+        {% endif %}
+
+
+
+
+
+
+        </p>
+
+    </div>
+
+    <!-- NAVIGATION -->
+    <div class="settings-nav">
+
+        <a href="{% url 'accounts:profile' %}"
+           class="nav-item {% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
+            Profile
+        </a>
+
+        <a href="{% url 'accounts:security' %}"
+           class="nav-item {% if request.resolver_match.url_name == 'security' %}active{% endif %}">
+            Security
+        </a>
+        
+        <div class="nav-divider"></div>
+
+        <div class="nav-group-title">Your Activity</div>
+
+        <a href="{% url 'accounts:engagement' %}"
+           class="nav-item {% if request.resolver_match.url_name == 'engagement' %}active{% endif %}">
+            Engagement
+        </a>
+
+        {% if user.profile.user_type == "writer" %}
+
+            <div class="nav-divider"></div>
+
+            <div class="nav-group-title">Writer Tools</div>
+
+            <a href="{% url 'accounts:my_posts' %}"
+               class="nav-item {% if request.resolver_match.url_name == 'my_posts' %}active{% endif %}">
+                My Posts
+            </a>
+
+        {% endif %}
+
+        <div class="nav-divider"></div>
+
+        <a href="{% url 'accounts:delete_account' %}"
+           class="nav-item danger">
+            Delete Account
+        </a>
+
+    </div>
+
+</aside>

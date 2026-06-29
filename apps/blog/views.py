@@ -1,12 +1,14 @@
 from django.contrib import messages
 from django.db.models import Q, F
 from django.shortcuts import redirect
-from django.views.generic import ListView, DetailView
-
-from apps.blog.models import Post
+from django.shortcuts import get_object_or_404
+from django.views.generic import ListView, DetailView,View,CreateView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from apps.blog.models import Post,Like,SavedPost
 from apps.blog.forms import CommentForm
-
-
+from apps.accounts.permissions import WriterRequiredMixin
+from apps.blog.forms import PostForm
+from django.urls import reverse_lazy
 class BlogView(ListView):
     """
     Display paginated list of published blog posts.
@@ -67,20 +69,34 @@ class PostDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         post = self.object
 
+        if self.request.user.is_authenticated:
+            user = self.request.user
+
+            context["is_liked"] = post.likes.filter(user=user).exists()
+            context["is_saved"] = post.saved_by.filter(user=user).exists()
+        else:
+            context["is_liked"] = False
+            context["is_saved"] = False
+
+        context["likes_count"] = post.likes.count()
+
         context["next_post"] = (
             Post.objects.published()
             .filter(published_date__gt=post.published_date)
             .order_by("published_date")
             .first()
         )
+
         context["previous_post"] = (
             Post.objects.published()
             .filter(published_date__lt=post.published_date)
             .order_by("-published_date")
             .first()
         )
+
         context["comments"] = post.comments.approved()
         context["comment_form"] = CommentForm()
+
         return context
 
     def post(self, request, *args, **kwargs):
@@ -103,3 +119,29 @@ class PostDetailView(DetailView):
         context = self.get_context_data()
         context["comment_form"] = form
         return self.render_to_response(context)
+    
+
+
+class ToggleLikeView(LoginRequiredMixin,View):
+    def post(self,request,slug):
+        post=get_object_or_404(Post,slug=slug)
+        like=post.likes.filter(user=request.user).first()
+        if like:
+            like.delete()
+        else:
+            post.likes.create(user=request.user)
+        return redirect("blog:detail",slug=slug)
+    
+
+class ToggleSaveView(LoginRequiredMixin,View):
+    def post(self,request,slug):
+        post=get_object_or_404(Post,slug=slug)
+        saved=post.saved_by.filter(user=request.user).first()
+        if saved:
+            saved.delete()
+        else:
+            post.saved_by.create(user=request.user)
+        return redirect("blog:detail",slug=post.slug)
+
+
+

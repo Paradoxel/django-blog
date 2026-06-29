@@ -116,6 +116,15 @@ CSRF_TRUSTED_ORIGINS = [
     if origin
 ]
 
+
+
+# URL to redirect users when they are NOT authenticated
+LOGIN_URL = "accounts:login"
+# URL to redirect users AFTER successful login
+LOGIN_REDIRECT_URL = "core:home"
+# URL to redirect users AFTER logout
+LOGOUT_REDIRECT_URL = "core:home"
+
 # --- Media Storage (Supabase) ---
 if not DEBUG:
     STORAGES = {

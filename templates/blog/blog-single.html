@@ -95,6 +95,44 @@
             <h3 class="mt-20 mb-20">
               {{post.title}}
             </h3>
+
+
+
+
+            <!-- POST ACTIONS (LIKE / SAVE) -->
+            <div class="post-actions">
+
+                            <form method="post" action="{% url 'blog:toggle_like' post.slug %}" style="display:inline;">
+                            {% csrf_token %}
+
+                            <button type="submit"
+                                    class="action-btn like-btn {% if is_liked %}active{% endif %}">
+
+                                {% if is_liked %}
+                                    ❤️ {{ likes_count }}
+                                {% else %}
+                                    🤍 {{ likes_count }}
+                                {% endif %}
+
+                            </button>
+                        </form>
+
+                <form method="post" action="{% url 'blog:toggle_save' post.slug %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="action-btn {% if is_saved %}active{% endif %}">
+                        
+                        {% if is_saved %}
+                            🔖 Saved
+                        {% else %}
+                            🔖 Save
+                        {% endif %}
+
+                    </button>
+                </form>
+
+            </div>
+
+
             <p class="excert">
               {{post.content}}
             </p>

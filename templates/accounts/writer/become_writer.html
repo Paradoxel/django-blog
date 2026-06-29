@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+{% load static %}
+{% load accounts_tags %}
+
+{% block title %}
+Apply to Become a Writer
+{% endblock %}
+
+{% block content %}
+
+<section class="settings-wrapper">
+
+    <div class="container">
+
+        <!-- HERO -->
+        <div class="settings-hero">
+
+            <h1>Apply to Become a Writer</h1>
+
+            <p>
+                Share your knowledge, publish high-quality articles,
+                and become part of our growing community of writers.
+            </p>
+
+        </div>
+
+        <div class="settings-grid">
+
+            <!-- SIDEBAR -->
+            {% user_sidebar user %}
+
+            <!-- MAIN -->
+            <main class="settings-main">
+
+                <!-- BENEFITS -->
+                <div class="section-card writer-benefits">
+
+                    <div class="section-header">
+
+                        <h2>
+                            Why Become a Writer?
+                        </h2>
+
+                        <p>
+                            As a writer you'll be able to share your ideas,
+                            inspire readers, and build your own professional
+                            profile.
+                        </p>
+
+                    </div>
+
+                    <div class="section-body">
+
+                        <div class="benefits-grid">
+
+                            <div class="benefit-item">
+                                <span class="benefit-icon">✍️</span>
+                                <div>
+                                    <h4>Publish Articles</h4>
+                                    <p>Create and publish your own content.</p>
+                                </div>
+                            </div>
+
+                            <div class="benefit-item">
+                                <span class="benefit-icon">🌍</span>
+                                <div>
+                                    <h4>Reach Readers</h4>
+                                    <p>Share your knowledge with the community.</p>
+                                </div>
+                            </div>
+
+                            <div class="benefit-item">
+                                <span class="benefit-icon">🚀</span>
+                                <div>
+                                    <h4>Grow Your Profile</h4>
+                                    <p>Build your reputation as a writer.</p>
+                                </div>
+                            </div>
+
+                            <div class="benefit-item">
+                                <span class="benefit-icon">💡</span>
+                                <div>
+                                    <h4>Inspire Others</h4>
+                                    <p>Help readers learn through your experience.</p>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- APPLICATION FORM -->
+                <div class="section-card writer-request-card">
+
+                    <div class="section-header">
+
+                        <h2>
+                            Writer Application
+                        </h2>
+
+                        <p>
+                            Tell us why you'd like to become a writer.
+                            Every application is reviewed by our team before approval.
+                        </p>
+
+                    </div>
+
+                    <div class="section-body">
+
+                        <form method="post">
+
+                            {% csrf_token %}
+
+                            <div class="form-group">
+
+                                <label for="{{ form.reason.id_for_label }}">
+                                    Why would you like to become a writer?
+                                </label>
+
+                                {{ form.reason }}
+
+                                <small class="form-help">
+                                    Describe your experience, interests, and
+                                    the topics you'd like to write about.
+                                </small>
+
+                                {% if form.reason.errors %}
+                                    <div class="field-error">
+                                        {{ form.reason.errors.0 }}
+                                    </div>
+                                {% endif %}
+
+                            </div>
+
+                            {% if form.non_field_errors %}
+                                <div class="field-error">
+                                    {{ form.non_field_errors }}
+                                </div>
+                            {% endif %}
+
+                            <div class="writer-note">
+
+                                <strong>Application Review</strong>
+
+                                <p>
+                                    Our editorial team will review your request.
+                                    Once reviewed, you'll be notified of the decision.
+                                </p>
+
+                            </div>
+
+                            <div class="settings-actions">
+
+                                <a
+                                    href="{% url 'accounts:profile' %}"
+                                    class="btn-secondary">
+
+                                    Cancel
+
+                                </a>
+
+                                <button type="submit" class="btn-primary btn-submit-writer">
+                                    Submit Application
+                                </button>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </main>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

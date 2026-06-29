@@ -38,16 +38,30 @@ def avatar_upload_path(instance, filename):
     return f"avatars/{instance.user.id}/{filename}"
 
 
+
+
+
+# type of user
+class UserTypes(models.TextChoices):
+    READER = "reader", "Reader"
+    WRITER = "writer", "Writer"
 class Profile(models.Model):
     """
     Extended user profile created automatically via signal on User creation.
     Stores optional personal info and social links.
     """
 
+    
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="profile",
+    )
+
+    user_type = models.CharField(
+        max_length=20,
+        choices=UserTypes.choices,
+        default=UserTypes.READER
     )
 
     phone_number = models.CharField(
@@ -78,3 +92,27 @@ class Profile(models.Model):
 
     def __str__(self):
         return f"{self.user.get_full_name()}'s profile"
+    
+
+
+
+
+
+
+
+
+
+
+
+
+class Status(models.TextChoices):
+    PENDING  = 'pending',  'Pending'
+    APPROVED = 'approved', 'Approved'
+    REJECTED = 'rejected', 'Rejected'
+
+class WriterRequest(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    status = models.CharField(max_length=10,choices=Status.choices,default=Status.PENDING)
+    reason = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    reviewed_at = models.DateTimeField(null=True,blank=True)

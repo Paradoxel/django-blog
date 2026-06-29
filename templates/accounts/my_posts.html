@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% load static %}
+{% load accounts_tags %}
+
+{% block title %}My Posts{% endblock %}
+
+{% block content %}
+
+<section class="settings-wrapper">
+
+    <div class="container">
+
+        <!-- HEADER -->
+        <div class="settings-hero">
+            <h1>My Posts</h1>
+            <p>Manage your created content</p>
+        </div>
+
+        <div class="settings-grid">
+
+            <!-- SIDEBAR -->
+            {% user_sidebar user %}
+
+            <!-- MAIN -->
+            <main class="settings-main">
+
+                <!-- ACTION BAR -->
+                <div class="section-card">
+
+                    <div class="section-header">
+                        <h2>Writer Dashboard</h2>
+                        <p>Create and manage your posts</p>
+                    </div>
+
+                    <div class="section-body">
+
+                        <a href="{% url 'accounts:post_create' %}" class="btn-primary">
+                            + Create New Post
+                        </a>
+
+                    </div>
+
+                </div>
+
+                <!-- POSTS LIST -->
+                <div class="section-card">
+
+                    {% if posts %}
+
+                        <div class="activity-list">
+
+                            {% for post in posts %}
+
+                                <div class="activity-card post-card">
+
+                                    <!-- HEADER -->
+                                    <div class="post-header">
+
+                                        <div class="post-title">
+                                            {{ post.title }}
+                                        </div>
+
+                                        <!-- STATUS BADGE (CLEAN VERSION) -->
+                                        <div class="post-status">
+                                            <span class="badge badge-{{ post.status }}">
+                                                {{ post.status_label }}
+                                            </span>
+                                        </div>
+
+                                    </div>
+
+                                    <!-- BODY -->
+                                    <p class="post-excerpt">
+                                        {{ post.excerpt|default:post.content|truncatechars:120 }}
+                                    </p>
+
+                                    <!-- FOOTER ACTIONS -->
+                                    <div class="post-actions">
+
+                                        <!-- Preview -->
+                                        {% if post.status == "published" %}
+                                            <a href="{{ post.get_absolute_url }}" class="btn btn-light btn-action">
+                                                👁 Preview
+                                            </a>
+                                        {% endif %}
+
+                                        <!-- Edit -->
+                                        <a href="{% url 'accounts:post_edit' post.slug %}" class="btn btn-primary btn-action">
+                                            ✏ Edit
+                                        </a>
+
+                                        <!-- Delete -->
+                                        <a href="{% url 'accounts:post_delete' post.slug %}"
+                                        class="btn btn-danger btn-action">
+                                            🗑 Delete
+                                        </a>
+
+                                    </div>
+
+                                </div>
+
+                            {% endfor %}
+
+                        </div>
+
+                    {% else %}
+
+                        <div class="empty-state">
+                            <h3>No Posts Yet</h3>
+                            <p>Create your first article and start writing.</p>
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </main>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
