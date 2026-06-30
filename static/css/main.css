@@ -4966,20 +4966,23 @@ body.mobile-nav-active #mobile-nav-toggle {
     color: #94a3b8;
 }
 
+.field-error {
+    margin-top: 6px;
+    font-size: 13px;
+}
 /* =========================================================
-   PREMIUM SAAS DASHBOARD UI
+   PREMIUM SAAS DASHBOARD UI (SETTINGS / PROFILE PAGE)
+   Clean, scalable, production-ready frontend architecture
    ========================================================= */
 
+
+/* =========================
+   BASE WRAPPER
+   ========================= */
 .settings-wrapper {
     background: radial-gradient(circle at top, #f8fafc, #eef2ff);
     min-height: 100vh;
     padding: 80px 0;
-}
-
-.field-error {
-    margin-top: 6px;
-    font-size: 13px;
-    color: #ef4444;
 }
 
 
@@ -5285,7 +5288,6 @@ body.mobile-nav-active #mobile-nav-toggle {
 .field-error {
     margin-top: 6px;
     font-size: 12px;
-    
     color: #ef4444;
     font-weight: 500;
 }
@@ -5318,6 +5320,7 @@ body.mobile-nav-active #mobile-nav-toggle {
     color: #4f46e5;
     font-weight: 600;
 }
+
 /* Error input highlight */
 .form-group input.error {
     border: 1.5px solid #ef4444;
