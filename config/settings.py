@@ -21,6 +21,7 @@ ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
 # --- Apps ---
 
 INSTALLED_APPS = [
+    # Django apps
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -30,20 +31,24 @@ INSTALLED_APPS = [
     "django.contrib.humanize",
     "django.contrib.sites",
     "django.contrib.sitemaps",
-    # third-party
+
+    # Third-party apps
     "captcha",
     "robots",
-    # local
+
+    # Local apps
     "apps.accounts.apps.AccountsConfig",
     "apps.core.apps.CoreConfig",
     "apps.blog.apps.BlogConfig",
 ]
 
+# Custom user model
 AUTH_USER_MODEL = "accounts.User"
+
+# Default site used by Django's Sites Framework.
 SITE_ID = 1
 
 # --- Middleware ---
-
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
@@ -73,10 +78,11 @@ TEMPLATES = [
     },
 ]
 
+# Entry point used by WSGI servers (e.g. Gunicorn) to serve this Django application.
 WSGI_APPLICATION = "config.wsgi.application"
 
 # --- Database ---
-
+# Database configuration (SQLite for development, DATABASE_URL for production)
 DATABASES = {
     "default": dj_database_url.config(
         default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
@@ -85,7 +91,6 @@ DATABASES = {
 }
 
 # --- Password validation ---
-
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
@@ -93,26 +98,27 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
-# --- Internationalization ---
-
-LANGUAGE_CODE = "en-us"
-TIME_ZONE = "UTC"
-USE_I18N = True
-USE_TZ = True
+# --- Internationalization & Timezone ---
+LANGUAGE_CODE = "en-us"       # Default language for Django and admin
+TIME_ZONE = "Asia/Tehran"     # Default project timezone
+USE_I18N = True               # Enable Django's translation framework
+USE_TZ = True                 # Use timezone-aware datetimes
 
 GOOGLE_MAPS_API_KEY = os.getenv("GOOGLE_MAPS_API_KEY", "")
 
-# --- Static & Media ---
-
+# Static files (CSS, JavaScript, Images)
 STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
+# User uploaded files
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
+# Trusted origins allowed to send CSRF-protected requests (configured via environment variables).
 CSRF_TRUSTED_ORIGINS = [
-    origin for origin in os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",")
+    origin
+    for origin in os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",")
     if origin
 ]
 
@@ -125,24 +131,76 @@ LOGIN_REDIRECT_URL = "core:home"
 # URL to redirect users AFTER logout
 LOGOUT_REDIRECT_URL = "core:home"
 
-# --- Media Storage (Supabase) ---
+
+# -------------------------------------------------------------------
+# Media Storage (Production Only)
+# -------------------------------------------------------------------
+# During development (DEBUG=True):
+#   - Static files are served locally.
+#   - Uploaded media files are stored inside MEDIA_ROOT.
+#
+# During production (DEBUG=False):
+#   - Uploaded media files are stored in Supabase Storage (S3 API).
+#   - Static files are served by WhiteNoise.
+# -------------------------------------------------------------------
+
 if not DEBUG:
+
+    # Configure Django's storage backends.
     STORAGES = {
+        # Default storage backend (user uploaded files).
         "default": {
             "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
         },
+
+        # Static files storage.
         "staticfiles": {
             "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
         },
     }
 
+    # ----------------------------------------------------------------
+    # Supabase Storage Credentials
+    # ----------------------------------------------------------------
+    # These values are loaded from environment variables to keep
+    # secrets out of the source code.
     AWS_ACCESS_KEY_ID = os.getenv("SUPABASE_ACCESS_KEY")
     AWS_SECRET_ACCESS_KEY = os.getenv("SUPABASE_SECRET_KEY")
+
+    # ----------------------------------------------------------------
+    # Storage Bucket
+    # ----------------------------------------------------------------
+    # Name of the bucket where uploaded media files are stored.
     AWS_STORAGE_BUCKET_NAME = "media"
+
+    # ----------------------------------------------------------------
+    # Supabase S3 Endpoint
+    # ----------------------------------------------------------------
+    # Django communicates with Supabase using its S3-compatible API.
     AWS_S3_ENDPOINT_URL = os.getenv("SUPABASE_S3_ENDPOINT")
+
+    # ----------------------------------------------------------------
+    # Storage Behaviour
+    # ----------------------------------------------------------------
+
+    # Prevent uploaded files with the same name from overwriting
+    # existing files.
     AWS_S3_FILE_OVERWRITE = False
+
+    # Make uploaded files publicly accessible.
     AWS_DEFAULT_ACL = "public-read"
+
+    # Generate clean public URLs without temporary signed query strings.
     AWS_QUERYSTRING_AUTH = False
-    AWS_S3_REGION_NAME = os.getenv("SUPABASE_REGION", "us-east-1") 
-    AWS_S3_SIGNATURE_VERSION = "s3v4"  
-    AWS_S3_CUSTOM_DOMAIN = f"{os.getenv('SUPABASE_PROJECT_ID')}.supabase.co/storage/v1/object/public/media"
+
+    # S3 region used by the storage backend.
+    AWS_S3_REGION_NAME = os.getenv("SUPABASE_REGION", "us-east-1")
+
+    # Signature version used when communicating with the S3 API.
+    AWS_S3_SIGNATURE_VERSION = "s3v4"
+
+    # Public base URL used to access uploaded media files.
+    AWS_S3_CUSTOM_DOMAIN = (
+        f"{os.getenv('SUPABASE_PROJECT_ID')}"
+        ".supabase.co/storage/v1/object/public/media"
+    )
