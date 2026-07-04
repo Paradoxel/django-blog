@@ -43,8 +43,10 @@ def avatar_upload_path(instance, filename):
 
 
 
-# type of user
+
 class UserTypes(models.TextChoices):
+    """Available roles for application users."""
+
     READER = "reader", "Reader"
     WRITER = "writer", "Writer"
 class Profile(models.Model):
@@ -69,7 +71,6 @@ class Profile(models.Model):
     phone_number = models.CharField(
         max_length=13,
         blank=True,
-        null=True,
         unique=True,
         validators=[validate_iran_phone_number],  # accepts 09xx or +989xx format
     )
@@ -80,14 +81,14 @@ class Profile(models.Model):
         null=True,
     )
 
-    bio = models.CharField(max_length=150, blank=True)
+    bio = models.TextField(max_length=300, blank=True)
 
     # social links — all optional
-    website = models.URLField(blank=True, null=True)
-    github = models.URLField(blank=True, null=True)
-    twitter = models.URLField(blank=True, null=True)
-    facebook = models.URLField(blank=True, null=True)
-    linkedin = models.URLField(blank=True, null=True)
+    website = models.URLField(blank=True)
+    github = models.URLField(blank=True)
+    twitter = models.URLField(blank=True)
+    facebook = models.URLField(blank=True)
+    linkedin = models.URLField(blank=True)
 
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
@@ -95,7 +96,13 @@ class Profile(models.Model):
     def __str__(self):
         return f"{self.user.get_full_name()}'s profile"
     
+    class Meta:
+        ordering = ['-created_date']
 
+    @property
+    def is_writer(self):
+        """Return True if the user has writer permissions."""
+        return self.user_type==UserTypes.WRITER
 
 
 
