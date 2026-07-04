@@ -1,43 +1,58 @@
 from django.urls import path
 
-from .views import (UserLoginView,
-                    UserRegisterView,
-                    user_logout,
-                    UpdateUserProfile,
-                    UserEngagementView,
-                    MyPostsView,
-                    CreatePostView,
-                    PostUpdateView,
-                    PostDeleteView,
-                    UserSecurityView,
-                    UserPasswordChangeView,
-                    UserSessionsView,
-                    LogoutSessionView,
-                    LogoutOtherSessionsView,
-                    DeleteAccountView,
-                    DeleteAccountConfirmView,
-                    BecomeWriterView)
+from . import views
 
 app_name = "accounts"
 
 urlpatterns = [
-    path("login/", UserLoginView.as_view(), name="login"),
-    path("register/", UserRegisterView.as_view(), name="register"),
-    path("logout/", user_logout , name="logout"),
-    path('profile/',UpdateUserProfile.as_view(),name='profile'),
-    path('engagement/',UserEngagementView.as_view(),name='engagement'),
-    path('my_posts/',MyPostsView.as_view(),name='my_posts'),
-    path("posts/create/", CreatePostView.as_view(), name="post_create"),
-    path("posts/<slug:slug>/edit/", PostUpdateView.as_view(), name="post_edit"),
-    path('posts/<slug:slug>/delete/',PostDeleteView.as_view(),name='post_delete'),
-    path('security/',UserSecurityView.as_view(),name='security'),
-    path('security/password/',UserPasswordChangeView.as_view(),name='security_password'),
-    path('security/sessions/',UserSessionsView.as_view(),name='security_sessions'),
-    path('security/sessions/logout/<str:session_key>/',LogoutSessionView.as_view(),name='logout_session'),
-    path('security/sessions/logout-other/',LogoutOtherSessionsView.as_view(),name="logout_other_sessions"),
-    path('security/delete-account/',DeleteAccountView.as_view(),name='delete_account'),
-    path('security/delete-account/confirm/',DeleteAccountConfirmView.as_view(),name="delete_account_confirm"),
-    path('become-writer/',BecomeWriterView.as_view(),name="become_writer",)
+    path("login/", views.UserLoginView.as_view(), name="login"),
+    path("register/", views.UserRegisterView.as_view(), name="register"),
+    path("logout/", views.user_logout, name="logout"),
 
+    path("profile/", views.UpdateUserProfile.as_view(), name="profile"),
+    path("engagement/", views.UserEngagementView.as_view(), name="engagement"),
+    path("my_posts/", views.MyPostsView.as_view(), name="my_posts"),
 
+    path("posts/create/", views.CreatePostView.as_view(), name="post_create"),
+    path("posts/<slug:slug>/edit/", views.PostUpdateView.as_view(), name="post_edit"),
+    path("posts/<slug:slug>/delete/", views.PostDeleteView.as_view(), name="post_delete"),
+
+    path("security/", views.UserSecurityView.as_view(), name="security"),
+    path(
+        "security/password/",
+        views.UserPasswordChangeView.as_view(),
+        name="security_password",
+    ),
+    path(
+        "security/sessions/",
+        views.UserSessionsView.as_view(),
+        name="security_sessions",
+    ),
+    path(
+        "security/sessions/logout/<str:session_key>/",
+        views.LogoutSessionView.as_view(),
+        name="logout_session",
+    ),
+    path(
+        "security/sessions/logout-other/",
+        views.LogoutOtherSessionsView.as_view(),
+        name="logout_other_sessions",
+    ),
+
+    path(
+        "security/delete-account/",
+        views.DeleteAccountView.as_view(),
+        name="delete_account",
+    ),
+    path(
+        "security/delete-account/confirm/",
+        views.DeleteAccountConfirmView.as_view(),
+        name="delete_account_confirm",
+    ),
+
+    path(
+        "become-writer/",
+        views.BecomeWriterView.as_view(),
+        name="become_writer",
+    ),
 ]
