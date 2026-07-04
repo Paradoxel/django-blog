@@ -7,11 +7,10 @@ from .validators import validate_iran_phone_number
 
 class User(AbstractBaseUser, PermissionsMixin):
     """
-    Custom user model that uses email as the unique identifier
-    instead of the default username field.
+    Custom user model using email as the authentication identifier.
     """
 
-    email = models.EmailField(unique=True)  # used as USERNAME_FIELD
+    email = models.EmailField(unique=True)  
     first_name = models.CharField(max_length=150, blank=True)
     last_name = models.CharField(max_length=150, blank=True)
     is_staff = models.BooleanField(default=False)
@@ -27,10 +26,13 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.email
 
-    def get_full_name(self):
+    def get_full_name(self) -> str:
         """Return full name, or email if first/last name are not set."""
         full_name = f"{self.first_name} {self.last_name}".strip()
         return full_name or self.email
+
+    class Meta:
+        ordering=['-created_date']
 
 
 def avatar_upload_path(instance, filename):
