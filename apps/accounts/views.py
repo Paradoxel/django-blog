@@ -23,6 +23,9 @@ from django.utils import timezone
 from django.views.generic import TemplateView,FormView
 from django.views.generic import View
 from django.shortcuts import get_object_or_404
+from django.views.decorators.http import require_POST
+
+
 User = get_user_model()
 
 
@@ -47,14 +50,14 @@ class UserRegisterView(CreateView):
     success_url = reverse_lazy("accounts:login")
 
 
+@require_POST
 @login_required
 def user_logout(request):
     """
-    Log out the current user and redirect to home page.
+    Log out the authenticated user and redirect to the home page.
     """
-    if(request.method=='POST'):
-        logout(request)
-        messages.success(request, "You have been logged out successfully.")
+    logout(request)
+    messages.success(request, "You have been logged out successfully.")
     return redirect("core:home")
 
 
