@@ -34,11 +34,6 @@ class UserLoginView(LoginView):
     template_name = "accounts/login.html"
     redirect_authenticated_user = True
 
-    def get_success_url(self):
-        """
-        Redirect user after successful login.
-        """
-        return reverse_lazy("core:home")
 
 
 class UserRegisterView(CreateView):
