@@ -63,52 +63,59 @@ def user_logout(request):
 
 
 
-# for update the user profile 
-class UpdateUserProfile(LoginRequiredMixin,UpdateView):
+class UpdateUserProfile(LoginRequiredMixin, UpdateView):
     """
     Handle profile update for logged-in users.
     Updates both User and Profile models in one submission.
     """
+
     template_name = "accounts/profile.html"
-    form_class=UserUpdateForm
-    def get_success_url(self):
-        return reverse_lazy("accounts:profile")
-    def get_object(self, queryset = ...):
-        # return current user
+    form_class = UserUpdateForm
+    success_url = reverse_lazy("accounts:profile")
+
+    def get_object(self, queryset=None):
+        """Return the currently authenticated user."""
         return self.request.user
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        if self.request.method=='POST':
-            context['profile_form']= ProfileUpdateForm(
+
+        profile = self.request.user.profile
+
+        if self.request.method == "POST":
+            context["profile_form"] = ProfileUpdateForm(
                 self.request.POST,
-                self.request.FILES, # needed for avatar
-                instance=self.get_object().profile,
+                self.request.FILES,
+                instance=profile,
             )
         else:
             context["profile_form"] = ProfileUpdateForm(
-                    instance=self.get_object().profile
+                instance=profile,
             )
+
         return context
 
     def form_valid(self, form):
         context = self.get_context_data()
         profile_form = context["profile_form"]
 
-        if form.is_valid() and profile_form.is_valid():
+        if profile_form.is_valid():
             self.object = form.save()
             profile_form.save()
 
-            messages.success(self.request, "Profile updated successfully")
+            messages.success(
+                self.request,
+                "Profile updated successfully.",
+            )
 
-            return redirect(self.get_success_url())
+            return redirect(self.success_url)
 
         return self.form_invalid(form)
-        
-    def form_invalid(self, form):
-        return self.render_to_response(self.get_context_data(form=form))
-    
 
+    def form_invalid(self, form):
+        return self.render_to_response(
+            self.get_context_data(form=form)
+        )
 
 class UserEngagementView(LoginRequiredMixin, ListView):
     template_name = "accounts/engagement.html"
