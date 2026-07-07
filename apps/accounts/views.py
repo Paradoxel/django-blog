@@ -383,21 +383,23 @@ class LogoutOtherSessionsView(LoginRequiredMixin, View):
 
 
 
-class DeleteAccountView(LoginRequiredMixin,FormView):
+class DeleteAccountView(LoginRequiredMixin, FormView):
+    """
+    Verify the user's identity before account deletion.
+    """
+
     template_name = "accounts/security/delete_account.html"
     form_class = DeleteAccountForm
     success_url = reverse_lazy("accounts:delete_account_confirm")
-    
+
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['user']=self.request.user
+        kwargs["user"] = self.request.user
         return kwargs
-    
-    
+
     def form_valid(self, form):
         self.request.session["delete_account_verified"] = True
         return super().form_valid(form)
-    
 
 
 
