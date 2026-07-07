@@ -403,16 +403,22 @@ class DeleteAccountView(LoginRequiredMixin, FormView):
 
 
 
-class DeleteAccountConfirmView(LoginRequiredMixin,DeleteAccountVerificationRequiredMixin,TemplateView):
+class DeleteAccountConfirmView(LoginRequiredMixin,DeleteAccountVerificationRequiredMixin,TemplateView,):
+    """
+    Permanently delete the authenticated user's account.
+    """
+
     template_name = "accounts/security/delete_account_confirm.html"
-    success_url = reverse_lazy('core:home')
+    success_url = reverse_lazy("core:home")
+
     def post(self, request, *args, **kwargs):
+        user = request.user
 
         with transaction.atomic():
-
-            user = request.user
-
-            request.session.pop("delete_account_verified", None)
+            request.session.pop(
+                "delete_account_verified",
+                None,
+            )
 
             logout(request)
 
@@ -420,7 +426,7 @@ class DeleteAccountConfirmView(LoginRequiredMixin,DeleteAccountVerificationRequi
 
             messages.success(
                 request,
-                "Your account has been permanently deleted."
+                "Your account has been permanently deleted.",
             )
 
         return redirect(self.success_url)
