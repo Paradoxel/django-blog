@@ -118,33 +118,35 @@ class UpdateUserProfile(LoginRequiredMixin, UpdateView):
         )
 
 class UserEngagementView(LoginRequiredMixin, ListView):
+    """
+    Display the current user's engagement history.
+    """
+
     template_name = "accounts/engagement.html"
-    paginate_by = 3
     context_object_name = "activities"
+    paginate_by = 3
 
     def get_queryset(self):
         user = self.request.user
         activity_type = self.request.GET.get("activity_type", "all")
 
+        comments = Comment.objects.filter(user=user).select_related("post")
+        likes = Like.objects.filter(user=user).select_related("post")
+        saved_posts = SavedPost.objects.filter(user=user).select_related("post")
+
         if activity_type == "comments":
-            return Comment.objects.filter(user=user).select_related("post")
+            return comments
 
-        elif activity_type == "likes":
-            return Like.objects.filter(user=user).select_related("post")
+        if activity_type == "likes":
+            return likes
 
-        elif activity_type == "saved":
-            return SavedPost.objects.filter(user=user).select_related("post")
+        if activity_type == "saved":
+            return saved_posts
 
-        else:
-            comments = Comment.objects.filter(user=user).select_related("post")
-            likes = Like.objects.filter(user=user).select_related("post")
-            saved = SavedPost.objects.filter(user=user).select_related("post")
+        activities = list(chain(comments, likes, saved_posts))
+        activities.sort(key=lambda activity: activity.created_date, reverse=True)
 
-            activities = list(chain(comments, likes, saved))
-            activities.sort(key=lambda x: x.created_date, reverse=True)
-
-            return activities
-
+        return activities
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -152,23 +154,26 @@ class UserEngagementView(LoginRequiredMixin, ListView):
         user = self.request.user
         activity_type = self.request.GET.get("activity_type", "all")
 
+        comments_count = Comment.objects.filter(user=user).count()
+        likes_count = Like.objects.filter(user=user).count()
+        saved_count = SavedPost.objects.filter(user=user).count()
+
         context["activity_type"] = activity_type
 
-        context["comments_count"] = Comment.objects.filter(user=user).count()
-        context["likes_count"] = Like.objects.filter(user=user).count()
-        context["saved_count"] = SavedPost.objects.filter(user=user).count()
+        context["comments_count"] = comments_count
+        context["likes_count"] = likes_count
+        context["saved_count"] = saved_count
 
         context["total_activity"] = (
-            context["comments_count"]
-            + context["likes_count"]
-            + context["saved_count"]
+            comments_count
+            + likes_count
+            + saved_count
         )
 
-        context["is_writer"] = (
-            user.profile.user_type == UserTypes.WRITER
-        )
+        context["is_writer"] = user.profile.is_writer
 
         return context
+
 
 class MyPostsView(LoginRequiredMixin,WriterRequiredMixin,ListView):
     model=Post
