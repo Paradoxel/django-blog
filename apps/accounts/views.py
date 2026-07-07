@@ -188,21 +188,21 @@ class MyPostsView(LoginRequiredMixin, WriterRequiredMixin, ListView):
         return self.model.objects.filter(author=self.request.user)
     
 
-class CreatePostView(LoginRequiredMixin,WriterRequiredMixin,CreateView):
+class CreatePostView(LoginRequiredMixin,WriterRequiredMixin,CreateView,):
+    """
+    Allow writers to create new draft posts.
+    """
+
     model = Post
     form_class = PostForm
     template_name = "accounts/post_form.html"
     success_url = reverse_lazy("accounts:my_posts")
-    def form_valid(self, form):
-        # STEP 1: attach author automatically (security)
-        form.instance.author = self.request.user
 
-        # STEP 2: force CMS workflow state
+    def form_valid(self, form):
+        form.instance.author = self.request.user
         form.instance.status = Post.Status.DRAFT
 
-        # STEP 3: save normally
         return super().form_valid(form)
-    
 
 
 class PostUpdateView(LoginRequiredMixin,WriterRequiredMixin,UpdateView):
