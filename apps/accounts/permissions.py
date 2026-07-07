@@ -28,7 +28,12 @@ class DeleteAccountVerificationRequiredMixin:
 
 
 class ReaderRequiredMixin:
+    """
+    Restrict access to reader-only users.
+    """
+
     def dispatch(self, request, *args, **kwargs):
-        if request.user.profile.user_type != UserTypes.READER:
+        if request.user.profile.is_writer:
             return redirect("accounts:profile")
+
         return super().dispatch(request, *args, **kwargs)
