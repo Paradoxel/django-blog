@@ -246,8 +246,12 @@ class PostDeleteView(LoginRequiredMixin,WriterRequiredMixin,DeleteView,):
         )
 
 
-class UserSecurityView(LoginRequiredMixin,TemplateView):
-    template_name='accounts/security/security.html'
+class UserSecurityView(LoginRequiredMixin, TemplateView):
+    """
+    Display user security settings page.
+    """
+
+    template_name = "accounts/security/security.html"
 
 
 
