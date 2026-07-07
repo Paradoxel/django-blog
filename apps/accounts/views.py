@@ -275,32 +275,42 @@ class UserPasswordChangeView(LoginRequiredMixin, PasswordChangeView):
 
 
 class UserSessionsView(LoginRequiredMixin, ListView):
+    """
+    Display all active sessions for the authenticated user.
+    """
+
     model = Session
     template_name = "accounts/security/security_sessions.html"
     context_object_name = "sessions"
     paginate_by = 3
 
     def get_queryset(self):
+        user_id = str(self.request.user.pk)
+        current_session_key = self.request.session.session_key
+
+        active_sessions = []
+
         queryset = Session.objects.filter(
             expire_date__gte=timezone.now()
         )
 
-        result = []
-
         for session in queryset:
-            data = session.get_decoded()
+            session_data = session.get_decoded()
 
-            if data.get("_auth_user_id") == str(self.request.user.pk):
-                result.append({
+            if session_data.get("_auth_user_id") != user_id:
+                continue
+
+            active_sessions.append(
+                {
                     "session_key": session.session_key,
                     "expire_date": session.expire_date,
                     "is_current": (
-                        session.session_key ==
-                        self.request.session.session_key
+                        session.session_key == current_session_key
                     ),
-                })
+                }
+            )
 
-        return result
+        return active_sessions
 
 
 
