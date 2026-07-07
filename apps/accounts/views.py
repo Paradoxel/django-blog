@@ -1,33 +1,47 @@
-from django.contrib.auth.views import LoginView
-from django.contrib.auth import logout, get_user_model
+from itertools import chain
+
+from django.contrib import messages
+from django.contrib.auth import get_user_model, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib import messages
-from django.shortcuts import redirect
-from django.urls import reverse_lazy
-from django.db import transaction
-from django.views.generic import CreateView,UpdateView,TemplateView
-from apps.accounts.forms import UserUpdateForm,ProfileUpdateForm,DeleteAccountForm,WriterRequestForm
-from apps.blog.models import Comment,Like,SavedPost
-from .forms import UserRegisterForm,WriterRequest
-from apps.accounts.models import UserTypes,Status
-from itertools import chain
-from django.views.generic import ListView,DeleteView
-from apps.blog.models import Post
-from apps.accounts.permissions import WriterRequiredMixin,DeleteAccountVerificationRequiredMixin,ReaderRequiredMixin
-from apps.blog.forms import PostForm
-from django.contrib.auth.views import PasswordChangeView
-from apps.accounts.forms import CustomPasswordChangeForm
+from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.contrib.sessions.models import Session
+from django.db import transaction
+from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse_lazy
 from django.utils import timezone
-from django.views.generic import TemplateView,FormView
-from django.views.generic import View
-from django.shortcuts import get_object_or_404
 from django.views.decorators.http import require_POST
+from django.views.generic import (
+    CreateView,
+    DeleteView,
+    FormView,
+    ListView,
+    TemplateView,
+    UpdateView,
+    View,
+)
+
+from apps.accounts.forms import (
+    CustomPasswordChangeForm,
+    DeleteAccountForm,
+    ProfileUpdateForm,
+    UserRegisterForm,
+    UserUpdateForm,
+    WriterRequestForm,
+)
+from apps.accounts.models import Status, UserTypes
+from apps.accounts.permissions import (
+    DeleteAccountVerificationRequiredMixin,
+    ReaderRequiredMixin,
+    WriterRequiredMixin,
+)
+from apps.blog.forms import PostForm
+from apps.blog.models import Comment, Like, Post, SavedPost
+
+from .forms import WriterRequest
 
 
 User = get_user_model()
-
 
 class UserLoginView(LoginView):
     """
