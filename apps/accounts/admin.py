@@ -72,6 +72,7 @@ class ProfileAdmin(admin.ModelAdmin):
 
 @admin.register(WriterRequest)
 class WriterRequestAdmin(admin.ModelAdmin):
+    """Admin configuration for writer requests."""
 
     list_display = [
         "user",
@@ -91,9 +92,12 @@ class WriterRequestAdmin(admin.ModelAdmin):
 
     readonly_fields = (
         "status",
-        'created_at',
+        "created_at",
         "reviewed_at",
     )
+
+    ordering = ("-created_at",)
+    date_hierarchy = "created_at"
 
     actions = [
         "approve_requests",
@@ -102,27 +106,24 @@ class WriterRequestAdmin(admin.ModelAdmin):
 
     @admin.action(description="Approve selected writer requests")
     def approve_requests(self, request, queryset):
-
         queryset.update(
             status=Status.APPROVED,
             reviewed_at=timezone.now(),
         )
 
         for writer_request in queryset:
-
             profile = writer_request.user.profile
             profile.user_type = UserTypes.WRITER
-            profile.save()
+            profile.save(update_fields=["user_type"])
 
     @admin.action(description="Reject selected writer requests")
     def reject_requests(self, request, queryset):
-
         queryset.update(
             status=Status.REJECTED,
             reviewed_at=timezone.now(),
         )
+
         for writer_request in queryset:
             profile = writer_request.user.profile
-            profile.user_type=UserTypes.READER
-            profile.save()
-
+            profile.user_type = UserTypes.READER
+            profile.save(update_fields=["user_type"])
