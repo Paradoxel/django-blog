@@ -9,7 +9,7 @@ class WriterRequiredMixin:
     """
 
     def dispatch(self, request, *args, **kwargs):
-        if request.user.profile.user_type != UserTypes.WRITER:
+        if not request.user.profile.is_writer:
             raise PermissionDenied
 
         return super().dispatch(request, *args, **kwargs)
