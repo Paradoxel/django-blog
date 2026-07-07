@@ -225,15 +225,25 @@ class PostUpdateView(LoginRequiredMixin,WriterRequiredMixin,UpdateView,):
         return super().form_valid(form)
     
 
-class PostDeleteView(LoginRequiredMixin,WriterRequiredMixin,DeleteView):
-    model=Post
+class PostDeleteView(LoginRequiredMixin,WriterRequiredMixin,DeleteView,):
+    """
+    Allow writers to delete only their own posts.
+    """
+
+    model = Post
     template_name = "accounts/post_confirm_delete.html"
     success_url = reverse_lazy("accounts:my_posts")
-    slug_field='slug'
-    slug_url_kwarg='slug'
+
+    slug_field = "slug"
+    slug_url_kwarg = "slug"
+
     def get_queryset(self):
-        return Post.objects.filter(author=self.request.user)
-    
+        """
+        Restrict deletion to posts owned by the current user.
+        """
+        return self.model.objects.filter(
+            author=self.request.user
+        )
 
 
 class UserSecurityView(LoginRequiredMixin,TemplateView):
