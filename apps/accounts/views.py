@@ -349,19 +349,35 @@ class LogoutSessionView(LoginRequiredMixin, View):
 
         return redirect("accounts:security_sessions")
 
-class LogoutOtherSessionsView(LoginRequiredMixin,View):
-    def post(self,request,*args,**kwargs):
+class LogoutOtherSessionsView(LoginRequiredMixin, View):
+    """
+    Terminate all active sessions except the current one.
+    """
+
+    def post(self, request, *args, **kwargs):
+        user_id = str(request.user.pk)
         current_session_key = request.session.session_key
-        sessions=Session.objects.filter(expire_date__gte=timezone.now())
-        for session in sessions:
-            data = session.get_decoded()
-            if data.get("_auth_user_id") == str(request.user.id):
-                    if session.session_key != current_session_key:
-                        session.delete()
+
+        active_sessions = Session.objects.filter(
+            expire_date__gte=timezone.now()
+        )
+
+        for session in active_sessions:
+            session_data = session.get_decoded()
+
+            if session_data.get("_auth_user_id") != user_id:
+                continue
+
+            if session.session_key == current_session_key:
+                continue
+
+            session.delete()
+
         messages.success(
             request,
-            "All other sessions have been signed out."
+            "All other sessions have been signed out.",
         )
+
         return redirect("accounts:security_sessions")
     
 
