@@ -4,9 +4,8 @@ from django.conf import settings
 
 from .models import Profile
 
-
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_profile(sender, instance, created, **kwargs):
-    """Auto-create Profile on new User creation. Skips on update."""
+    """Create a profile automatically when a new user is created."""
     if created:
         Profile.objects.create(user=instance)
