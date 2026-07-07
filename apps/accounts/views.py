@@ -315,18 +315,29 @@ class UserSessionsView(LoginRequiredMixin, ListView):
 
 
 class LogoutSessionView(LoginRequiredMixin, View):
+    """
+    Terminate one active session owned by the current user.
+    """
 
     def post(self, request, session_key, *args, **kwargs):
+        user_id = str(request.user.pk)
+
+        active_sessions = Session.objects.filter(
+            expire_date__gte=timezone.now()
+        )
 
         session = get_object_or_404(
-            Session.objects.filter(expire_date__gte=timezone.now()),
+            active_sessions,
             session_key=session_key,
         )
 
-        data = session.get_decoded()
+        session_data = session.get_decoded()
 
-        if data.get("_auth_user_id") != str(request.user.pk):
-            messages.error(request, "Invalid session.")
+        if session_data.get("_auth_user_id") != user_id:
+            messages.error(
+                request,
+                "Invalid session.",
+            )
             return redirect("accounts:security_sessions")
 
         session.delete()
