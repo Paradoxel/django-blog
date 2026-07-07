@@ -175,12 +175,17 @@ class UserEngagementView(LoginRequiredMixin, ListView):
         return context
 
 
-class MyPostsView(LoginRequiredMixin,WriterRequiredMixin,ListView):
-    model=Post
-    template_name='accounts/my_posts.html'
-    context_object_name='posts'
+class MyPostsView(LoginRequiredMixin, WriterRequiredMixin, ListView):
+    """
+    Display posts created by the authenticated writer.
+    """
+
+    model = Post
+    template_name = "accounts/my_posts.html"
+    context_object_name = "posts"
+
     def get_queryset(self):
-        return Post.objects.filter(author=self.request.user)
+        return self.model.objects.filter(author=self.request.user)
     
 
 class CreatePostView(LoginRequiredMixin,WriterRequiredMixin,CreateView):
