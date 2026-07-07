@@ -433,22 +433,36 @@ class DeleteAccountConfirmView(LoginRequiredMixin,DeleteAccountVerificationRequi
     
 
 
-class BecomeWriterView(LoginRequiredMixin,ReaderRequiredMixin,CreateView):
+class BecomeWriterView(LoginRequiredMixin,ReaderRequiredMixin,CreateView,):
+    """
+    Allow readers to submit a writer application.
+    """
+
     template_name = "accounts/writer/become_writer.html"
-    form_class=WriterRequestForm
+    form_class = WriterRequestForm
     success_url = reverse_lazy("accounts:profile")
-    
-    
 
     def form_valid(self, form):
         user = self.request.user
-        if WriterRequest.objects.filter(status=Status.PENDING,user=user).exists():
-            messages.info(self.request,"You already have a pending writer application.")
-            return redirect('accounts:profile')
-        form.instance.user=self.request.user
-        messages.success(
-        self.request,
-            "Your writer application has been submitted successfully."
+
+        pending_request = WriterRequest.objects.filter(
+            user=user,
+            status=Status.PENDING,
         )
+
+        if pending_request.exists():
+            messages.info(
+                self.request,
+                "You already have a pending writer application.",
+            )
+            return redirect("accounts:profile")
+
+        form.instance.user = user
+
+        messages.success(
+            self.request,
+            "Your writer application has been submitted successfully.",
+        )
+
         return super().form_valid(form)
     
