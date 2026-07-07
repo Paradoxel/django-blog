@@ -1,8 +1,14 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-
-from .models import User, Profile,WriterRequest,UserTypes,Status
 from django.utils import timezone
+
+from .models import (
+    Profile,
+    Status,
+    User,
+    UserTypes,
+    WriterRequest,
+)
 
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
