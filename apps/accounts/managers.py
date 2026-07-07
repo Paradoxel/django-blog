@@ -6,9 +6,14 @@ class UserManager(BaseUserManager):
     Custom manager for the email-based User model.
     """
 
-    def create_user(self, email, password=None, **extra_fields):
+    def create_user(
+        self,
+        email: str,
+        password: str | None = None,
+        **extra_fields,
+    ):
         """
-        Create and return a regular user.
+        Create and save a regular user.
         """
         if not email:
             raise ValueError("The email field must be set.")
@@ -25,9 +30,14 @@ class UserManager(BaseUserManager):
 
         return user
 
-    def create_superuser(self, email, password=None, **extra_fields):
+    def create_superuser(
+        self,
+        email: str,
+        password: str | None = None,
+        **extra_fields,
+    ):
         """
-        Create and return a superuser.
+        Create and save a superuser.
         """
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
