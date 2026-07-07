@@ -39,9 +39,31 @@ class UserAdmin(BaseUserAdmin):
 class ProfileAdmin(admin.ModelAdmin):
     """Admin configuration for the Profile model."""
 
-    list_display = ('user', 'phone_number', 'created_date')
-    search_fields = ('user__email', 'phone_number')
-    date_hierarchy = 'created_date'  # date-based drilldown navigation
+    list_display = (
+        "user",
+        "user_type",
+        "phone_number",
+        "created_date",
+    )
+
+    search_fields = (
+        "user__email",
+        "phone_number",
+    )
+
+    list_filter = (
+        "user_type",
+        "created_date",
+    )
+
+    readonly_fields = (
+        "created_date",
+        "updated_date",
+    )
+
+    ordering = ("-created_date",)
+
+    date_hierarchy = "created_date"
 
 
 
