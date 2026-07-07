@@ -255,15 +255,21 @@ class UserSecurityView(LoginRequiredMixin, TemplateView):
 
 
 
-class UserPasswordChangeView(LoginRequiredMixin,PasswordChangeView):
+class UserPasswordChangeView(LoginRequiredMixin, PasswordChangeView):
+    """
+    Handle user password changes.
+    """
+
     template_name = "accounts/security/security_password.html"
     success_url = reverse_lazy("accounts:security")
     form_class = CustomPasswordChangeForm
+
     def form_valid(self, form):
         messages.success(
             self.request,
-            "Password updated successfully."
+            "Password updated successfully.",
         )
+
         return super().form_valid(form)
     
 
