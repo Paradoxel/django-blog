@@ -210,7 +210,9 @@ class Post(models.Model):
 
 
 class CommentQuerySet(models.QuerySet):
-    """Semantic filters for comment moderation and display."""
+    """
+    Semantic query interface for comments.
+    """
 
     def approved(self):
         """Return only approved comments — visible to public."""
