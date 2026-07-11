@@ -274,32 +274,36 @@ class Comment(models.Model):
 
 class Like(models.Model):
     """
-    Represents a "like" action performed by a user on a post.
+    Represents a user's like on a post.
     """
 
-    # The user who liked the post
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name="likes"
+        related_name="likes",
     )
 
-    # The post that was liked
     post = models.ForeignKey(
         Post,
         on_delete=models.CASCADE,
-        related_name="likes"
+        related_name="likes",
     )
 
-    # Timestamp of when the like was created
-    created_date = models.DateTimeField(auto_now_add=True)
+    created_date = models.DateTimeField(
+        auto_now_add=True,
+    )
+
+    objects = models.Manager()
 
     class Meta:
-        # newest likes first
         ordering = ["-created_date"]
 
-        # prevent duplicate likes (same user cannot like same post twice)
-        unique_together = ("user", "post")
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "post"],
+                name="unique_user_post_like",
+            )
+        ]
 
     def __str__(self):
         return f"{self.user} liked {self.post}"
