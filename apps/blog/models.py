@@ -225,8 +225,10 @@ class CommentQuerySet(models.QuerySet):
 
 class Comment(models.Model):
     """
-    Blog comment — supports both guest and authenticated users.
-    Requires admin approval before becoming publicly visible.
+    Blog comment.
+
+    Supports both authenticated users and guests.
+    Comments require admin approval before becoming public.
     """
 
     post = models.ForeignKey(
@@ -235,21 +237,29 @@ class Comment(models.Model):
         related_name="comments",
     )
 
-    # optional — None means guest comment
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        on_delete=models.SET_NULL,  # keep comment even if user is deleted
+        on_delete=models.SET_NULL,
+        related_name="comments",
         null=True,
         blank=True,
-        related_name="comments",
     )
 
     name = models.CharField(max_length=150)
-    email = models.EmailField(blank=True)  # optional for logged-in users
+
+    email = models.EmailField(
+        blank=True,
+    )
+
     message = models.TextField()
 
-    is_approved = models.BooleanField(default=False)  # admin must approve before visible
-    created_date = models.DateTimeField(auto_now_add=True)
+    is_approved = models.BooleanField(
+        default=False,
+    )
+
+    created_date = models.DateTimeField(
+        auto_now_add=True,
+    )
 
     objects = CommentQuerySet.as_manager()
 
