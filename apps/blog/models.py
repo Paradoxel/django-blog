@@ -34,20 +34,32 @@ class Tag(models.Model):
 
 class Category(models.Model):
     """
-    Post category.
-    Per Post Many Category
+    Organize posts into categories.
     """
 
-    name = models.CharField(max_length=100, unique=True)
-    slug = models.SlugField(max_length=255,unique=True, blank=True) 
-    description = models.TextField(blank=True)
+    name = models.CharField(
+        max_length=100,
+        unique=True,
+    )
+
+    slug = models.SlugField(
+        max_length=255,
+        unique=True,
+        blank=True,
+    )
+
+    description = models.TextField(
+        blank=True,
+    )
 
     class Meta:
+        ordering = ["name"]
         verbose_name_plural = "Categories"
 
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.name)
+
         super().save(*args, **kwargs)
 
     def __str__(self):
