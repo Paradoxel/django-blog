@@ -84,12 +84,15 @@ class PostQuerySet(models.QuerySet):
 class Post(models.Model):
     """
     Core blog post model.
-    Handles draft → published → archived workflow.
-    Auto-generates slug and sets published_date on first publish.
+
+    Handles the draft → published → archived workflow.
+    Automatically generates a unique slug and sets the
+    publication date on first publish.
     """
 
     class Status(models.TextChoices):
         """Publication lifecycle states."""
+
         DRAFT = "draft", "Draft"
         PUBLISHED = "published", "Published"
         ARCHIVED = "archived", "Archived"
@@ -101,20 +104,30 @@ class Post(models.Model):
     )
 
     title = models.CharField(max_length=255)
-    slug = models.SlugField(max_length=255,unique=True, blank=True)  
+
+    slug = models.SlugField(
+        max_length=255,
+        unique=True,
+        blank=True,
+    )
+
+    excerpt = models.CharField(
+        max_length=300,
+        blank=True,
+    )
 
     content = models.TextField()
-    excerpt = models.CharField(max_length=300, blank=True)  # short preview 
 
-    # organized by year/month to avoid too many files in one folder
-    image = models.ImageField(upload_to="posts/%Y/%m/")
+    image = models.ImageField(
+        upload_to="posts/%Y/%m/",
+    )
 
     primary_tag = models.ForeignKey(
         Tag,
-        null=True,
-        blank=True,
         on_delete=models.SET_NULL,
         related_name="primary_posts",
+        null=True,
+        blank=True,
     )
 
     categories = models.ManyToManyField(
@@ -122,19 +135,19 @@ class Post(models.Model):
         related_name="posts",
     )
 
-    view_count = models.PositiveIntegerField(default=0)
-
     status = models.CharField(
         max_length=20,
         choices=Status.choices,
         default=Status.DRAFT,
-        db_index=True,  # frequently filtered — index justified
+        db_index=True,
     )
+
+    view_count = models.PositiveIntegerField(default=0)
 
     published_date = models.DateTimeField(
         null=True,
         blank=True,
-        db_index=True,  # used in ordering and filters — index justified
+        db_index=True,
     )
 
     created_date = models.DateTimeField(auto_now_add=True)
@@ -146,45 +159,53 @@ class Post(models.Model):
         ordering = ["-created_date"]
 
     def save(self, *args, **kwargs):
-        # Build unique slug from title on first save only
+        """Generate a unique slug and set the publication date."""
+
         if not self.slug:
             base_slug = slugify(self.title[:240])
             slug = base_slug
             counter = 1
 
-            while Post.objects.filter(slug=slug).exists():
+            while self.__class__.objects.filter(slug=slug).exists():
                 slug = f"{base_slug}-{counter}"
                 counter += 1
 
             self.slug = slug
 
-        # Auto-set published_date once on first publish — never overwrite
-        if self.status == self.Status.PUBLISHED:
-            if not self.published_date:
-                self.published_date = timezone.now()
+        if (
+            self.status == self.Status.PUBLISHED
+            and not self.published_date
+        ):
+            self.published_date = timezone.now()
 
         super().save(*args, **kwargs)
 
     def __str__(self):
         return self.title
-    
+
     def get_absolute_url(self):
-        return reverse("blog:detail", kwargs={"slug": self.slug})
-    
+        return reverse(
+            "blog:detail",
+            kwargs={"slug": self.slug},
+        )
+
+    @property
     def reading_time(self):
-        """Estimate reading time based on average 200 words per minute."""
+        """Estimate reading time (200 words per minute)."""
         word_count = len(self.content.split())
-        minutes = max(1, round(word_count / 200))
-        return minutes
+        return max(1, round(word_count / 200))
 
     @property
     def status_label(self):
+        """Return a human-friendly status label."""
+
         mapping = {
-        "draft": "Under review by admin",
-        "published": "Approved & Live",
-        "archived": "Rejected by admin",
+            self.Status.DRAFT: "Under review by admin",
+            self.Status.PUBLISHED: "Approved & Live",
+            self.Status.ARCHIVED: "Rejected by admin",
         }
-        return mapping.get(self.status,"Unknown")
+
+        return mapping.get(self.status, "Unknown")
     
 
 
