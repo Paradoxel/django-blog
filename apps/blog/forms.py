@@ -8,26 +8,30 @@ class CommentForm(forms.ModelForm):
 
     class Meta:
         model = Comment
-        fields = ("name", "email", "message")
+        fields = (
+            "name",
+            "email",
+            "message",
+        )
 
         widgets = {
             "name": forms.TextInput(
                 attrs={
                     "class": "form-control",
-                    "placeholder": "Enter Name",
+                    "placeholder": "Your name",
                 }
             ),
             "email": forms.EmailInput(
                 attrs={
                     "class": "form-control",
-                    "placeholder": "Enter email address",
+                    "placeholder": "Your email",
                 }
             ),
             "message": forms.Textarea(
                 attrs={
                     "class": "form-control mb-10",
                     "rows": 5,
-                    "placeholder": "Message",
+                    "placeholder": "Your message",
                 }
             ),
         }
